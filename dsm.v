@@ -9,34 +9,28 @@
 `define Q_OFF 				20'h0_4000	// bit 14 is high -> 0.5 Volts
 // Top level module
 module DSM_top (
-	input		clock,
-	input		vin, 	// 1 bit
-	output	reg	pwm		// 1 bit
+	input			clock,
+	input	[19: 0]	vin, 	// 1 bit
+	output	reg		pwm		// 1 bit
 	
 	//input	[31: 0]	dith_i,		// Dithering is currently off
 );
 
 	wire	[19: 0]	pwm_scaled;				// PWM * vin_FS/2	
-	wire	[19: 0]	vin_frac;
 	wire	[19: 0]	vin_pwm_scaled_delta;	// vin - pwm_scaled
 	wire	[19: 0]	dss_o;
 	wire	[19: 0]	dss_vin_sum;
 	wire	[19: 0]	dss_vin_sum_dith;
 	wire	[19: 0]	quant_o
 	
-	
-	// Change Vin from 1 bit to the above described 20 bit representation
-	assign	vin_frac[19:16]	= 4'b0;		// saturation bits
-	assign	vin_frac[15]	= vin;		// vin
-	assign 	vin_frac[14: 0]	= 15'b0;	// fractional output
-	
+
 	
 	// Multiply by (VIN_FS/2) (bitshifted once)
-	assign	pwm_scaled				= `VIN_FS[19:1] * pwm;
+	assign	pwm_scaled				= `VIN_FS_HALF * pwm;
 	// Assuming KFW is 1
-	assign	vin_pwm_scaled_delta	= vin_frac - pwm_scaled;
+	assign	vin_pwm_scaled_delta	= vin - pwm_scaled;
 	// Sum DSS output with vin
-	assign	dss_vin_sum				= dss_o + vin_frac;
+	assign	dss_vin_sum				= dss_o + vin;
 	// Dither the dss output summed with vin
 	assign 	dss_vin_sum_dith		= dss_vin_sum /*+ dith_i*/;	// dithering turned off
 	
