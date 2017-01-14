@@ -11,6 +11,7 @@
 // Top level module
 module DSM_top (
 	input			clock,
+	input			reset,
 	input	[19: 0]	vin, 	// 1 bit
 	output	reg		pwm		// 1 bit
 	
