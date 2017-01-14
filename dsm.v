@@ -6,6 +6,7 @@
 `define VIN_FS				20'h0_8000	// bit 15 is high, 1 volt
 `define VIN_FS_RECIPROCAL	20'h0_8000	// 1/1 is still 1
 `define VIN_FS_HALF			20'h0_4000	// half of VIN_FS (bit 14 is high)
+`define VIN_FS_HALF_NEG		20'hF_C000
 `define Q_OFF 				20'h0_4000	// bit 14 is high -> 0.5 Volts
 // Top level module
 module DSM_top (
@@ -21,12 +22,12 @@ module DSM_top (
 	wire	[19: 0]	dss_o;
 	wire	[19: 0]	dss_vin_sum;
 	wire	[19: 0]	dss_vin_sum_dith;
-	wire	[19: 0]	quant_o
+	wire			quant_o
 	
 
 	
 	// Multiply by (VIN_FS/2) (bitshifted once)
-	assign	pwm_scaled				= `VIN_FS_HALF * pwm;
+	assign	pwm_scaled				= pwm ? `VIN_FS_HALF : `VIN_FS_HALF_NEG;
 	// Assuming KFW is 1
 	assign	vin_pwm_scaled_delta	= vin - pwm_scaled;
 	// Sum DSS output with vin
@@ -35,7 +36,7 @@ module DSM_top (
 	assign 	dss_vin_sum_dith		= dss_vin_sum /*+ dith_i*/;	// dithering turned off
 	
 	always @(posedge clk) begin
-		pwm	<= quant_o[15];	// bits 19-16 are for saturation, ignore. 14-0 are fractional bits
+		pwm	<= quant_o;	// bits 19-16 are for saturation, ignore. 14-0 are fractional bits
 	end
 	
 	// I need to know how wide y (dss_out) should be
@@ -47,7 +48,7 @@ module DSM_top (
 	// Question: What are the values of A, B, C and D? (I can leave undefined for now)
 	// answer: you can run tb.m and get the value of A,B,C,D. only D is a number ,ABC are all matrix
 	DSS DSS_i (
-		.x(vin_pwm_scaled_delta),
+		.u(vin_pwm_scaled_delta),
 		.y(dss_o)
 	);
 	
@@ -79,7 +80,9 @@ endmodule
 // use the Initial conditions parameter.
 
 module DSS (
-	input	[19: 0] x,
+	input			clock,
+	input			reset,
+	input	[19: 0] u,
 	output	[19: 0]	y
 );
 	// 25 bit precision for the DSS since they are pretty small.
@@ -96,6 +99,25 @@ module DSS (
 	wire	[3: 0]	B;
 	wire	[24: 0]	C [3: 0];
 	wire	[24: 0] D;
+	
+	wire	[19: 0] xn1 [3: 0];
+	reg		[19: 0]	xn0	[3: 0];
+	
+	always @ (posedge clock) begin
+		if (reset) begin
+			xn0	<= 0;
+		end
+		else begin
+			xn0	<= xn1;
+		end
+	end
+	
+		// TODO: shift bits properly for multiplication
+	assign xn1[0]	= A0[0]*xn0[0]+A0[1]*xn0[1]+A0[2]*xn0[2]+A0[3]*xn0[3]+u;
+	assign xn1[1]	= xn0[0];
+	assign xn1[2]	= xn0[1];
+	assign xn1[3]	= xn0[2];
+	assign y		= C[0]*xn0[0]+C[1]*xn0[1]+C[2]*xn0[2]+C[3]*xn0[3]+D*u;
 	
 	
 	// Walkthrough of how the representation of A0[0] is done
@@ -148,37 +170,26 @@ endmodule
 
 // Quantizer
 module quantizer (
-	input	[31: 0] in1,
-	input			clk,
-	output	[31: 0]	out1
+	input	[19: 0] in1,
+	input			reset,
+	input			clock,
+	output			out1
 );
-
-	wire	[31: 0] in1_scaled;
-	wire	[31: 0]	zoh_i;
-	// Question: What is the sampling of the zero order hold? 
-	// answer: tsamp=2.5e-10, also get from running tb.m
-	// It can be relative to frequency of input or absolute. Need
-	// to know to make zero order hold.
-	wire	[31: 0]	zoh_o;
-	wire	[31: 0]	quant_o;
-	wire	[31: 0]	quant_sat;
-	wire	[31: 0]	out_pre_norm;
+	wire	[19: 0]	zoh_i;
+	wire	[19: 0]	zoh_o;
 	
-	// Scale the input by 1/VIN_FS
-	assign in1_scaled	= VIN_FS_RECIPROCAL * in1;
-	// Add the Q offset
-	assign zoh_i		= in1_scaled + Q_OFF;
+	assign zoh_i	= in1;
+		
+	// Zero order hold at Ts
+	always @(posedge clock) begin
+		if (reset) begin
+			zoh_o	<= 20'b0;
+		end
+		else begin
+			zoh_o	<= zoh_i;
+		end
+	end
 	
-	/*
-		STILL NEED TO WRITE ZOH, QUANTIZER, AND SATURATION.
-		JUST NEED MORE DETAILS FIRST. 
-		(Question 1) or need to know other parameters like nlev, etc..
-	*/
-	//nlev=1, also can get from running tb.m
-	
-	// Subtract the Q offset
-	assign out_pre_norm	= quant_sat - Q_OFF;
-	// Normalize the output
-	assign out1			= out_pre_norm * 32'd2;
-	
+	// Quantize the output
+	assign out1	= ~zoh_o[19];
 endmodule
