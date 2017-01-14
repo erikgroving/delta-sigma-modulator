@@ -48,13 +48,16 @@ module DSM_top (
 	// Question: What are the values of A, B, C and D? (I can leave undefined for now)
 	// answer: you can run tb.m and get the value of A,B,C,D. only D is a number ,ABC are all matrix
 	DSS DSS_i (
+		.clock(clock),
+		.reset(reset),
 		.u(vin_pwm_scaled_delta),
 		.y(dss_o)
 	);
 	
 	quantizer quantizer_i (
 		.in1(dss_vin_sum_dith),
-		.clk(clk),
+		.clock(clock),
+		.reset(reset),
 		.out1(quant_o)
 	);
 	
