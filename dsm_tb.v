@@ -7,6 +7,7 @@ module  dsm_tb ();
 	
 	integer data_file;
 	integer scan_file;
+	integer write_file;
 
 	dsm dsm_i (
 		.clock(clock),
@@ -22,16 +23,17 @@ module  dsm_tb ();
 
 	initial begin
 		clock = 0;
-		reset = 0;
+		reset = 1;
 		data_file = $fopen("vin_bin.txt", "r");
+		write_file = $fopen("pwm.txt", "w");
 		if (data_file == 0) begin
 			$display("could not open data file");
 			$finish;
 		end
-		#5;
-		reset = 1;
 		#20;
-		reset = 0;
+		@(posedge clock);
+		#1;
+		reset = 1;
 	end
 
 	always @(negedge clock) begin
@@ -39,9 +41,11 @@ module  dsm_tb ();
 			vin	<= 20'b0;
 		end
 		else begin
+			$fdisplay(write_file, "%01b", pwm);
 			scan_file = $fscanf(data_file, "%b\n", vin); 
 			if ($feof(data_file)) begin
-				$display("reached end of file");
+				$fclose(write_file);
+				$fclose(scan_file);
 				$finish;
 			end
 		end

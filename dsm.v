@@ -106,6 +106,8 @@ module DSS (
 	
 	wire	[19: 0] xn1 [3: 0];
 	reg		[19: 0]	xn0	[3: 0];
+	wire	[44: 0] temp_xn1;
+	wire	[44: 0] temp_y;
 	
 	always @ (posedge clock) begin
 		if (reset) begin
@@ -123,11 +125,13 @@ module DSS (
 	end
 	
 		// TODO: shift bits properly for multiplication
-	assign xn1[0]	= A0[0]*xn0[0]+A0[1]*xn0[1]+A0[2]*xn0[2]+A0[3]*xn0[3]+u;
+	assign temp_xn1	= A0[0]*xn0[0]+A0[1]*xn0[1]+A0[2]*xn0[2]+A0[3]*xn0[3]+u;
+	assign xn1[0]	= temp_xn1[42:23];
 	assign xn1[1]	= xn0[0];
 	assign xn1[2]	= xn0[1];
 	assign xn1[3]	= xn0[2];
-	assign y		= C[0]*xn0[0]+C[1]*xn0[1]+C[2]*xn0[2]+C[3]*xn0[3]+D*u;
+	assign temp_y	= C[0]*xn0[0]+C[1]*xn0[1]+C[2]*xn0[2]+C[3]*xn0[3]+D*u;
+	assign y		= temp_y[42:23];
 	
 	
 	// Walkthrough of how the representation of A0[0] is done
