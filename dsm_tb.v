@@ -9,7 +9,7 @@ module  dsm_tb ();
 	integer scan_file;
 	integer write_file;
 
-	dsm dsm_i (
+	DSM_top dsm_i (
 		.clock(clock),
 		.reset(reset),
 		.vin(vin),
@@ -32,8 +32,7 @@ module  dsm_tb ();
 		end
 		#20;
 		@(posedge clock);
-		#1;
-		reset = 1;
+		reset = #1 0;
 	end
 
 	always @(negedge clock) begin
