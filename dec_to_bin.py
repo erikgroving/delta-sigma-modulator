@@ -1,10 +1,12 @@
 import os
 import math
-total_bits = int(input("how many total bits?\n"))
-frac_bits = int(input("how many frac bits?\n"))
-while(1):
-	val = float(input("what value are you converting?\n"))
-	bin_val = ""
+total_bits = 20
+frac_bits = 15
+f = open('simu_a.txt', 'r')
+out = open('vin_bin.txt', 'w')
+for line in f:
+	val = float(line)
+	bin_val = "20'b"
 	for i in range(total_bits):
 #		print(i)
 		exp = total_bits - (i + frac_bits + 1)
@@ -32,5 +34,7 @@ while(1):
 					bin_val += '0'
 			else:
 				bin_val += '0'
-	print(bin_val)
-	
+	out.write(bin_val)
+	out.write('\n')
+f.close()
+out.close()

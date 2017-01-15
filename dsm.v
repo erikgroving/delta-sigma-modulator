@@ -23,7 +23,7 @@ module DSM_top (
 	wire	[19: 0]	dss_o;
 	wire	[19: 0]	dss_vin_sum;
 	wire	[19: 0]	dss_vin_sum_dith;
-	wire			quant_o
+	wire			quant_o;
 	
 
 	
@@ -36,7 +36,7 @@ module DSM_top (
 	// Dither the dss output summed with vin
 	assign 	dss_vin_sum_dith		= dss_vin_sum /*+ dith_i*/;	// dithering turned off
 	
-	always @(posedge clk) begin
+	always @(posedge clock) begin
 		pwm	<= quant_o;	// bits 19-16 are for saturation, ignore. 14-0 are fractional bits
 	end
 	
@@ -95,9 +95,9 @@ module DSS (
 	// [23] - 1
 	// [22: 0] fractional precision bits
 	wire	[24: 0]	A0 [3: 0];	// row 0
-	wire	[24: 0]	A1 [3: 0]	// row 1
-	wire	[24: 0] A2 [3: 0]	// row 2
-	wire	[24: 0] A3 [3: 0]	// row 3
+	wire	[24: 0]	A1 [3: 0];	// row 1
+	wire	[24: 0] A2 [3: 0];	// row 2
+	wire	[24: 0] A3 [3: 0];	// row 3
 	
 	
 	wire	[3: 0]	B;
@@ -109,10 +109,16 @@ module DSS (
 	
 	always @ (posedge clock) begin
 		if (reset) begin
-			xn0	<= 0;
+			xn0[0]	<= 20'b0;
+			xn0[1]	<= 20'b0;
+			xn0[2]	<= 20'b0;
+			xn0[3]	<= 20'b0;
 		end
 		else begin
-			xn0	<= xn1;
+			xn0[0]	<= xn1[0];
+			xn0[1]	<= xn1[1];
+			xn0[2]	<= xn1[2];
+			xn0[3]	<= xn1[3];
 		end
 	end
 	
@@ -137,10 +143,10 @@ module DSS (
 	// This divided 2^23 is -6.28113e-4, close enough(I hope, actual is -6.28132e-4)
 	
 	// First row
-	assign A0[0]	= 25'b1FF_EB6B		// -6.28113e-4 (supposed to be -6.28132e-04)
-	assign A0[1]	= 25'h100_40AB		// -1.99802649 (supposed to be -1.99802650)
-	assign A0[2]	= 25'h1FF_EB6B		// same as A0[0]
-	assign A0[3]	= 25'h180_0000		// -1
+	assign A0[0]	= 25'h1FF_EB6B;		// -6.28113e-4 (supposed to be -6.28132e-04)
+	assign A0[1]	= 25'h100_40AB;		// -1.99802649 (supposed to be -1.99802650)
+	assign A0[2]	= 25'h1FF_EB6B;		// same as A0[0]
+	assign A0[3]	= 25'h180_0000;		// -1
 	// Second row
 	assign A1[0]	= 25'h080_0000;		// 1
 	assign A1[1]	= 25'h0;			// 0
@@ -180,7 +186,7 @@ module quantizer (
 	output			out1
 );
 	wire	[19: 0]	zoh_i;
-	wire	[19: 0]	zoh_o;
+	reg		[19: 0]	zoh_o;
 	
 	assign zoh_i	= in1;
 		
