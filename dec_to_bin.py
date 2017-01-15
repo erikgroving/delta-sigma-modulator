@@ -6,7 +6,7 @@ f = open('simu_a.txt', 'r')
 out = open('vin_bin.txt', 'w')
 for line in f:
 	val = float(line)
-	bin_val = "20'b"
+	bin_val = ""
 	for i in range(total_bits):
 #		print(i)
 		exp = total_bits - (i + frac_bits + 1)
