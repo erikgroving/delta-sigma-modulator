@@ -37,7 +37,12 @@ module DSM_top (
 	assign 	dss_vin_sum_dith		= dss_vin_sum /*+ dith_i*/;	// dithering turned off
 	
 	always @(posedge clock) begin
-		pwm	<= quant_o;	// bits 19-16 are for saturation, ignore. 14-0 are fractional bits
+		if (reset) begin
+			pwm	<= #1 1'b0;
+		end
+		else begin
+			pwm	<= #1 quant_o;	// bits 19-16 are for saturation, ignore. 14-0 are fractional bits
+		end
 	end
 	
 	// I need to know how wide y (dss_out) should be
@@ -125,13 +130,13 @@ module DSS (
 	end
 	
 		// TODO: shift bits properly for multiplication
-	assign temp_xn1	= A0[0]*xn0[0]+A0[1]*xn0[1]+A0[2]*xn0[2]+A0[3]*xn0[3]+u;
-	assign xn1[0]	= temp_xn1[42:23];
+	assign temp_xn1	= A0[0]*xn0[0]+A0[1]*xn0[1]+A0[2]*xn0[2]+A0[3]*xn0[3];
+	assign xn1[0]	= temp_xn1[42:23] + u;
 	assign xn1[1]	= xn0[0];
 	assign xn1[2]	= xn0[1];
 	assign xn1[3]	= xn0[2];
 	assign temp_y	= C[0]*xn0[0]+C[1]*xn0[1]+C[2]*xn0[2]+C[3]*xn0[3]+D*u;
-	assign y		= temp_y[42:23];
+	assign y		= temp_y[42:23] + u;
 	
 	
 	// Walkthrough of how the representation of A0[0] is done

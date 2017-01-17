@@ -33,6 +33,8 @@ module  dsm_tb ();
 		#20;
 		@(posedge clock);
 		reset = #1 0;
+		#200;
+		$finish;
 	end
 
 	always @(negedge clock) begin
@@ -45,6 +47,7 @@ module  dsm_tb ();
 			if ($feof(data_file)) begin
 				$fclose(write_file);
 				$fclose(scan_file);
+				$display("Reached end");
 				$finish;
 			end
 		end

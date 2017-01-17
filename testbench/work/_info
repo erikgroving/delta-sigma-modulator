@@ -9,13 +9,13 @@ z2
 cModel Technology
 dd:/Modelsim/examples
 vdsm_tb
-Z0 !s110 1484438789
+Z0 !s110 1484621288
 !i10b 1
-!s100 Qdln1_NUEBVKG3EFVB2Um1
-I3OZPnPf_MW^]=F2?RM_G32
+!s100 kX5`Eo?1KzA>KYMdkn4j70
+IXn_;7X2zX;nY6N]hQ7nFk1
 Z1 VDg1SIo80bB@j0V0VzS_@n1
 Z2 dC:/Users/Erik/Desktop/delta-sigma-modulator/testbench
-w1484438667
+w1484614690
 8C:/Users/Erik/Desktop/delta-sigma-modulator/dsm_tb.v
 FC:/Users/Erik/Desktop/delta-sigma-modulator/dsm_tb.v
 L0 1
@@ -23,7 +23,7 @@ Z3 OP;L;10.4a;61
 r1
 !s85 0
 31
-Z4 !s108 1484438789.000000
+Z4 !s108 1484621288.000000
 !s107 C:/Users/Erik/Desktop/delta-sigma-modulator/dsm_tb.v|
 !s90 -reportprogress|300|-work|work|-stats=none|C:/Users/Erik/Desktop/delta-sigma-modulator/dsm_tb.v|
 !s101 -O0
@@ -32,11 +32,11 @@ Z5 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact -O0
 vDSM_top
 R0
 !i10b 1
-!s100 2L[Afi:=lV]CcXR>ZDVYO0
-I]bbT2BD[0BZ_H`fAV6WNS2
+!s100 iIn1bZCO_cA]ihfHfd=Mg3
+IU6^4Wb0hJ5hhZFhSO4hA42
 R1
 R2
-Z6 w1484438784
+Z6 w1484621256
 Z7 8C:/Users/Erik/Desktop/delta-sigma-modulator/dsm.v
 Z8 FC:/Users/Erik/Desktop/delta-sigma-modulator/dsm.v
 L0 12
@@ -54,14 +54,14 @@ n@d@s@m_top
 vDSS
 R0
 !i10b 1
-!s100 ZWLlD>f>mMM2<YII1j`PR1
-ILblWhf3aI8^g14[4]Wihe1
+!s100 MU3Uz:TRTc[?i=EKzA<VP1
+IS29JBOG[z16DfozIgfGPi0
 R1
 R2
 R6
 R7
 R8
-L0 86
+L0 91
 R3
 r1
 !s85 0
@@ -76,14 +76,14 @@ n@d@s@s
 vquantizer
 R0
 !i10b 1
-!s100 WYkUTVDGHe5a4n3801]320
-I`EDWa?a@Om_U:k8AY138g1
+!s100 L^Nh5^C?BglBhR?J=ofaZ1
+I@KAIRWc1[TCjYna78RKPT0
 R1
 R2
 R6
 R7
 R8
-L0 182
+L0 191
 R3
 r1
 !s85 0
