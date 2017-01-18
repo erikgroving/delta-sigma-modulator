@@ -38,10 +38,10 @@ module DSM_top (
 	
 	always @(posedge clock) begin
 		if (reset) begin
-			pwm	<= #1 1'b0;
+			pwm	<= 1'b0;
 		end
 		else begin
-			pwm	<= #1 quant_o;	// bits 19-16 are for saturation, ignore. 14-0 are fractional bits
+			pwm	<= quant_o;	// bits 19-16 are for saturation, ignore. 14-0 are fractional bits
 		end
 	end
 	
@@ -99,20 +99,26 @@ module DSS (
 	// [24]	- -2
 	// [23] - 1
 	// [22: 0] fractional precision bits
-	wire	[24: 0]	A0 [3: 0];	// row 0
-	wire	[24: 0]	A1 [3: 0];	// row 1
-	wire	[24: 0] A2 [3: 0];	// row 2
-	wire	[24: 0] A3 [3: 0];	// row 3
+	wire signed	[24: 0]	A0 [3: 0];	// row 0
+	wire signed	[24: 0]	A1 [3: 0];	// row 1
+	wire signed	[24: 0] A2 [3: 0];	// row 2
+	wire signed	[24: 0] A3 [3: 0];	// row 3
 	
 	
-	wire	[3: 0]	B;
-	wire	[24: 0]	C [3: 0];
-	wire	[24: 0] D;
+	wire signed	[3: 0]	B;
+	wire signed	[24: 0]	C [3: 0];
+	wire signed	[24: 0] D;
 	
-	wire	[19: 0] xn1 [3: 0];
-	reg		[19: 0]	xn0	[3: 0];
-	wire	[44: 0] temp_xn1;
-	wire	[44: 0] temp_y;
+	wire signed	[19: 0] xn1 [3: 0];
+	reg	 signed	[19: 0]	xn0	[3: 0];
+	wire signed	[44: 0] temp_xn1;
+	wire signed [44: 0]	temp_y;
+	wire signed	[44: 0] temp_y1;
+	wire signed	[44: 0] temp_y2;
+	wire signed	[44: 0] temp_y3;
+	wire signed	[44: 0] temp_y4;
+	wire signed	[44: 0] temp_y5;
+
 	
 	always @ (posedge clock) begin
 		if (reset) begin
@@ -131,12 +137,17 @@ module DSS (
 	
 		// TODO: shift bits properly for multiplication
 	assign temp_xn1	= A0[0]*xn0[0]+A0[1]*xn0[1]+A0[2]*xn0[2]+A0[3]*xn0[3];
-	assign xn1[0]	= temp_xn1[42:23] + u;
+	assign xn1[0]	= temp_xn1[42:23] + $signed(u);
 	assign xn1[1]	= xn0[0];
 	assign xn1[2]	= xn0[1];
 	assign xn1[3]	= xn0[2];
-	assign temp_y	= C[0]*xn0[0]+C[1]*xn0[1]+C[2]*xn0[2]+C[3]*xn0[3]+D*u;
-	assign y		= temp_y[42:23] + u;
+	assign temp_y1	= C[0]*xn0[0];
+	assign temp_y2	= C[1]*xn0[1];
+	assign temp_y3	= C[2]*xn0[2];
+	assign temp_y4	= C[3]*xn0[3];
+	assign temp_y5	= D*$signed(u);
+	assign temp_y	= temp_y1 + temp_y2 + temp_y3 + temp_y4 + temp_y5;
+	assign y		= temp_y[42:23];
 	
 	
 	// Walkthrough of how the representation of A0[0] is done

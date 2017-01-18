@@ -25,16 +25,14 @@ module  dsm_tb ();
 		clock = 0;
 		reset = 1;
 		data_file = $fopen("vin_bin.txt", "r");
-		write_file = $fopen("pwm.txt", "w");
+		write_file = $fopen("pwm.txt", "w");			
 		if (data_file == 0) begin
 			$display("could not open data file");
 			$finish;
 		end
-		#20;
+		#10;
 		@(posedge clock);
 		reset = #1 0;
-		#200;
-		$finish;
 	end
 
 	always @(negedge clock) begin

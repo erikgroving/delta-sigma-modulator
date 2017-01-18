@@ -4,7 +4,8 @@ total_bits = int(input("how many total bits\n"))
 frac_bits = int(input("how many fractional bits?\n"))
 while(1):
 #		print(i)
-	bin_val = ""
+	bin_val = ""	
+	hex_val = ""
 	val = float(input("what value to convert?\n"))
 	for i in range(total_bits):
 		exp = total_bits - (i + frac_bits + 1)
@@ -32,5 +33,9 @@ while(1):
 					bin_val += '0'
 			else:
 				bin_val += '0'
-	print(bin_val)
-	print('\n\n')
+		
+	int_val = int(bin_val, 2)
+	hex_val = hex(int_val)
+	print('\n\nConverted value: ')
+	output_str = 'Int:\t' + str(int_val) + '\nHex:\t' + hex_val + '\nBinary\t' + bin_val + '\n\n'
+	print(output_str)
