@@ -221,5 +221,6 @@ module quantizer (
 	end
 	
 	// Quantize the output
-	assign out1	= ~zoh_o[19];
+//	assign out1	= ~zoh_o[19];
+	assign out1	= (reset) ? 1'b0 : ~zoh_i[19];
 endmodule

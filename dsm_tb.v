@@ -40,7 +40,12 @@ module  dsm_tb ();
 			vin	<= 20'b0;
 		end
 		else begin
-			$fdisplay(write_file, "%01b", pwm);
+			if (pwm) begin
+				$fdisplay(write_file, "1");			
+			end
+			else begin
+				$fdisplay(write_file, "-1");
+			end
 			scan_file = $fscanf(data_file, "%b\n", vin); 
 			if ($feof(data_file)) begin
 				$fclose(write_file);
