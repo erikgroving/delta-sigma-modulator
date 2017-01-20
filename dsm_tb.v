@@ -41,10 +41,10 @@ module  dsm_tb ();
 		end
 		else begin
 			if (pwm) begin
-				$fdisplay(write_file, "1");			
+				$fdisplay(write_file, "1\t%4.0f", $time);			
 			end
 			else begin
-				$fdisplay(write_file, "-1");
+				$fdisplay(write_file, "-1\t%4.0f", $time);
 			end
 			scan_file = $fscanf(data_file, "%b\n", vin); 
 			if ($feof(data_file)) begin
