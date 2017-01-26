@@ -6,11 +6,13 @@ module mixer (
 );
 
 	wire signed [24: 0] ampl;
+
+	wire signed [44: 0] mult_res;
 	
 	assign ampl = 25'h028_619a;	// 0.6309573 * 0.5 = 0.3154786
 	
-	assign mix_o = ampl * $signed(interp_i) * $signed(LO);
-	
+	assign mult_res = ampl * $signed(interp_i) * $signed(LO);
+	assign mix_o	= mult_res[42:23];
 	
 
 endmodule
