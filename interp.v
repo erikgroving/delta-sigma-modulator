@@ -49,7 +49,7 @@ module interp (
 			interp_o	<= v;
 		end
 		else begin
-			interp_o	<= interp_o + v_step;
+			interp_o	<= $signed(interp_o) + v_step;
 		end
 	end
 	
