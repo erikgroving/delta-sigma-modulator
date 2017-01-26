@@ -1,4 +1,12 @@
 // This doesn't need to be its own module
+
+// So I'm a little worried about synthesis times
+// in this module. The reason being is that the
+// there are two multiplies, first in input * LO,
+// next is that result * ampl/2. This means that there
+// are two serial multiplies, and multiplies are expensive.
+// If this synthesizes at a bad clock period, I can make the
+// ampl multiply a bitshift-sum operation.
 module mixer (
 	input	[19: 0]	interp_i,
 	input	[19: 0] LO,
