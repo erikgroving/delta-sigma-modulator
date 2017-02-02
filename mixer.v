@@ -14,7 +14,7 @@ module mixer (
 );
 
 	wire signed [24: 0] ampl;
-
+	wire signed [19: 0] inter_res;
 	wire signed [39: 0] mult_res;
 	wire signed	[44: 0] mix_res;
 	
