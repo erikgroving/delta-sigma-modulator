@@ -2,8 +2,8 @@ import os
 import math
 total_bits = 20
 frac_bits = 15
-f = open('simu_a.txt', 'r')
-out = open('vin_bin.txt', 'w')
+f = open('interp_input_dec.txt', 'r')
+out = open('interp_vin_bin.txt', 'w')
 for line in f:
 	val = float(line)
 	bin_val = ""

@@ -18,7 +18,7 @@ module interp (
 
 	reg signed 	[19: 0] v;			// current v
 	reg signed 	[19: 0] v_prev;		// previous v
-	reg signed 	[19: 0]	v_step;		// 1/50 * v_diff
+	wire signed [19: 0]	v_step;		// 1/50 * v_diff
 	wire signed [19: 0] v_diff;		// current_v - previous_v
 
 	wire				prescale_clk;	// 80 MHz clock
@@ -57,8 +57,11 @@ module interp (
 	assign prescale_clk	= (prescale_cnt >= 25);
 	
 	assign v_diff 	= v - v_prev;
-	assign v_step	= (v_diff >> 6) + (v_diff >> 8) + 
-					  (v_diff >> 11) - (v_diff >> 16);
+	assign v_step	= {{6{v_diff[19]}}, v_diff[19:6]} + 
+					{{8{v_diff[19]}}, v_diff[19:8]} + 
+					{{11{v_diff[19]}}, v_diff[19:11]} - 	
+					{{16{v_diff[19]}}, v_diff[19:16]};
+
 	
 	// record samples every 80 MHz, interpolated samples will
 	// be output according to the data
