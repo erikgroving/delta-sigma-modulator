@@ -4,6 +4,9 @@ module interp_tb(
 		
 	reg		[19: 0]	vin;
 	wire	[19: 0]	interp_o;
+	wire	[19: 0] mix_o;
+	wire	[1: 0]	LO;
+	reg		[1: 0] 	LO_cnt;
 	reg 			clock;		
 	reg				reset;
 	reg				ds_clock;	// 50x slower than clock (4GHz -- 80 MHz)
@@ -26,6 +29,18 @@ module interp_tb(
 		#10;
 		@(posedge clock);
 		reset = #1 0;
+	end
+	
+	assign	LO	= 	LO_cnt[0]		? 2'b00 :
+					~LO_cnt[1] 		? 2'b01 : 2'b10;
+	
+	always @(posedge clock) begin
+		if (reset) begin
+			LO_cnt	<= 2'b0;
+		end
+		else begin
+			LO_cnt	<= LO_cnt + 1'b1;
+		end
 	end
 	
 	always @(negedge clock) begin
@@ -68,6 +83,12 @@ module interp_tb(
 		.reset(reset),
 		.v_in(vin),
 		.interp_o(interp_o)
+	);
+	
+	mixer mixer_i (
+		.interp_i(interp_o),
+		.LO(LO),
+		.mix_o(mix_o)
 	);
 
 

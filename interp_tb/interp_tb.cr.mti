@@ -1,8 +1,15 @@
-C:/Users/Erik/Desktop/delta-sigma-modulator/interp_tb.v {1 {vlog -work work -stats=none C:/Users/Erik/Desktop/delta-sigma-modulator/interp_tb.v
+C:/Users/Erik/Desktop/delta-sigma-modulator/mixer.v {1 {vlog -work work -stats=none C:/Users/Erik/Desktop/delta-sigma-modulator/mixer.v
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
--- Compiling module interp_tb
+-- Compiling module mixer
 
 Top level modules:
-	interp_tb
+	mixer
+
+} {} {}} C:/Users/Erik/Desktop/delta-sigma-modulator/interp.v {1 {vlog -work work -stats=none C:/Users/Erik/Desktop/delta-sigma-modulator/interp.v
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module interp
+
+Top level modules:
+	interp
 
 } {} {}}
