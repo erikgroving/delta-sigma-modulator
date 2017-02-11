@@ -1,0 +1,38 @@
+C:/Users/Erik/Desktop/delta-sigma-modulator/mixer.v {1 {vlog -work work -stats=none C:/Users/Erik/Desktop/delta-sigma-modulator/mixer.v
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module mixer
+
+Top level modules:
+	mixer
+
+} {} {}} C:/Users/Erik/Desktop/delta-sigma-modulator/interp.v {1 {vlog -work work -stats=none C:/Users/Erik/Desktop/delta-sigma-modulator/interp.v
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module interp
+
+Top level modules:
+	interp
+
+} {} {}} C:/Users/Erik/Desktop/delta-sigma-modulator/dsm_top.v {1 {vlog -work work -stats=none C:/Users/Erik/Desktop/delta-sigma-modulator/dsm_top.v
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module dsm_top
+
+Top level modules:
+	dsm_top
+
+} {} {}} C:/Users/Erik/Desktop/delta-sigma-modulator/dsm_top_tb.v {1 {vlog -work work -stats=none C:/Users/Erik/Desktop/delta-sigma-modulator/dsm_top_tb.v
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module dsm_top_tb
+
+Top level modules:
+	dsm_top_tb
+
+} {} {}} C:/Users/Erik/Desktop/delta-sigma-modulator/dsm.v {1 {vlog -work work -stats=none C:/Users/Erik/Desktop/delta-sigma-modulator/dsm.v
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module DSM_top
+-- Compiling module DSS
+-- Compiling module quantizer
+
+Top level modules:
+	DSM_top
+
+} {} {}}

@@ -39,6 +39,18 @@ module interp (
 			prescale_cnt	<= prescale_cnt + 1'b1;
 		end
 		
+		
+		// record samples every 80 MHz, interpolated samples will
+		// be output according to the data		
+		if (reset) begin
+			v_prev	<= 20'b0;
+			v		<= 20'b0;		
+		end
+		else if (prescale_cnt == 6'd25) begin
+			v_prev	<= v;
+			v		<= v_in;
+		end
+		
 		// prescale_clk goes high when it goes from 24->25
 		// so when that happens, set interp_o to v (the next v_prev)
 		// otherwise we just increment by the step (which is (v - v_prev)/50)
@@ -63,17 +75,15 @@ module interp (
 					{{16{v_diff[19]}}, v_diff[19:16]};
 
 	
-	// record samples every 80 MHz, interpolated samples will
-	// be output according to the data
-	always @ (posedge prescale_clk) begin
+
+	/*always @ (posedge prescale_clk) begin
 		if (reset) begin
-			v_prev	<= 20'b0;
-			v		<= 20'b0;
+
 		end
 		else begin
 			v_prev	<= v;
 			v		<= v_in;
 		end
-	end
+	end*/
 	
 endmodule
