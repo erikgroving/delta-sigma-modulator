@@ -45,7 +45,8 @@ module dsm_top_tb (
 		end
 	end
 	
-	always @ (negedge ds_clock) begin
+	// mixer comment always @ (negedge ds_clock) begin
+	always @(negedge clock) begin
 		if (reset) begin
 			vin	<= 20'b0;
 		end
