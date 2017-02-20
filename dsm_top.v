@@ -2,7 +2,7 @@ module dsm_top (
 	input			clock,
 	input			reset,
 	input	[19: 0]	vin,
-	output			pwm
+	output	[1: 0]	pwm
 );
 
 	wire	[1: 0] 	LO;

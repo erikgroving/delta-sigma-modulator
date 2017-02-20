@@ -10,35 +10,37 @@
 `define Q_OFF 				20'h0_4000	// bit 14 is high -> 0.5 Volts
 // Top level module
 module DSM_top (
-	input			clock,
-	input			reset,
-	input	[19: 0]	vin, 	// 1 bit
-	output	reg		pwm		// 1 bit
+	input				clock,
+	input				reset,
+	input		[19: 0]	vin, 	// 1 bit
+	output	reg	[1: 0]	pwm		// 1 bit
 	
-	//input	[31: 0]	dith_i,		// Dithering is currently off
 );
 
 	wire	[19: 0]	pwm_scaled;				// PWM * vin_FS/2	
 	wire	[19: 0]	vin_pwm_scaled_delta;	// vin - pwm_scaled
 	wire	[19: 0]	dss_o;
+	wire	[19: 0]	dith_const;
 	wire	[19: 0]	dss_vin_sum;
 	wire	[19: 0]	dss_vin_sum_dith;
-	wire			quant_o;
+	wire	[1: 0]	quant_o;
 	
-
 	
+	// Dithering constant, (1/2)^2/12
+	assign	dith_const				= 20'h2aa;
 	// Multiply by (VIN_FS/2) (bitshifted once)
-	assign	pwm_scaled				= pwm ? `VIN_FS_HALF : `VIN_FS_HALF_NEG;
+	assign	pwm_scaled				= 	pwm == 2'b00	? 20'h0 		: 
+										pwm == 2'b01	? `VIN_FS_HALF 	: `VIN_FS_HALF_NEG;
 	// Assuming KFW is 1
 	assign	vin_pwm_scaled_delta	= vin - pwm_scaled;
 	// Sum DSS output with vin
 	assign	dss_vin_sum				= dss_o + vin;
 	// Dither the dss output summed with vin
-	assign 	dss_vin_sum_dith		= dss_vin_sum /*+ dith_i*/;	// dithering turned off
+	assign 	dss_vin_sum_dith		= dss_vin_sum + dith_const;	// dithering turned off
 	
 	always @(posedge clock) begin
 		if (reset) begin
-			pwm	<= 1'b0;
+			pwm	<= 2'b0;
 		end
 		else begin
 			pwm	<= quant_o;	// bits 19-16 are for saturation, ignore. 14-0 are fractional bits
@@ -203,12 +205,12 @@ module quantizer (
 	input	[19: 0] in1,
 	input			reset,
 	input			clock,
-	output			out1
+	output	[1: 0]	out1
 );
-	wire	[19: 0]	zoh_i;
-	reg		[19: 0]	zoh_o;
+	wire signed	[19: 0]	zoh_i;
+	reg			[19: 0]	zoh_o;
 	
-	assign zoh_i	= in1;
+	assign zoh_i	= $signed(in1) + 20'h4000;
 		
 	// Zero order hold at Ts
 	always @(posedge clock) begin
@@ -222,5 +224,6 @@ module quantizer (
 	
 	// Quantize the output
 //	assign out1	= ~zoh_o[19];
-	assign out1	= (reset) ? 1'b0 : ~zoh_i[19];
+	assign out1	= 	(zoh_i < $signed(20'h2000)) 			? 2'b11 :
+					(reset || zoh_i  < $signed(20'h6000)) 	? 2'b00	: 2'b01 ;
 endmodule

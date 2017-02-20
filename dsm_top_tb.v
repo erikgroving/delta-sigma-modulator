@@ -7,7 +7,7 @@ module dsm_top_tb (
 	reg 				clock;		
 	reg					reset;
 	reg					ds_clock;	// 50x slower than clock (4GHz -- 80 MHz)
-	wire				pwm;
+	wire	[1: 0]		pwm;
 	
 	// Testbench input and output file descriptors
 	integer				write_file;
@@ -35,13 +35,15 @@ module dsm_top_tb (
 	
 	always @(negedge clock) begin
 		if (!reset) begin
-			if (pwm) begin
+			if (pwm == 2'b01) begin
 				$fdisplay(write_file, "1");
 			end
-			else begin
+			else if (pwm == 2'b11) begin
 				$fdisplay(write_file, "-1");
 			end
-			//$fdisplay(write_file, "%01b", pwm);
+			else begin
+				$fdisplay(write_file, "0");
+			end
 		end
 	end
 	
