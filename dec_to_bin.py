@@ -2,8 +2,8 @@ import os
 import math
 total_bits = 20
 frac_bits = 15
-f = open('interp_out_matlab.txt', 'r')
-out = open('actual_interp_out.txt', 'w')
+f = open('systemIN_matlab.txt', 'r')
+out = open('systemIN_bin.txt', 'w')
 for line in f:
 	val = float(line)
 	bin_val = ""

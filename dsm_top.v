@@ -23,17 +23,16 @@ module dsm_top (
 		end
 	end
 
-	/* commented for mixer test
 	interp interp_i (
 		.clock(clock),
 		.reset(reset),
 		.v_in(vin),
 		.interp_o(interp_o)
-	);*/
+	);
 	
 	mixer mixer_i (
-		//.interp_i(interp_o), commented for mixer test
-		.interp_i(vin),
+		.interp_i(interp_o), 
+		//.interp_i(vin),
 		.LO(LO),
 		.mix_o(mix_o)
 	);
