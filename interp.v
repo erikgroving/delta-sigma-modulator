@@ -32,7 +32,7 @@ module interp (
 		if (reset) begin
 			prescale_cnt	<= 6'd0;
 		end
-		else if (prescale_cnt == 6'd49) begin
+		else if (prescale_cnt == 6'd24) begin
 			prescale_cnt	<= 6'd0;
 		end
 		else begin
@@ -46,7 +46,7 @@ module interp (
 			v_prev	<= 20'b0;
 			v		<= 20'b0;		
 		end
-		else if (prescale_cnt == 6'd25) begin
+		else if (prescale_cnt == 6'd24) begin
 			v_prev	<= v;
 			v		<= v_in;
 		end

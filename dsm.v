@@ -36,7 +36,7 @@ module DSM_top (
 	// Sum DSS output with vin
 	assign	dss_vin_sum				= dss_o + vin;
 	// Dither the dss output summed with vin
-	assign 	dss_vin_sum_dith		= dss_vin_sum + dith_const;	// dithering turned off
+	assign 	dss_vin_sum_dith		= dss_vin_sum /*+ dith_const*/;	// dithering turned off
 	
 	always @(posedge clock) begin
 		if (reset) begin
