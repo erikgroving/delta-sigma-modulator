@@ -66,13 +66,13 @@ module interp (
 	end
 	
 	// if clock counter is >= 25, clock is high, otherwise low
-	assign prescale_clk	= (prescale_cnt >= 25);
+	assign prescale_clk	= (prescale_cnt == 6'd23);
 	
 	assign v_diff 	= v - v_prev;
-	assign v_step	= {{6{v_diff[19]}}, v_diff[19:6]} + 
-					{{8{v_diff[19]}}, v_diff[19:8]} + 
-					{{11{v_diff[19]}}, v_diff[19:11]} - 	
-					{{16{v_diff[19]}}, v_diff[19:16]};
+	assign v_step	= {{5{v_diff[19]}}, v_diff[19:5]} + 
+					{{7{v_diff[19]}}, v_diff[19:7]} + 
+					{{10{v_diff[19]}}, v_diff[19:10]} - 	
+					{{15{v_diff[19]}}, v_diff[19:15]};
 
 	
 
