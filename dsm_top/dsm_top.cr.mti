@@ -12,11 +12,4 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	dsm_top
 
-} {} {}} C:/Users/Erik/Desktop/delta-sigma-modulator/dsm_top_tb.v {1 {vlog -work work -stats=none C:/Users/Erik/Desktop/delta-sigma-modulator/dsm_top_tb.v
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
--- Compiling module dsm_top_tb
-
-Top level modules:
-	dsm_top_tb
-
 } {} {}}

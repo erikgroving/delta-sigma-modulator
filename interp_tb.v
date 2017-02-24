@@ -24,7 +24,7 @@ module interp_tb(
 		clock = 0;	
 		ds_clock = 0;
 		reset	= 1;
-		actual_interp_out_file = $fopen("../dsm_top/interp_vin_bin.txt", "r");
+		actual_interp_out_file = $fopen("../actual_interp_out.txt", "r");
 		data_file = $fopen("interp_vin_bin.txt", "r");
 		write_file = $fopen("interp_out.txt", "w");
 		if (data_file == 0) begin

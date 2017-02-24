@@ -21,7 +21,7 @@ module dsm_top_tb (
 		ds_clock = 0;
 		reset	= 1;
 		#300; // Need reset to happens on the 80MHz too
-		data_file = $fopen("interp_vin_bin.txt", "r");
+		data_file = $fopen("../actual_interp_out.txt", "r");
 		write_file = $fopen("dsm_out.txt", "w");			
 		if (data_file == 0) begin
 			$display("could not open data file");
@@ -69,7 +69,7 @@ module dsm_top_tb (
 		clock = ~clock;
 	end
 	always begin
-		#50;
+		#25;
 		ds_clock = ~ds_clock;
 	end
 	

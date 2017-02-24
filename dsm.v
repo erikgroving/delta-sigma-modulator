@@ -210,7 +210,7 @@ module quantizer (
 	wire signed	[19: 0]	zoh_i;
 	reg			[19: 0]	zoh_o;
 	
-	assign zoh_i	= $signed(in1) + 20'h4000;
+	assign zoh_i	= $signed(in1) + $signed(20'h4000);
 		
 	// Zero order hold at Ts
 	always @(posedge clock) begin
