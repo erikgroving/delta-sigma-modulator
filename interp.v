@@ -2,7 +2,7 @@ module interp (
 	input				clock,
 	input				reset,
 	input 		[19: 0]	v_in,		// signal in
-	output reg	[19: 0]	interp_o	// interpolated output singal
+	output wire	[19: 0]	interp_o	// interpolated output singal
 );
 
 
@@ -15,11 +15,11 @@ module interp (
 	// adding the result: 
 	// v_step = v_diff >> 6 + v_diff >> 8 + v_diff >> 11 - v_diff >> 16
 	// this is 0.0200043, we want 0.02, should be close enough
-
-	reg signed 	[19: 0] v;			// current v
-	reg signed 	[19: 0] v_prev;		// previous v
-	wire signed [19: 0]	v_step;		// 1/50 * v_diff
-	wire signed [19: 0] v_diff;		// current_v - previous_v
+	reg signed	[39: 0] interp;
+	reg signed 	[39: 0] v;			// current v
+	reg signed 	[39: 0] v_prev;		// previous v
+	wire signed [39: 0]	v_step;		// 1/50 * v_diff
+	wire signed [39: 0] v_diff;		// current_v - previous_v
 
 	wire				prescale_clk;	// 80 MHz clock
 	reg	[5: 0]			prescale_cnt;	// Counter to prescale
@@ -44,35 +44,37 @@ module interp (
 		// be output according to the data		
 		if (reset) begin
 			v_prev	<= 20'b0;
-			v		<= 20'b0;		
+			v		<= 61'b0;		
 		end
 		else if (prescale_cnt == 6'd24) begin
 			v_prev	<= v;
-			v		<= v_in;
+			v		<= {v_in, 20'b0};
 		end
 		
 		// prescale_clk goes high when it goes from 24->25
 		// so when that happens, set interp_o to v (the next v_prev)
 		// otherwise we just increment by the step (which is (v - v_prev)/50)
 		if (reset) begin
-			interp_o	<= 20'd0;
+			interp	<= 40'd0;
 		end
 		else if (prescale_cnt == 6'd24) begin
-			interp_o	<= v;
+			interp	<= v;
 		end
 		else begin
-			interp_o	<= $signed(interp_o) + v_step;
+			interp	<= $signed(interp) + $signed(v_step);
 		end
 	end
+	
+	assign interp_o = interp[39:20];
 	
 	// if clock counter is >= 25, clock is high, otherwise low
 	assign prescale_clk	= (prescale_cnt == 6'd23);
 	
 	assign v_diff 	= v - v_prev;
-	assign v_step	= {{5{v_diff[19]}}, v_diff[19:5]} + 
-					{{7{v_diff[19]}}, v_diff[19:7]} + 
-					{{10{v_diff[19]}}, v_diff[19:10]} - 	
-					{{15{v_diff[19]}}, v_diff[19:15]};
+	assign v_step	= {{5{v_diff[39]}}, v_diff[39:5]} + 
+					{{7{v_diff[39]}}, v_diff[39:7]} + 
+					{{10{v_diff[39]}}, v_diff[39:10]} - 	
+					{{15{v_diff[39]}}, v_diff[39:15]};
 
 	
 
