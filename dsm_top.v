@@ -1,6 +1,7 @@
 module dsm_top (
 	input			clock,
 	input			reset,
+	input	[19: 0]	dith_i,
 	input	[19: 0]	vin,
 	output	[1: 0]	pwm
 );
@@ -42,12 +43,8 @@ module dsm_top (
 		.clock(clock),
 		.reset(reset),
 		.vin(mix_o),
+		.dith_i(dith_i),
 		.pwm(pwm)
 	);
-	
-
-
-
-
 
 endmodule

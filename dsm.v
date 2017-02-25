@@ -13,6 +13,7 @@ module DSM_top (
 	input				clock,
 	input				reset,
 	input		[19: 0]	vin, 	// 1 bit
+	input		[19: 0]	dith_i,
 	output	reg	[1: 0]	pwm		// 1 bit
 	
 );
@@ -20,14 +21,11 @@ module DSM_top (
 	wire	[19: 0]	pwm_scaled;				// PWM * vin_FS/2	
 	wire	[19: 0]	vin_pwm_scaled_delta;	// vin - pwm_scaled
 	wire	[19: 0]	dss_o;
-	wire	[19: 0]	dith_const;
 	wire	[19: 0]	dss_vin_sum;
 	wire	[19: 0]	dss_vin_sum_dith;
 	wire	[1: 0]	quant_o;
 	
 	
-	// Dithering constant, (1/2)^2/12
-	assign	dith_const				= 20'h2aa;
 	// Multiply by (VIN_FS/2) (bitshifted once)
 	assign	pwm_scaled				= 	pwm == 2'b00	? 20'h0 		: 
 										pwm == 2'b01	? `VIN_FS_HALF 	: `VIN_FS_HALF_NEG;
@@ -36,7 +34,7 @@ module DSM_top (
 	// Sum DSS output with vin
 	assign	dss_vin_sum				= dss_o + vin;
 	// Dither the dss output summed with vin
-	assign 	dss_vin_sum_dith		= dss_vin_sum /*+ dith_const*/;	// dithering turned off
+	assign 	dss_vin_sum_dith		= dss_vin_sum + dith_i;	// dithering turned off
 	
 	always @(posedge clock) begin
 		if (reset) begin
