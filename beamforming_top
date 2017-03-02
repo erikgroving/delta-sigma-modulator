@@ -1,0 +1,62 @@
+module beamforming_top(
+  input clock,
+  input reset,
+  input [19:0] vin_i, //is it convinient to modify it to 10 bits?
+	input [19: 0] vin_q,
+	input [3: 0]  w_cos [7:0], // format may be wrong :)
+	input [3: 0]  w_sin [7:0], // format may be wrong :)
+	output	[1: 0]	pwm   [7:0]  // format may be wrong :)
+);
+
+	interp interp_i (
+		.clock(clock),
+		.reset(reset),
+		.v_in(vin_i),
+		
+		.interp_o(interp_o_i)
+	);
+	
+	interp interp_q (
+		.clock(clock),
+		.reset(reset),
+		.v_in(vin_q),
+		
+		.interp_o(interp_o_q)
+	);
+	
+	phaseShift phaseShift_k (
+	   .interp_o_i(interp_o_i),
+	   .interp_o_q(interp_o_q),
+	   .w_cos(w_cos [k]),
+	   .w_sin(w_sin [k]),
+	   
+	   .cwm_i(cwm_i [k]),
+	   .cwm_q(cwm_q [k])
+	);                       //k=[7:0], 8*phaseShift
+	
+	
+	mixer mixer_k (
+		.mixin_i(cwm_i [k]),
+		.mixin_q(cwm_q [k]), 
+		.LO_i(LO_i),          // 1, 0, -1, 0
+		.LO_q(LO_q),          // 0, 1, 0 ,-1
+		.mix_o(mix_o[k])
+	);                       //k=[7:0],8*mixer, mixer need to be rewriten a little bit
+	                         //mix_o sum i and q output up
+	
+	lfsr lfsr (
+		.clock(clock),
+		.reset(reset),
+		.dith_o(dith)
+	);                       //I think one lfsr is enough
+	
+	
+	DSM_top dsm_k (
+		.clock(clock),
+		.reset(reset),
+		.vin(mix_o[k]),
+		.dith_i(dith),
+		.pwm(pwm[k])
+	);                       //k=[7:0],8*dsm
+
+endmodule
