@@ -9,7 +9,8 @@ module dsm_top (
 	wire	[1: 0] 	LO;
 	reg		[1: 0] 	LO_cnt;
 	wire	[19: 0]	interp_o;
-	wire	[19: 0] mix_o;
+	wire	[19: 0] mix_o;	
+	wire	[19: 0]	dith;
 	
 	
 	assign	LO	= 	LO_cnt[0]		? 2'b00 :
@@ -38,12 +39,19 @@ module dsm_top (
 		.mix_o(mix_o)
 	);
 	
+	lfsr lfsr_i (
+		.clock(clock),
+		.reset(reset),
+		.dith_o(dith)
+	);
+	
 	
 	DSM_top dsm_i (
 		.clock(clock),
 		.reset(reset),
 		.vin(mix_o),
-		.dith_i(dith_i),
+		.dith_i(dith),
+		//.dith_i(dith_i),
 		.pwm(pwm)
 	);
 

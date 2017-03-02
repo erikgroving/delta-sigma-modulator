@@ -9,7 +9,7 @@ z2
 cModel Technology
 dC:/Users/Erik/Desktop/delta-sigma-modulator/interp_tb
 vDSM_top
-Z0 !s110 1487985383
+Z0 !s110 1488487165
 !i10b 1
 !s100 EaImB[[zJ0IOkgT^Zoj:=2
 InPBQN@CVY:idjE0hU:<R<1
@@ -23,7 +23,7 @@ Z6 OP;L;10.4a;61
 r1
 !s85 0
 31
-Z7 !s108 1487985383.000000
+Z7 !s108 1488487165.000000
 Z8 !s107 C:/Users/Erik/Desktop/delta-sigma-modulator/dsm.v|
 Z9 !s90 -reportprogress|300|-work|work|-stats=none|C:/Users/Erik/Desktop/delta-sigma-modulator/dsm.v|
 !s101 -O0
@@ -33,11 +33,11 @@ n@d@s@m_top
 vdsm_top
 R0
 !i10b 1
-!s100 n3Z30<JD^c61@M5nA6?Xh1
-I78onkW6EkRAX;?IUlN;TG3
+!s100 fG0>2ioj`N3CRcFE@A@3i3
+IhdPa=82GJR9>;3nU2W]MN3
 R1
 R2
-w1487984491
+w1488487007
 8C:/Users/Erik/Desktop/delta-sigma-modulator/dsm_top.v
 FC:/Users/Erik/Desktop/delta-sigma-modulator/dsm_top.v
 L0 1
@@ -52,7 +52,7 @@ R7
 !i113 1
 R10
 vdsm_top_tb
-!s110 1487985384
+R0
 !i10b 1
 !s100 cbQc??Fe>9a?E0_kg[MM=1
 I@Y8LkaAn2Ao@f^1=YTzD93
@@ -95,7 +95,7 @@ R9
 R10
 n@d@s@s
 vinterp
-R0
+Z11 !s110 1488487164
 !i10b 1
 !s100 R47:NVH[Ef0X:;m7AM__93
 I`Uh>>FmcRi^9Co_nK<_AC3
@@ -109,14 +109,56 @@ R6
 r1
 !s85 0
 31
-R7
+Z12 !s108 1488487164.000000
 !s107 C:/Users/Erik/Desktop/delta-sigma-modulator/interp.v|
 !s90 -reportprogress|300|-work|work|-stats=none|C:/Users/Erik/Desktop/delta-sigma-modulator/interp.v|
 !s101 -O0
 !i113 1
 R10
-vmixer
+vlfsr
 R0
+!i10b 1
+!s100 W0kQj;an9`a:>z3nZz=fQ3
+IdG5E@6Bc>:L<3:QJWa7OI3
+R1
+R2
+w1488487074
+8C:/Users/Erik/Desktop/delta-sigma-modulator/lfsr.v
+FC:/Users/Erik/Desktop/delta-sigma-modulator/lfsr.v
+L0 1
+R6
+r1
+!s85 0
+31
+R7
+!s107 C:/Users/Erik/Desktop/delta-sigma-modulator/lfsr.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/Erik/Desktop/delta-sigma-modulator/lfsr.v|
+!s101 -O0
+!i113 1
+R10
+vlfsr_tb
+!s110 1488480912
+!i10b 1
+!s100 NCl5eVVGhT_8j3kKk_MMA2
+I^[zWF<iiWSEFJD=9i<Vf93
+R1
+R2
+w1488480906
+8C:/Users/Erik/Desktop/delta-sigma-modulator/lfsr_tb.v
+FC:/Users/Erik/Desktop/delta-sigma-modulator/lfsr_tb.v
+L0 1
+R6
+r1
+!s85 0
+31
+!s108 1488480912.000000
+!s107 C:/Users/Erik/Desktop/delta-sigma-modulator/lfsr_tb.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/Erik/Desktop/delta-sigma-modulator/lfsr_tb.v|
+!s101 -O0
+!i113 1
+R10
+vmixer
+R11
 !i10b 1
 !s100 0_<`]aWg9IC0:C8A64:2;3
 IIa:e5CPUY]=P0Uh^eUP6D1
@@ -130,7 +172,7 @@ R6
 r1
 !s85 0
 31
-R7
+R12
 !s107 C:/Users/Erik/Desktop/delta-sigma-modulator/mixer.v|
 !s90 -reportprogress|300|-work|work|-stats=none|C:/Users/Erik/Desktop/delta-sigma-modulator/mixer.v|
 !s101 -O0
