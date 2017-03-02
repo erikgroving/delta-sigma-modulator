@@ -1,11 +1,11 @@
 module beamforming_top(
-  input clock,
-  input reset,
-  input [19:0] vin_i, //is it convinient to modify it to 10 bits?
-	input [19: 0] vin_q,
+  	input clock,
+  	input reset,
+  	input [19:0] vin_i, 	//is it convinient to modify it to 10 bits?
+	input [19: 0] vin_q,	//is it convinient to modify it to 10 bits?
 	input [3: 0]  w_cos [7:0], // format may be wrong :)
 	input [3: 0]  w_sin [7:0], // format may be wrong :)
-	output	[1: 0]	pwm   [7:0]  // format may be wrong :)
+	output[1: 0]  pwm   [7:0]  // format may be wrong :)
 );
 
 	interp interp_i (
