@@ -6,7 +6,8 @@ module bf_top (
   input [19: 0] vin_q_1,//all of the four vin should be 8 bits instead
   input	[19: 0]	vin_i_2,//all of the four vin should be 8 bits instead
   input [19: 0] vin_q_2,//all of the four vin should be 8 bits instead
-	
+
+//Probably need to change to 5 or 6 bits	
   input [3: 0]  w_cos_1_1st,
   input [3: 0]  w_cos_1_2nd,
   input [3: 0]  w_cos_1_3rd,
