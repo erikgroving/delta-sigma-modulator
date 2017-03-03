@@ -7,7 +7,7 @@ module phaseShift(
 	input [3:0]  w_cos_1,
 	input [3:0]  w_sin_1,
 	input [3:0]  w_cos_2,
-	input [3:0]  w_sin_2, //bit depth for the w coefficients are pending
+	input [3:0]  w_sin_2, //bit depth for the w coefficients are pending, maybe 5 ot 6 bits
 	output [19:0] out_i,
 	output [19:0] out_q
 	);
