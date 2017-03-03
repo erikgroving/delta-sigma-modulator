@@ -1,62 +1,336 @@
-module beamforming_top(
-  	input clock,
-  	input reset,
-  	input [19:0] vin_i, 	//is it convinient to modify it to 10 bits?
-	input [19: 0] vin_q,	//is it convinient to modify it to 10 bits?
-	input [3: 0]  w_cos [7:0], // format may be wrong :)
-	input [3: 0]  w_sin [7:0], // format may be wrong :)
-	output[1: 0]  pwm   [7:0]  // format may be wrong :)
+module bf_top (
+
+  input			clock,
+  input			reset,
+  input	[19: 0]	vin_i_1,//all of the four vin should be 8 bits instead
+  input [19: 0] vin_q_1,//all of the four vin should be 8 bits instead
+  input	[19: 0]	vin_i_2,//all of the four vin should be 8 bits instead
+  input [19: 0] vin_q_2,//all of the four vin should be 8 bits instead
+	
+  input [3: 0]  w_cos_1_1st,
+  input [3: 0]  w_cos_1_2nd,
+  input [3: 0]  w_cos_1_3rd,
+  input [3: 0]  w_cos_1_4th,
+  input [3: 0]  w_cos_1_5th,
+  input [3: 0]  w_cos_1_6th,
+  input [3: 0]  w_cos_1_7th,
+  input [3: 0]  w_cos_1_8th,
+  
+  input [3: 0]  w_sin_1_1st,
+  input [3: 0]  w_sin_1_2nd,
+  input [3: 0]  w_sin_1_3rd,
+  input [3: 0]  w_sin_1_4th,
+  input [3: 0]  w_sin_1_5th,
+  input [3: 0]  w_sin_1_6th,
+  input [3: 0]  w_sin_1_7th,
+  input [3: 0]  w_sin_1_8th,
+  
+  input [3: 0]  w_cos_2_1st,
+  input [3: 0]  w_cos_2_2nd,
+  input [3: 0]  w_cos_2_3rd,
+  input [3: 0]  w_cos_2_4th,
+  input [3: 0]  w_cos_2_5th,
+  input [3: 0]  w_cos_2_6th,
+  input [3: 0]  w_cos_2_7th,
+  input [3: 0]  w_cos_2_8th,
+  
+  input [3: 0]  w_sin_2_1st,
+  input [3: 0]  w_sin_2_2nd,
+  input [3: 0]  w_sin_2_3rd,
+  input [3: 0]  w_sin_2_4th,
+  input [3: 0]  w_sin_2_5th,
+  input [3: 0]  w_sin_2_6th,
+  input [3: 0]  w_sin_2_7th,
+  input [3: 0]  w_sin_2_8th,
+  
+  output	[1: 0]	pwm_1st,
+  output	[1: 0]	pwm_2nd,
+  output	[1: 0]	pwm_3rd,
+  output	[1: 0]	pwm_4th,
+  output	[1: 0]	pwm_5th,
+  output	[1: 0]	pwm_6th,
+  output	[1: 0]	pwm_7th,
+  output	[1: 0]	pwm_8th
 );
 
-	interp interp_i (
+
+//LO_i and LO_q are needed to be given here in top
+
+wire [19:0] out_i [7:0];
+wire [19:0] out_q [7:0];
+wire [19:0] mix_o [7:0];
+
+
+////////////////////////interp:need to be modified for 8 bit input.../////////////////////////////////
+//beam one
+	interp interp_i_1 (
 		.clock(clock),
 		.reset(reset),
-		.v_in(vin_i),
+		.v_in(vin_i_1),
 		
-		.interp_o(interp_o_i)
+		.interp_o(interp_o_i_1)
 	);
 	
-	interp interp_q (
+	//beam one
+	interp interp_q_1 (
 		.clock(clock),
 		.reset(reset),
-		.v_in(vin_q),
+		.v_in(vin_q_1),
 		
-		.interp_o(interp_o_q)
+		.interp_o(interp_o_q_1)
 	);
 	
-	phaseShift phaseShift_k (
-	   .interp_o_i(interp_o_i),
-	   .interp_o_q(interp_o_q),
-	   .w_cos(w_cos [k]),
-	   .w_sin(w_sin [k]),
-	   
-	   .cwm_i(cwm_i [k]),
-	   .cwm_q(cwm_q [k])
-	);                       //k=[7:0], 8*phaseShift
+	//beam two
+	interp interp_i_2 (
+		.clock(clock),
+		.reset(reset),
+		.v_in(vin_i_2),
+		
+		.interp_o(interp_o_i_2)
+	);
 	
+	//beam two
+	interp interp_q_2 (
+		.clock(clock),
+		.reset(reset),
+		.v_in(vin_q_2),
+		
+		.interp_o(interp_o_q_2)
+	);
 	
-	mixer mixer_k (
-		.mixin_i(cwm_i [k]),
-		.mixin_q(cwm_q [k]), 
-		.LO_i(LO_i),          // 1, 0, -1, 0
-		.LO_q(LO_q),          // 0, 1, 0 ,-1
-		.mix_o(mix_o[k])
-	);                       //k=[7:0],8*mixer, mixer need to be rewriten a little bit
-	                         //mix_o sum i and q output up
-	
-	lfsr lfsr (
+	///////////////////////////////dith gen////////////////////////////////////////////////////////////
+		lfsr lfsr (
 		.clock(clock),
 		.reset(reset),
 		.dith_o(dith)
 	);                       //I think one lfsr is enough
 	
 	
-	DSM_top dsm_k (
+	//////////////////////////////1st channel////////////////////////////////
+	phaseShift phaseShift_1st (
+	   .interp_o_i_1(interp_o_i_1),
+	   .interp_o_q_1(interp_o_q_1),
+	   .interp_o_i_2(interp_o_i_2),
+	   .interp_o_q_2(interp_o_q_2),
+	   .w_cos_1(w_cos_1_1st),
+	   .w_sin_1(w_sin_1_1st),
+	   .w_cos_2(w_cos_2_1st),
+	   .w_sin_2(w_sin_2_1st),
+	   
+	   .out_i(out_i [0]),
+	   .out_q(out_q [0])
+	);                       //8*phaseShift
+	mixer_iq mixer_iq_1st (
+		.mixin_i(out_i [0]),
+		.mixin_q(out_q [0]), 
+		.LO_i(LO_i),          // 1, 0, -1, 0
+		.LO_q(LO_q),          // 0, 1, 0 ,-1
+		.mix_o(mix_o[0])
+	);                       //8*mixer
+	DSM_top dsm_1st (
 		.clock(clock),
 		.reset(reset),
-		.vin(mix_o[k]),
+		.vin(mix_o[0]),
 		.dith_i(dith),
-		.pwm(pwm[k])
-	);                       //k=[7:0],8*dsm
-
+		.pwm(pwm_1st)
+	);                       //8*dsm
+	
+		
+	//////////////////////////////2nd channel////////////////////////////////
+	phaseShift phaseShift_2nd (
+	   .interp_o_i_1(interp_o_i_1),
+	   .interp_o_q_1(interp_o_q_1),
+	   .interp_o_i_2(interp_o_i_2),
+	   .interp_o_q_2(interp_o_q_2),
+	   .w_cos_1(w_cos_1_2nd),
+	   .w_sin_1(w_sin_1_2nd),
+	   .w_cos_2(w_cos_2_2nd),
+	   .w_sin_2(w_sin_2_2nd),
+	   
+	   .out_i(out_i [1]),
+	   .out_q(out_q [1])
+	);                       
+	mixer_iq mixer_iq_2nd (
+		.mixin_i(out_i [1]),
+		.mixin_q(out_q [1]), 
+		.LO_i(LO_i),          
+		.LO_q(LO_q),          
+		.mix_o(mix_o[1])
+	);                       
+	DSM_top dsm_2nd (
+		.clock(clock),
+		.reset(reset),
+		.vin(mix_o[1]),
+		.dith_i(dith),
+		.pwm(pwm_2nd)
+	);                      
+	//////////////////////////////3rd channel ////////////////////////////////
+	phaseShift phaseShift_3rd (
+	   .interp_o_i_1(interp_o_i_1),
+	   .interp_o_q_1(interp_o_q_1),
+	   .interp_o_i_2(interp_o_i_2),
+	   .interp_o_q_2(interp_o_q_2),
+	   .w_cos_1(w_cos_1_3rd),
+	   .w_sin_1(w_sin_1_3rd),
+	   .w_cos_2(w_cos_2_3rd),
+	   .w_sin_2(w_sin_2_3rd),
+	   
+	   .out_i(out_i [2]),
+	   .out_q(out_q [2])
+	);                       
+	mixer_iq mixer_iq_3rd (
+		.mixin_i(out_i [2]),
+		.mixin_q(out_q [2]), 
+		.LO_i(LO_i),          
+		.LO_q(LO_q),          
+		.mix_o(mix_o[2])
+	);                       
+	DSM_top dsm_3rd (
+		.clock(clock),
+		.reset(reset),
+		.vin(mix_o[2]),
+		.dith_i(dith),
+		.pwm(pwm_3rd)
+	);   
+  //////////////////////////////4th channel ////////////////////////////////
+	phaseShift phaseShift_4th (
+	   .interp_o_i_1(interp_o_i_1),
+	   .interp_o_q_1(interp_o_q_1),
+	   .interp_o_i_2(interp_o_i_2),
+	   .interp_o_q_2(interp_o_q_2),
+	   .w_cos_1(w_cos_1_4th),
+	   .w_sin_1(w_sin_1_4th),
+	   .w_cos_2(w_cos_2_4th),
+	   .w_sin_2(w_sin_2_4th),
+	   
+	   .out_i(out_i [3]),
+	   .out_q(out_q [3])
+	);                       
+	mixer_iq mixer_iq_4th (
+		.mixin_i(out_i [3]),
+		.mixin_q(out_q [3]), 
+		.LO_i(LO_i),          
+		.LO_q(LO_q),          
+		.mix_o(mix_o[3])
+	);                       
+	DSM_top dsm_4th (
+		.clock(clock),
+		.reset(reset),
+		.vin(mix_o[3]),
+		.dith_i(dith),
+		.pwm(pwm_4th)
+	);   
+    //////////////////////////////5th channel ////////////////////////////////
+	phaseShift phaseShift_5th (
+	   .interp_o_i_1(interp_o_i_1),
+	   .interp_o_q_1(interp_o_q_1),
+	   .interp_o_i_2(interp_o_i_2),
+	   .interp_o_q_2(interp_o_q_2),
+	   .w_cos_1(w_cos_1_5th),
+	   .w_sin_1(w_sin_1_5th),
+	   .w_cos_2(w_cos_2_5th),
+	   .w_sin_2(w_sin_2_5th),
+	   
+	   .out_i(out_i [4]),
+	   .out_q(out_q [4])
+	);                       
+	mixer_iq mixer_iq_5th (
+		.mixin_i(out_i [4]),
+		.mixin_q(out_q [4]), 
+		.LO_i(LO_i),          
+		.LO_q(LO_q),          
+		.mix_o(mix_o[4])
+	);                       
+	DSM_top dsm_5th (
+		.clock(clock),
+		.reset(reset),
+		.vin(mix_o[4]),
+		.dith_i(dith),
+		.pwm(pwm_5th)
+	);   
+	  //////////////////////////////6th channel ////////////////////////////////
+	phaseShift phaseShift_6th (
+	   .interp_o_i_1(interp_o_i_1),
+	   .interp_o_q_1(interp_o_q_1),
+	   .interp_o_i_2(interp_o_i_2),
+	   .interp_o_q_2(interp_o_q_2),
+	   .w_cos_1(w_cos_1_6th),
+	   .w_sin_1(w_sin_1_6th),
+	   .w_cos_2(w_cos_2_6th),
+	   .w_sin_2(w_sin_2_6th),
+	   
+	   .out_i(out_i [5]),
+	   .out_q(out_q [5])
+	);                       
+	mixer_iq mixer_iq_6th (
+		.mixin_i(out_i [5]),
+		.mixin_q(out_q [5]), 
+		.LO_i(LO_i),          
+		.LO_q(LO_q),          
+		.mix_o(mix_o[5])
+	);                       
+	DSM_top dsm_6th (
+		.clock(clock),
+		.reset(reset),
+		.vin(mix_o[5]),
+		.dith_i(dith),
+		.pwm(pwm_6th)
+	);   
+	  //////////////////////////////7th channel ////////////////////////////////
+	phaseShift phaseShift_7th (
+	   .interp_o_i_1(interp_o_i_1),
+	   .interp_o_q_1(interp_o_q_1),
+	   .interp_o_i_2(interp_o_i_2),
+	   .interp_o_q_2(interp_o_q_2),
+	   .w_cos_1(w_cos_1_7th),
+	   .w_sin_1(w_sin_1_7th),
+	   .w_cos_2(w_cos_2_7th),
+	   .w_sin_2(w_sin_2_7th),
+	   
+	   .out_i(out_i [6]),
+	   .out_q(out_q [6])
+	);                       
+	mixer_iq mixer_iq_7th (
+		.mixin_i(out_i [6]),
+		.mixin_q(out_q [6]), 
+		.LO_i(LO_i),          
+		.LO_q(LO_q),          
+		.mix_o(mix_o[6])
+	);                       
+	DSM_top dsm_7th (
+		.clock(clock),
+		.reset(reset),
+		.vin(mix_o[6]),
+		.dith_i(dith),
+		.pwm(pwm_7th)
+	);   
+	  //////////////////////////////8th channel ////////////////////////////////
+	phaseShift phaseShift_8th (
+	   .interp_o_i_1(interp_o_i_1),
+	   .interp_o_q_1(interp_o_q_1),
+	   .interp_o_i_2(interp_o_i_2),
+	   .interp_o_q_2(interp_o_q_2),
+	   .w_cos_1(w_cos_1_8th),
+	   .w_sin_1(w_sin_1_8th),
+	   .w_cos_2(w_cos_2_8th),
+	   .w_sin_2(w_sin_2_8th),
+	   
+	   .out_i(out_i [7]),
+	   .out_q(out_q [7])
+	);                       
+	mixer_iq mixer_iq_8th (
+		.mixin_i(out_i [7]),
+		.mixin_q(out_q [7]), 
+		.LO_i(LO_i),          
+		.LO_q(LO_q),          
+		.mix_o(mix_o[7])
+	);                       
+	DSM_top dsm_8th (
+		.clock(clock),
+		.reset(reset),
+		.vin(mix_o[7]),
+		.dith_i(dith),
+		.pwm(pwm_8th)
+	);   
+	
 endmodule
