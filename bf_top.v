@@ -8,6 +8,7 @@ module bf_top (
   input [7: 0] 	vin_q_2,//all of the four vin should be 8 bits instead
 
 //Probably need to change to 5 or 6 bits	
+// Changed to 5 bits
   input [4: 0]  w_cos_1 [7: 0],
   input [4: 0]  w_sin_1 [7: 0],                           
   input [4: 0]  w_cos_2 [7: 0],                           
@@ -18,16 +19,34 @@ module bf_top (
 
 //LO_i and LO_q are needed to be given here in top
 
-wire [19:0] out_i [7:0];
-wire [19:0] out_q [7:0];
-wire [19:0] mix_o [7:0];
+	wire [19:0] out_i [7:0];
+	wire [19:0] out_q [7:0];
+	wire [19:0] mix_o [7:0];
 
-wire [19: 0] interp_o_i_1;
-wire [19: 0] interp_o_q_1;
-wire [19: 0] interp_o_i_2;
-wire [19: 0] interp_o_q_2;
+	wire [19: 0] interp_o_i_1;
+	wire [19: 0] interp_o_q_1;
+	wire [19: 0] interp_o_i_2;
+	wire [19: 0] interp_o_q_2;
 
-
+	wire	[1: 0] 	LO_i;
+	wire	[1: 0]	LO_q;
+	reg		[1: 0] 	LO_cnt;
+	
+	
+	assign	LO_i = 	LO_cnt[0]		? 2'b00 :			// 1 --> 0 --> -1 --> 0
+					~LO_cnt[1] 		? 2'b01 : 2'b10;
+	assign	LO_q =	~LO_cnt[0]		? 2'b00 :			// 0 --> 1 --> 0 --> -1
+					~LO_cnt[1]		? 2'b01 : 2'b10;	
+	
+	always @(posedge clock) begin
+		if (reset) begin
+			LO_cnt	<= 2'b0;
+		end
+		else begin
+			LO_cnt	<= LO_cnt + 1'b1;
+		end
+	end
+	
 ////////////////////////interp:need to be modified for 8 bit input.../////////////////////////////////
 						// has been modified for 8 bit input, still 20 bit output
 //beam one
