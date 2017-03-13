@@ -1,16 +1,14 @@
 import os
 import math
-total_bits = 20
-frac_bits = 15
-f = open('dith.txt', 'r')
-out = open('dith_bin.txt', 'w')
+total_bits = 8
+frac_bits = 7
+f = open('q_input_2.txt', 'r')
+out = open('q_input_2_bin.txt', 'w')
 for line in f:
-	val = float(line)
+	val = float(line) * 256.0
 	bin_val = ""
 	for i in range(total_bits):
-#		print(i)
 		exp = total_bits - (i + frac_bits + 1)
-#		print('\n')
 		if (i == 0):
 			x = -pow(2, exp)
 		else:

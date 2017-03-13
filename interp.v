@@ -1,7 +1,7 @@
 module interp (
 	input				clock,
 	input				reset,
-	input 		[19: 0]	v_in,		// signal in
+	input 		[7: 0]	v_in,		// signal in
 	output wire	[19: 0]	interp_o	// interpolated output singal
 );
 
@@ -48,7 +48,7 @@ module interp (
 		end
 		else if (prescale_cnt == 6'd24) begin
 			v_prev	<= v;
-			v		<= {v_in, 12'b0};
+			v		<= {v_in, 24'b0};
 		end
 		
 		// prescale_clk goes high when it goes from 24->25
