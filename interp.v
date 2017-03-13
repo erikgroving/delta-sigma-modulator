@@ -48,7 +48,9 @@ module interp (
 		end
 		else if (prescale_cnt == 6'd24) begin
 			v_prev	<= v;
-			v		<= {v_in, 24'b0};
+			v		<= {{12{v_in[7]}}, v_in, 12'b0};// do the bitshift here. 4 bits of saturation, vin was shifted left
+													// 8 times since the original vin input was multiplied by 256, thus
+													// need to do a total shift of 12 bits
 		end
 		
 		// prescale_clk goes high when it goes from 24->25

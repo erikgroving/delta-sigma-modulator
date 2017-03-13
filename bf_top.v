@@ -23,6 +23,8 @@ module bf_top (
 	wire [19:0] out_q [7:0];
 	wire [19:0] mix_o [7:0];
 
+	wire [19:0] dith;
+	
 	wire [19: 0] interp_o_i_1;
 	wire [19: 0] interp_o_q_1;
 	wire [19: 0] interp_o_i_2;
