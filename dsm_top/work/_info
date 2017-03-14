@@ -10,7 +10,7 @@ cModel Technology
 dC:/Users/Erik/Desktop/delta-sigma-modulator/interp_tb
 vDSM_top
 Z0 DXx6 sv_std 3 std 0 22 WmjPaeP=7F5?QFXzJ>D[Q2
-Z1 !s110 1489519210
+Z1 !s110 1489521937
 !i10b 1
 !s100 a72WiAC7ARdOz15a]WX631
 IQInKZ>SdCg1VWF0d6?[2P1
@@ -26,7 +26,7 @@ Z8 OP;L;10.4a;61
 r1
 !s85 0
 31
-Z9 !s108 1489519210.000000
+Z9 !s108 1489521937.000000
 Z10 !s107 C:\Users\Erik\Desktop\delta-sigma-modulator\parameters.vh|C:/Users/Erik/Desktop/delta-sigma-modulator/dsm.v|
 Z11 !s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/Erik/Desktop/delta-sigma-modulator/dsm.v|
 !s101 -O0
@@ -101,7 +101,7 @@ R11
 R12
 n@d@s@s
 vinterp
-Z14 !s110 1489519209
+!s110 1489521936
 !i10b 1
 !s100 NXC98FV]L>A>>WKATjD:k1
 Ii2HiM1KA3ZaFT?DJe4<>I0
@@ -115,7 +115,7 @@ R8
 r1
 !s85 0
 31
-Z15 !s108 1489519209.000000
+!s108 1489521936.000000
 !s107 C:\Users\Erik\Desktop\delta-sigma-modulator\parameters.vh|C:/Users/Erik/Desktop/delta-sigma-modulator/interp.v|
 !s90 -reportprogress|300|-work|work|-stats=none|C:/Users/Erik/Desktop/delta-sigma-modulator/interp.v|
 !s101 -O0
@@ -164,7 +164,7 @@ r1
 !i113 1
 R13
 vmixer
-R14
+R1
 !i10b 1
 !s100 G;<3fmcX>Z7YBWHiJoFdg3
 II]eeGe[TN375=;>lJ<R670
@@ -178,7 +178,7 @@ R8
 r1
 !s85 0
 31
-R15
+R9
 !s107 C:\Users\Erik\Desktop\delta-sigma-modulator\parameters.vh|C:/Users/Erik/Desktop/delta-sigma-modulator/mixer.v|
 !s90 -reportprogress|300|-work|work|-stats=none|C:/Users/Erik/Desktop/delta-sigma-modulator/mixer.v|
 !s101 -O0
