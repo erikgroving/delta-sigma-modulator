@@ -57,40 +57,40 @@ module bf_top_tb (
 
 	
 	assign w_cos_1[0]	= 5'd15;
-	assign w_cos_1[1]	= 5'd7;
-	assign w_cos_1[2]	= -5'd8;
-	assign w_cos_1[3]	= -5'd15;
-	assign w_cos_1[4]	= -5'd6;
-	assign w_cos_1[5]	= 5'd10;
-	assign w_cos_1[6]	= 5'd15;
-	assign w_cos_1[7]	= 5'd5;
+	assign w_cos_1[1]	= -5'd11;
+	assign w_cos_1[2]	= 5'd2;
+	assign w_cos_1[3]	= 5'd9;
+	assign w_cos_1[4]	= -5'd15;
+	assign w_cos_1[5]	= 5'd13;
+	assign w_cos_1[6]	= -5'd5;
+	assign w_cos_1[7]	= -5'd6;
 
 	assign w_cos_2[0]	= 5'd15;
-	assign w_cos_2[1]	= -5'd11;
-	assign w_cos_2[2]	= 5'd2;
-	assign w_cos_2[3]	= 5'd9;
-	assign w_cos_2[4]	= -5'd15;
-	assign w_cos_2[5]	= 5'd13;
-	assign w_cos_2[6]	= -5'd5;
-	assign w_cos_2[7]	= -5'd6;
+	assign w_cos_2[1]	= 5'd0;
+	assign w_cos_2[2]	= -5'd15;
+	assign w_cos_2[3]	= 5'd0;
+	assign w_cos_2[4]	= 5'd15;
+	assign w_cos_2[5]	= 5'd0;
+	assign w_cos_2[6]	= -5'd15;
+	assign w_cos_2[7]	= 5'd0;
 	
 	assign w_sin_1[0]	= 5'd0;
-	assign w_sin_1[1]	= -5'd14;
-	assign w_sin_1[2]	= -5'd13;
-	assign w_sin_1[3]	= 5'd1;
-	assign w_sin_1[4]	= 5'd14;
-	assign w_sin_1[5]	= 5'd12;
-	assign w_sin_1[6]	= -5'd3;
-	assign w_sin_1[7]	= -5'd15;
+	assign w_sin_1[1]	= -5'd10;
+	assign w_sin_1[2]	= 5'd15;
+	assign w_sin_1[3]	= -5'd12;
+	assign w_sin_1[4]	= 5'd3;
+	assign w_sin_1[5]	= 5'd8;
+	assign w_sin_1[6]	= -5'd15;
+	assign w_sin_1[7]	= 5'd14;
 
 	assign w_sin_2[0]	= 5'd0;
-	assign w_sin_2[1]	= 5'd10;
-	assign w_sin_2[2]	= -5'd15;
-	assign w_sin_2[3]	= 5'd12;
-	assign w_sin_2[4]	= -5'd3;
-	assign w_sin_2[5]	= -5'd8;
-	assign w_sin_2[6]	= 5'd15;
-	assign w_sin_2[7]	= -5'd14;
+	assign w_sin_2[1]	= 5'd15;
+	assign w_sin_2[2]	= 5'd0;
+	assign w_sin_2[3]	= -5'd15;
+	assign w_sin_2[4]	= 5'd0;
+	assign w_sin_2[5]	= 5'd15;
+	assign w_sin_2[6]	= 5'd0;
+	assign w_sin_2[7]	= -5'd15;
 	
 	bf_top bf_top_i (
 		.clock(clock),
