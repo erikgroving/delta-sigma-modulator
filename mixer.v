@@ -7,15 +7,16 @@
 // are two serial multiplies, and multiplies are expensive.
 // If this synthesizes at a bad clock period, I can make the
 // ampl multiply a bitshift-sum operation.
+`include "parameters.vh"
 module mixer (
-	input	[10: 0]	interp_i,
-	input	[1: 0] LO,
-	output	[10: 0] mix_o
+	input	[`T_BITS - 1: 0]	interp_i,
+	input	[1: 0] 				LO,
+	output	[`T_BITS - 1: 0]	mix_o
 );
 
-	wire signed [10: 0] ampl;
-	wire signed [10: 0] inter_res;
-	wire signed	[21: 0] mix_res;
+	wire signed [`T_BITS - 1: 0] 		ampl;
+	wire signed [`T_BITS - 1: 0] 		inter_res;
+	wire signed	[2 * `T_BITS - 1: 0] 	mix_res;
 	
 	assign ampl = 11'hA1;	// 0.6309573 * 0.5 = 0.3154786
 	
@@ -23,6 +24,6 @@ module mixer (
 							LO[0] ? interp_i : 11'b0;
 							
 	assign mix_res		= inter_res * ampl;
-	assign mix_o		= mix_res[19:9];
+	assign mix_o		= mix_res[2 * `T_BITS - 1:`F_BITS];
 
 endmodule

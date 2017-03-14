@@ -1,8 +1,10 @@
+`include "parameters.vh"
+
 module interp (
 	input				clock,
 	input				reset,
 	input 		[7: 0]	v_in,		// signal in
-	output wire	[10: 0]	interp_o	// interpolated output singal
+	output wire	[`T_BITS - 1: 0]	interp_o	// interpolated output singal
 );
 
 
@@ -15,11 +17,11 @@ module interp (
 	// adding the result: 
 	// v_step = v_diff >> 6 + v_diff >> 8 + v_diff >> 11 - v_diff >> 16
 	// this is 0.0200043, we want 0.02, should be close enough
-	reg signed	[23: 0] interp;
-	reg signed 	[23: 0] v;			// current v
-	reg signed 	[23: 0] v_prev;		// previous v
-	wire signed [23: 0]	v_step;		// 1/50 * v_diff
-	wire signed [23: 0] v_diff;		// current_v - previous_v
+	reg signed	[`I_BITS - 1: 0] 	interp;
+	reg signed 	[`I_BITS - 1: 0] 	v;			// current v
+	reg signed 	[`I_BITS - 1: 0] 	v_prev;		// previous v
+	wire signed [`I_BITS - 1: 0]	v_step;		// 1/50 * v_diff
+	wire signed [`I_BITS - 1: 0] 	v_diff;		// current_v - previous_v
 
 	wire				prescale_clk;	// 80 MHz clock
 	reg	[3: 0]			prescale_cnt;	// Counter to prescale
@@ -40,19 +42,19 @@ module interp (
 		// record samples every 80 MHz, interpolated samples will
 		// be output according to the data		
 		if (reset) begin
-			v_prev	<= 24'b0;
-			v		<= 24'b0;		
+			v_prev	<= `I_BITS'b0;
+			v		<= `I_BITS'b0;		
 		end
 		else if (prescale_cnt == 4'd15) begin
 			v_prev	<= v;
-			v		<= {v_in, 16'b0};// 
+			v		<= {v_in, `I_BITS_SUB_VIN_BITS'b0};// 
 		end
 		
 		// prescale_clk goes high when it goes from 24->25
 		// so when that happens, set interp_o to v (the next v_prev)
 		// otherwise we just increment by the step (which is (v - v_prev)/50)
 		if (reset) begin
-			interp	<= 24'd0;
+			interp	<= `I_BITS'd0;
 		end
 		else if (prescale_cnt == 4'd15) begin
 			interp	<= v;
@@ -62,12 +64,12 @@ module interp (
 		end
 	end
 	
-	assign interp_o = {interp[23], interp[23: 14]};
+	assign interp_o = {interp[`I_U_LIM], interp[`I_U_LIM: `I_LIM_LIM]};
 	
 	assign prescale_clk	= (prescale_cnt == 6'd14);
 	
 	assign v_diff 	= v - v_prev;
-	assign v_step	= {{4{v_diff[23]}}, v_diff[23:4]};
+	assign v_step	= {{4{v_diff[`I_U_LIM]}}, v_diff[`I_U_LIM:4]};
 
 	
 endmodule

@@ -1,7 +1,8 @@
+`include "parameters.vh"
 module lfsr (
-	input 				clock,
-	input 				reset,
-	output [10: 0]		dith_o
+	input 						clock,
+	input 						reset,
+	output [`T_BITS - 1: 0]		dith_o
 );
 	
 	reg	signed 	[19: 0]	lfsr_20;
@@ -10,11 +11,11 @@ module lfsr (
 	reg	signed 	[22: 0]	lfsr_23;
 	reg	signed 	[23: 0]	lfsr_24;
 	reg	signed 	[24: 0]	lfsr_25;	
-	wire		[10: 0]	dith_pre;
+	wire		[`T_BITS - 1: 0]	dith_pre;
 	
-	assign	dith_pre	= $signed(lfsr_20[8:0]) + $signed(lfsr_21[8:0]) + 
-							$signed(lfsr_22[8:0]) + $signed(lfsr_23[8:0]);
-	assign	dith_o		= {{2{dith_pre[10]}}, dith_pre[10:2]};
+	assign	dith_pre	= $signed(lfsr_20[`F_BITS - 1:0]) + $signed(lfsr_21[`F_BITS - 1:0]) + 
+							$signed(lfsr_22[`F_BITS - 1:0]) + $signed(lfsr_23[`F_BITS - 1:0]);
+	assign	dith_o		= {{2{dith_pre[`T_BITS - 1]}}, dith_pre[`T_BITS - 1:2]};
 	
 	//
 	always @(posedge clock) begin
