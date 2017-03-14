@@ -1,11 +1,11 @@
 import os
 import math
-total_bits = 8
-frac_bits = 7
-f = open('i_input_1.txt', 'r')
-out = open('i_input_2_bin.txt', 'w')
+total_bits = 11
+frac_bits = 9
+f = open('dsm_in.txt', 'r')
+out = open('dsm_in_bin.txt', 'w')
 for line in f:
-	val = float(line) * 256.0
+	val = float(line)
 	bin_val = ""
 	for i in range(total_bits):
 		exp = total_bits - (i + frac_bits + 1)

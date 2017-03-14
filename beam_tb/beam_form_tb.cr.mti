@@ -19,6 +19,13 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	interp
 
+} {} {}} C:/Users/Erik/Desktop/delta-sigma-modulator/bf_top_tb.v {1 {vlog -work work -sv -stats=none C:/Users/Erik/Desktop/delta-sigma-modulator/bf_top_tb.v
+Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
+-- Compiling module bf_top_tb
+
+Top level modules:
+	bf_top_tb
+
 } {} {}} C:/Users/Erik/Desktop/delta-sigma-modulator/phaseShift.v {1 {vlog -work work -sv -stats=none C:/Users/Erik/Desktop/delta-sigma-modulator/phaseShift.v
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
 -- Compiling module phaseShift

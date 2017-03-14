@@ -1,28 +1,28 @@
 // Okay, so I'm doing the bitwise representation this way:
-// 20 bits: 
-// [19:16] 	-- saturation bits (I hope output can't become greater than 16 times input
-// [15] 	-- the voltage bit (if high: 1 Volt, if low: -1 Volt)
-// [14: 0] 	-- fractional bits that aren't used in final output 
-`define VIN_FS				20'h0_8000	// bit 15 is high, 1 volt
-`define VIN_FS_RECIPROCAL	20'h0_8000	// 1/1 is still 1
-`define VIN_FS_HALF			20'h0_4000	// half of VIN_FS (bit 14 is high)
-`define VIN_FS_HALF_NEG		20'hF_C000
-`define Q_OFF 				20'h0_4000	// bit 14 is high -> 0.5 Volts
+// 11 bits: 
+// [10] 	-- saturation bit (I hope output can't become greater than 2 times input)
+// [9] 		-- the voltage bit (if high: 1 Volt, if low: -1 Volt)
+// [8: 0] 	-- fractional bits that aren't used in final output 
+`define VIN_FS				11'h200	// bit 9 is high, 1 volt
+`define VIN_FS_RECIPROCAL	11'h200	// 1/1 is still 1
+`define VIN_FS_HALF			11'h100	// half of VIN_FS (bit 14 is high)
+`define VIN_FS_HALF_NEG		11'h700	
+
 // Top level module
 module DSM_top (
 	input				clock,
 	input				reset,
-	input		[19: 0]	vin, 	// 1 bit
-	input		[19: 0]	dith_i,
+	input		[10: 0]	vin, 	// 1 bit
+	input		[10: 0]	dith_i,
 	output	reg	[1: 0]	pwm		// 1 bit
 	
 );
 
-	wire	[19: 0]	pwm_scaled;				// PWM * vin_FS/2	
-	wire	[19: 0]	vin_pwm_scaled_delta;	// vin - pwm_scaled
-	wire	[19: 0]	dss_o;
-	wire	[19: 0]	dss_vin_sum;
-	wire	[19: 0]	dss_vin_sum_dith;
+	wire	[10: 0]	pwm_scaled;				// PWM * vin_FS/2	
+	wire	[10: 0]	vin_pwm_scaled_delta;	// vin - pwm_scaled
+	wire	[10: 0]	dss_o;
+	wire	[10: 0]	dss_vin_sum;
+	wire	[10: 0]	dss_vin_sum_dith;
 	wire	[1: 0]	quant_o;
 	
 	
@@ -91,41 +91,41 @@ endmodule
 module DSS (
 	input			clock,
 	input			reset,
-	input	[19: 0] u,
-	output	[19: 0]	y
+	input	[10: 0] u,
+	output	[10: 0]	y
 );
 	// 25 bit precision for the DSS since they are pretty small.
 	// 2's complement since there are negative numbers
 	// [24]	- -2
 	// [23] - 1
 	// [22: 0] fractional precision bits
-	wire signed	[24: 0]	A0 [3: 0];	// row 0
-	wire signed	[24: 0]	A1 [3: 0];	// row 1
-	wire signed	[24: 0] A2 [3: 0];	// row 2
-	wire signed	[24: 0] A3 [3: 0];	// row 3
+	wire signed	[10: 0]	A0 [3: 0];	// row 0
+	wire signed	[10: 0]	A1 [3: 0];	// row 1
+	wire signed	[10: 0] A2 [3: 0];	// row 2
+	wire signed	[10: 0] A3 [3: 0];	// row 3
 	
 	
 	wire signed	[3: 0]	B;
-	wire signed	[24: 0]	C [3: 0];
-	wire signed	[24: 0] D;
+	wire signed	[10: 0]	C [3: 0];
+	wire signed	[10: 0] D;
 	
-	wire signed	[19: 0] xn1 [3: 0];
-	reg	 signed	[19: 0]	xn0	[3: 0];
-	wire signed	[44: 0] temp_xn1;
-	wire signed [44: 0]	temp_y;
-	wire signed	[44: 0] temp_y1;
-	wire signed	[44: 0] temp_y2;
-	wire signed	[44: 0] temp_y3;
-	wire signed	[44: 0] temp_y4;
-	wire signed	[44: 0] temp_y5;
+	wire signed	[10: 0] xn1 [3: 0];
+	reg	 signed	[10: 0]	xn0	[3: 0];
+	wire signed	[21: 0] temp_xn1;
+	wire signed [21: 0]	temp_y;
+	wire signed	[21: 0] temp_y1;
+	wire signed	[21: 0] temp_y2;
+	wire signed	[21: 0] temp_y3;
+	wire signed	[21: 0] temp_y4;
+	wire signed	[21: 0] temp_y5;
 
 	
 	always @ (posedge clock) begin
 		if (reset) begin
-			xn0[0]	<= 20'b0;
-			xn0[1]	<= 20'b0;
-			xn0[2]	<= 20'b0;
-			xn0[3]	<= 20'b0;
+			xn0[0]	<= 11'b0;
+			xn0[1]	<= 11'b0;
+			xn0[2]	<= 11'b0;
+			xn0[3]	<= 11'b0;
 		end
 		else begin
 			xn0[0]	<= xn1[0];
@@ -137,7 +137,7 @@ module DSS (
 	
 		// TODO: shift bits properly for multiplication
 	assign temp_xn1	= A0[0]*xn0[0]+A0[1]*xn0[1]+A0[2]*xn0[2]+A0[3]*xn0[3];
-	assign xn1[0]	= temp_xn1[42:23] + $signed(u);
+	assign xn1[0]	= temp_xn1[19:9] + $signed(u);
 	assign xn1[1]	= xn0[0];
 	assign xn1[2]	= xn0[1];
 	assign xn1[3]	= xn0[2];
@@ -147,7 +147,7 @@ module DSS (
 	assign temp_y4	= C[3]*xn0[3];
 	assign temp_y5	= D*$signed(u);
 	assign temp_y	= temp_y1 + temp_y2 + temp_y3 + temp_y4 + temp_y5;
-	assign y		= temp_y[42:23];
+	assign y		= temp_y[19:9];
 	
 	
 	// Walkthrough of how the representation of A0[0] is done
@@ -163,57 +163,57 @@ module DSS (
 	// This divided 2^23 is -6.28113e-4, close enough(I hope, actual is -6.28132e-4)
 	
 	// First row
-	assign A0[0]	= 25'h1FF_EB6B;		// -6.28113e-4 (supposed to be -6.28132e-04)
-	assign A0[1]	= 25'h100_40AB;		// -1.99802649 (supposed to be -1.99802650)
-	assign A0[2]	= 25'h1FF_EB6B;		// same as A0[0]
-	assign A0[3]	= 25'h180_0000;		// -1
+	assign A0[0]	= 11'h7FF;			// -6.28113e-4 (supposed to be -6.28132e-04)
+	assign A0[1]	= 11'h401;			// -1.99802649 (supposed to be -1.99802650)
+	assign A0[2]	= 11'h7FF;			// same as A0[0]
+	assign A0[3]	= 11'h600;			// -1
 	// Second row
-	assign A1[0]	= 25'h080_0000;		// 1
-	assign A1[1]	= 25'h0;			// 0
-	assign A1[2]	= 25'h0;			// 0
-	assign A1[3]	= 25'h0;			// 0
+	assign A1[0]	= 11'h200;			// 1
+	assign A1[1]	= 11'h0;			// 0
+	assign A1[2]	= 11'h0;			// 0
+	assign A1[3]	= 11'h0;			// 0
 	// Third Row
-	assign A2[0]	= 25'h0;			// 0
-	assign A2[1]	= 25'h080_0000;		// 1
-	assign A2[2]	= 25'h0;			// 0
-	assign A2[3]	= 25'h0;			// 0
+	assign A2[0]	= 11'h0;			// 0
+	assign A2[1]	= 11'h200;			// 1
+	assign A2[2]	= 11'h0;			// 0
+	assign A2[3]	= 11'h0;			// 0
 	// Fourth Row
-	assign A3[0]	= 25'h0;			// 0
-	assign A3[1]	= 25'h0;			// 0
-	assign A3[2]	= 25'h080_0000;		// 1
-	assign A3[3]	= 25'h0;			// 0
+	assign A3[0]	= 11'h0;			// 0
+	assign A3[1]	= 11'h0;			// 0
+	assign A3[2]	= 11'h200;			// 1
+	assign A3[3]	= 11'h0;			// 0
 	
 	// B
 	assign B		= 4'b0001;
 	
 	// C
-	assign C[0]		= 25'h18F_5D27;		// -0.8799698
-	assign C[1]		= 25'h88055;		//  0.0664163
-	assign C[2]		= 25'h1B2_1A18;		// -0.6085788
-	assign C[3]		= 25'h32FC9;		//  0.0248957
+	assign C[0]		= 11'h63D;		// -0.8799698
+	assign C[1]		= 11'h22;		//  0.0664163
+	assign C[2]		= 11'h6C8;		// -0.6085788
+	assign C[3]		= 11'hC;		//  0.0248957
 	
 	// D
-	assign D		= 25'h1FCD037;		// -0.0248957
+	assign D		= 11'h7F3;		// -0.0248957
 	
 
 endmodule
 
 // Quantizer
 module quantizer (
-	input	[19: 0] in1,
+	input	[10: 0] in1,
 	input			reset,
 	input			clock,
 	output	[1: 0]	out1
 );
-	wire signed	[19: 0]	zoh_i;
-	reg			[19: 0]	zoh_o;
+	wire signed	[10: 0]	zoh_i;
+	reg			[10: 0]	zoh_o;
 	
-	assign zoh_i	= $signed(in1) + $signed(20'h4000);
+	assign zoh_i	= $signed(in1) + $signed(11'h100);
 		
 	// Zero order hold at Ts
 	always @(posedge clock) begin
 		if (reset) begin
-			zoh_o	<= 20'b0;
+			zoh_o	<= 11'b0;
 		end
 		else begin
 			zoh_o	<= zoh_i;
@@ -222,6 +222,6 @@ module quantizer (
 	
 	// Quantize the output
 //	assign out1	= ~zoh_o[19];
-	assign out1	= 	(zoh_i < $signed(20'h2000)) 			? 2'b11 :
-					(reset || zoh_i  < $signed(20'h6000)) 	? 2'b00	: 2'b01 ;
+	assign out1	= 	(zoh_i < $signed(11'h80)) 			? 2'b11 :
+					(reset || zoh_i  < $signed(11'h180)) 	? 2'b00	: 2'b01 ;
 endmodule
