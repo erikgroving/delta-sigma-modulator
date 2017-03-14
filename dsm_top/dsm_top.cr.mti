@@ -5,13 +5,6 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	mixer
 
-} {} {}} C:/Users/Erik/Desktop/delta-sigma-modulator/dsm_top.v {1 {vlog -work work -stats=none C:/Users/Erik/Desktop/delta-sigma-modulator/dsm_top.v
-Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
--- Compiling module dsm_top
-
-Top level modules:
-	dsm_top
-
 } {} {}} C:/Users/Erik/Desktop/delta-sigma-modulator/lfsr.v {1 {vlog -work work -stats=none C:/Users/Erik/Desktop/delta-sigma-modulator/lfsr.v
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
 -- Compiling module lfsr
@@ -19,11 +12,13 @@ Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 
 Top level modules:
 	lfsr
 
-} {} {}} C:/Users/Erik/Desktop/delta-sigma-modulator/dsm_top_tb.v {1 {vlog -work work -stats=none C:/Users/Erik/Desktop/delta-sigma-modulator/dsm_top_tb.v
+} {} {}} C:/Users/Erik/Desktop/delta-sigma-modulator/dsm.v {1 {vlog -work work -stats=none C:/Users/Erik/Desktop/delta-sigma-modulator/dsm.v
 Model Technology ModelSim PE Student Edition vlog 10.4a Compiler 2015.03 Apr  7 2015
--- Compiling module dsm_top_tb
+-- Compiling module DSM_top
+-- Compiling module DSS
+-- Compiling module quantizer
 
 Top level modules:
-	dsm_top_tb
+	DSM_top
 
 } {} {}}

@@ -1,16 +1,15 @@
 module dsm_top (
 	input			clock,
 	input			reset,
-	input	[19: 0]	dith_i,
-	input	[19: 0]	vin,
+	input	[7: 0]	vin,
 	output	[1: 0]	pwm
 );
 
 	wire	[1: 0] 	LO;
 	reg		[1: 0] 	LO_cnt;
-	wire	[19: 0]	interp_o;
-	wire	[19: 0] mix_o;	
-	wire	[19: 0]	dith;
+	wire	[10: 0]	interp_o;
+	wire	[10: 0] mix_o;	
+	wire	[10: 0]	dith;
 	
 	
 	assign	LO	= 	LO_cnt[0]		? 2'b00 :
@@ -34,7 +33,6 @@ module dsm_top (
 	
 	mixer mixer_i (
 		.interp_i(interp_o), 
-		//.interp_i(vin),
 		.LO(LO),
 		.mix_o(mix_o)
 	);
@@ -51,7 +49,6 @@ module dsm_top (
 		.reset(reset),
 		.vin(mix_o),
 		.dith_i(dith),
-		//.dith_i(dith_i),
 		.pwm(pwm)
 	);
 

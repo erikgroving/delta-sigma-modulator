@@ -3,8 +3,7 @@ module dsm_top_tb (
 );
 
 	// Testbench signals
-	reg	signed [19: 0]	vin;
-	reg signed [19: 0] 	dith_i;
+	reg	signed [7: 0]	vin;
 	reg 				clock;		
 	reg					reset;
 	reg					ds_clock;	// 50x slower than clock (4GHz -- 80 MHz)
@@ -12,7 +11,6 @@ module dsm_top_tb (
 	
 	// Testbench input and output file descriptors
 	integer				write_file;
-	integer				dither_file;
 	integer 			data_file;
 	integer 			scan_file;
 
@@ -24,7 +22,6 @@ module dsm_top_tb (
 		reset	= 1;
 		#300; // Need reset to happens on the 80MHz too
 		data_file = $fopen("../systemIN_bin.txt", "r");
-		dither_file = $fopen("../dith_bin.txt", "r");
 		write_file = $fopen("dsm_out.txt", "w");			
 		if (data_file == 0) begin
 			$display("could not open data file");
@@ -48,38 +45,19 @@ module dsm_top_tb (
 				$fdisplay(write_file, "0");
 			end
 		end
-		
-		if (reset) begin
-			dith_i	<= 20'b0;
-		end
-		else begin
-
-			scan_file = $fscanf(dither_file, "%b\n", dith_i); 
-			if ($feof(dither_file)) begin
-				$fclose(write_file);
-				$fclose(data_file);
-				$fclose(scan_file);
-				$fclose(dither_file);
-				$finish;
-			end
-		end			
-		
 	end
 	
 	// mixer comment 
 	always @ (negedge ds_clock) begin
-	//always @(negedge clock) begin
 		if (reset) begin
-			vin	<= 20'b0;
+			vin	<= 8'b0;
 		end
 		else begin
-
 			scan_file = $fscanf(data_file, "%b\n", vin); 
 			if ($feof(data_file)) begin
 				$fclose(write_file);
 				$fclose(data_file);
 				$fclose(scan_file);
-				$fclose(dither_file);
 				$finish;
 			end
 		end	
@@ -90,7 +68,7 @@ module dsm_top_tb (
 		clock = ~clock;
 	end
 	always begin
-		#25;
+		#16;
 		ds_clock = ~ds_clock;
 	end
 	
@@ -98,7 +76,6 @@ module dsm_top_tb (
 		.clock(clock),
 		.reset(reset),
 		.vin(vin),
-		.dith_i(dith_i),
 		.pwm(pwm)
 	);
 	

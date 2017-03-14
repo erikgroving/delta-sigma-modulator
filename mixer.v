@@ -8,21 +8,21 @@
 // If this synthesizes at a bad clock period, I can make the
 // ampl multiply a bitshift-sum operation.
 module mixer (
-	input	[19: 0]	interp_i,
+	input	[10: 0]	interp_i,
 	input	[1: 0] LO,
-	output	[19: 0] mix_o
+	output	[10: 0] mix_o
 );
 
-	wire signed [24: 0] ampl;
-	wire signed [19: 0] inter_res;
-	wire signed	[44: 0] mix_res;
+	wire signed [10: 0] ampl;
+	wire signed [10: 0] inter_res;
+	wire signed	[21: 0] mix_res;
 	
-	assign ampl = 25'h028_619a;	// 0.6309573 * 0.5 = 0.3154786
+	assign ampl = 11'hA1;	// 0.6309573 * 0.5 = 0.3154786
 	
 	assign inter_res	= 	LO[1] ? -interp_i :
-							LO[0] ? interp_i : 20'b0;
+							LO[0] ? interp_i : 11'b0;
 							
 	assign mix_res		= inter_res * ampl;
-	assign mix_o		= mix_res[42:23];
+	assign mix_o		= mix_res[19:9];
 
 endmodule
