@@ -1,9 +1,9 @@
 `include "parameters.vh"
 
 module interp (
-	input				clock,
-	input				reset,
-	input 		[7: 0]	v_in,		// signal in
+	input							clock,
+	input							reset,
+	input 		[13: 0]				v_in,		// signal in
 	output wire	[`T_BITS - 1: 0]	interp_o	// interpolated output singal
 );
 

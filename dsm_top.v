@@ -3,7 +3,7 @@
 module dsm_top (
 	input			clock,
 	input			reset,
-	input	[7: 0]	vin,
+	input	[13: 0]	vin,
 	output	[1: 0]	pwm
 );
 

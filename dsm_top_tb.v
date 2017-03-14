@@ -5,7 +5,7 @@ module dsm_top_tb (
 );
 
 	// Testbench signals
-	reg	signed [7: 0]	vin;
+	reg	signed [13: 0]	vin;
 	reg 				clock;		
 	reg					reset;
 	reg					ds_clock;	// 50x slower than clock (4GHz -- 80 MHz)
@@ -52,7 +52,7 @@ module dsm_top_tb (
 	// mixer comment 
 	always @ (negedge ds_clock) begin
 		if (reset) begin
-			vin	<= 8'b0;
+			vin	<= 14'b0;
 		end
 		else begin
 			scan_file = $fscanf(data_file, "%b\n", vin); 

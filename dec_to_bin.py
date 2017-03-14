@@ -1,7 +1,7 @@
 import os
 import math
-total_bits = 8
-frac_bits = 7
+total_bits = 14
+frac_bits = 13
 f = open('interp_in.txt', 'r')
 out = open('interp_in_bin.txt', 'w')
 for line in f:
