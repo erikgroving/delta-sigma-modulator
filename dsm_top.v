@@ -1,3 +1,5 @@
+`include "parameters.vh"
+
 module dsm_top (
 	input			clock,
 	input			reset,
@@ -5,11 +7,11 @@ module dsm_top (
 	output	[1: 0]	pwm
 );
 
-	wire	[1: 0] 	LO;
-	reg		[1: 0] 	LO_cnt;
-	wire	[10: 0]	interp_o;
-	wire	[10: 0] mix_o;	
-	wire	[10: 0]	dith;
+	wire	[1: 0] 				LO;
+	reg		[1: 0] 				LO_cnt;
+	wire	[`T_BITS - 1: 0]	interp_o;
+	wire	[`T_BITS - 1: 0] 	mix_o;	
+	wire	[`T_BITS - 1: 0]	dith;
 	
 	
 	assign	LO	= 	LO_cnt[0]		? 2'b00 :

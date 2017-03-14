@@ -154,37 +154,37 @@ module DSS (
 	// This divided 2^23 is -6.28113e-4, close enough(I hope, actual is -6.28132e-4)
 	
 	// First row
-	assign A0[0]	= `T_BITS'h7FF;			// -6.28113e-4 (supposed to be -6.28132e-04)
-	assign A0[1]	= `T_BITS'h401;			// -1.99802649 (supposed to be -1.99802650)
-	assign A0[2]	= `T_BITS'h7FF;			// same as A0[0]
-	assign A0[3]	= `T_BITS'h600;			// -1
+	assign A0[0]	= `T_BITS'h3FFD;		// -6.28113e-4 (supposed to be -6.28132e-04)
+	assign A0[1]	= `T_BITS'h2008;		// -1.99802649 (supposed to be -1.99802650)
+	assign A0[2]	= `T_BITS'h3FFD;		// same as A0[0]
+	assign A0[3]	= `T_BITS'h3000;		// -1
 	// Second row     
-	assign A1[0]	= `T_BITS'h200;			// 1
+	assign A1[0]	= `T_BITS'h1000;		// 1
 	assign A1[1]	= `T_BITS'h0;			// 0
 	assign A1[2]	= `T_BITS'h0;			// 0
 	assign A1[3]	= `T_BITS'h0;			// 0
 	// Third Row      
 	assign A2[0]	= `T_BITS'h0;			// 0
-	assign A2[1]	= `T_BITS'h200;			// 1
+	assign A2[1]	= `T_BITS'h1000;		// 1
 	assign A2[2]	= `T_BITS'h0;			// 0
 	assign A2[3]	= `T_BITS'h0;			// 0
 	// Fourth Row     
 	assign A3[0]	= `T_BITS'h0;			// 0
 	assign A3[1]	= `T_BITS'h0;			// 0
-	assign A3[2]	= `T_BITS'h200;			// 1
+	assign A3[2]	= `T_BITS'h1000;		// 1
 	assign A3[3]	= `T_BITS'h0;			// 0
 	
 	// B
 	assign B		= 4'b0001;
 	
 	// C
-	assign C[0]		= `T_BITS'h63D;		// -0.8799698
-	assign C[1]		= `T_BITS'h22;		//  0.0664163
-	assign C[2]		= `T_BITS'h6C8;		// -0.6085788
-	assign C[3]		= `T_BITS'hC;		//  0.0248957
+	assign C[0]		= `T_BITS'h31EB;	// -0.8799698
+	assign C[1]		= `T_BITS'h110;		//  0.0664163
+	assign C[2]		= `T_BITS'h3643;	// -0.6085788
+	assign C[3]		= `T_BITS'h65;		//  0.0248957
 
 	// D 
-	assign D		= `T_BITS'h7F3;		// -0.0248957
+	assign D		= `T_BITS'h3F9A;		// -0.0248957
 	
 
 endmodule

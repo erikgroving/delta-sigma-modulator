@@ -64,7 +64,7 @@ module interp (
 		end
 	end
 	
-	assign interp_o = {interp[`I_U_LIM], interp[`I_U_LIM: `I_LIM_LIM]};
+	assign interp_o = {interp[`I_U_LIM], interp[`I_U_LIM: `I_L_LIM]};
 	
 	assign prescale_clk	= (prescale_cnt == 6'd14);
 	

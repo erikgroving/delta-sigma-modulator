@@ -1,3 +1,5 @@
+`include "parameters.vh"
+
 module dsm_top_tb (
 
 );
