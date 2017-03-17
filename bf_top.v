@@ -23,8 +23,8 @@ module bf_top (
 
 	wire [19:0] dith;
 	
-	wire [19: 0] interp_o_i;
-	wire [19: 0] interp_o_q;
+	wire [19: 0] interp_o_i [7:0];
+	wire [19: 0] interp_o_q [7:0];
 
 
 	wire	[1: 0] 	LO_i;
@@ -75,9 +75,9 @@ module bf_top (
 			interp interp_i (
 				.clock(clock),
 				.reset(reset),
-				.v_in(out_i[i])),
+				.v_in(out_i[i]),
 		
-				.interp_o(interp_o_i)
+				.interp_o(interp_o_i[i])
 			);
 			
 			interp interp_q (
@@ -85,12 +85,12 @@ module bf_top (
 				.reset(reset),
 				.v_in(out_q[i]),
 		
-				.interp_o(interp_o_q)
+				.interp_o(interp_o_q[i])
 			);
 			
 			mixer_iq mixer_iq_i (
-				.mixin_i(interp_o_i),
-				.mixin_q(interp_o_q), 
+				.mixin_i(interp_o_i[i]),
+				.mixin_q(interp_o_q[i]), 
 				.LO_i(LO_i),          // 1, 0, -1, 0
 				.LO_q(LO_q),          // 0, 1, 0 ,-1
 				.mix_o(mix_o[i])
