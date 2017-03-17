@@ -6,21 +6,21 @@
 `ifndef PARAMETERS_VH
 `define PARAMETERS_VH
 
-`define VIN_FS				14'h1000	// bit 9 is high, 1 volt
-`define VIN_FS_RECIPROCAL	14'h1000	// 1/1 is still 1
-`define VIN_FS_HALF			14'h800		// half of VIN_FS (bit 14 is high)
-`define VIN_FS_HALF_NEG		14'h3800	// -0.5
-`define QUANT_LOW			14'h400		// 0.25
-`define QUANT_HIGH			14'hC00		// 0.75
-`define QUANT_OFF			14'h800		// 0.5
+`define VIN_FS				15'h2000	// bit 9 is high, 1 volt
+`define VIN_FS_RECIPROCAL	15'h2000	// 1/1 is still 1
+`define VIN_FS_HALF			15'h1000	// half of VIN_FS (bit 14 is high)
+`define VIN_FS_HALF_NEG		15'h7000	// -0.5
+`define QUANT_LOW			15'h800		// 0.25
+`define QUANT_HIGH			15'h1800	// 0.75
+`define QUANT_OFF			15'h1000	// 0.5
 
-`define F_BITS				12	//fractional bits
-`define T_BITS				14	// total bits
+`define F_BITS				13	//fractional bits
+`define T_BITS				15	// total bits
 `define I_BITS				24	// interpolation bits, this is addition, 24 bits won't be a problem
 
-`define I_BITS_SUB_VIN_BITS	10
+`define I_BITS_SUB_VIN_BITS	9
 
-`define I_L_LIM				11	// bottom limit for interp out
+`define I_L_LIM				9	// bottom limit for interp out
 `define I_U_LIM				23	// upper limit for interp out
 
 `endif

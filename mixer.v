@@ -18,12 +18,12 @@ module mixer (
 	wire signed [`T_BITS - 1: 0] 		inter_res;
 	wire signed	[2 * `T_BITS - 1: 0] 	mix_res;
 	
-	assign ampl = 14'h50C;	// 0.6309573 * 0.5 = 0.3154786
+	assign ampl = 15'h2861;	// 0.6309573 * 0.5 = 0.3154786 (15 fractional bits)
 	
 	assign inter_res	= 	LO[1] ? -interp_i :
 							LO[0] ? interp_i : `T_BITS'b0;
 							
 	assign mix_res		= inter_res * ampl;
-	assign mix_o		= mix_res[2 * `T_BITS - 1:`F_BITS];
+	assign mix_o		= mix_res[`T_BITS + 14: 15];
 
 endmodule
