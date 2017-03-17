@@ -2,12 +2,12 @@ module bf_top (
 
   input			clock,
   input			reset,
-  input	[7: 0]	vin_i_1,//all of the four vin should be 8 bits instead
-  input [7: 0] 	vin_q_1,//all of the four vin should be 8 bits instead
-  input	[7: 0]	vin_i_2,//all of the four vin should be 8 bits instead
-  input [7: 0] 	vin_q_2,//all of the four vin should be 8 bits instead
+  input	[7: 0]	vin_i_1,
+  input [7: 0] 	vin_q_1,
+  input	[7: 0]	vin_i_2,
+  input [7: 0] 	vin_q_2,
 
-//Probably need to change to 5 or 6 bits	
+	
 // Changed to 5 bits
   input [4: 0]  w_cos_1 [7: 0],
   input [4: 0]  w_sin_1 [7: 0],                           
@@ -17,18 +17,15 @@ module bf_top (
 );
 
 
-//LO_i and LO_q are needed to be given here in top
-
 	wire [19:0] out_i [7:0];
 	wire [19:0] out_q [7:0];
 	wire [19:0] mix_o [7:0];
 
 	wire [19:0] dith;
 	
-	wire [19: 0] interp_o_i_1;
-	wire [19: 0] interp_o_q_1;
-	wire [19: 0] interp_o_i_2;
-	wire [19: 0] interp_o_q_2;
+	wire [19: 0] interp_o_i;
+	wire [19: 0] interp_o_q;
+
 
 	wire	[1: 0] 	LO_i;
 	wire	[1: 0]	LO_q;
@@ -49,45 +46,8 @@ module bf_top (
 		end
 	end
 	
-////////////////////////interp:need to be modified for 8 bit input.../////////////////////////////////
-						// has been modified for 8 bit input, still 20 bit output
-//beam one
-	interp interp_i_1 (
-		.clock(clock),
-		.reset(reset),
-		.v_in(vin_i_1),
-		
-		.interp_o(interp_o_i_1)
-	);
+
 	
-	//beam one
-	interp interp_q_1 (
-		.clock(clock),
-		.reset(reset),
-		.v_in(vin_q_1),
-		
-		.interp_o(interp_o_q_1)
-	);
-	
-	//beam two
-	interp interp_i_2 (
-		.clock(clock),
-		.reset(reset),
-		.v_in(vin_i_2),
-		
-		.interp_o(interp_o_i_2)
-	);
-	
-	//beam two
-	interp interp_q_2 (
-		.clock(clock),
-		.reset(reset),
-		.v_in(vin_q_2),
-		
-		.interp_o(interp_o_q_2)
-	);
-	
-	///////////////////////////////dith gen////////////////////////////////////////////////////////////
 	lfsr lfsr (
 		.clock(clock),
 		.reset(reset),
@@ -99,10 +59,10 @@ module bf_top (
 	generate 
 		for (i = 0; i < 8; i=i+1) begin
 			phaseShift phaseShift_i (
-			   .interp_o_i_1(interp_o_i_1),
-			   .interp_o_q_1(interp_o_q_1),
-			   .interp_o_i_2(interp_o_i_2),
-			   .interp_o_q_2(interp_o_q_2),
+			   .sysin_i_1(vin_i_1),
+			   .sysin_q_1(vin_q_1),
+			   .sysin_i_2(vin_i_2),
+			   .sysin_q_2(vin_q_2),
 			   .w_cos_1(w_cos_1[i]),
 			   .w_sin_1(w_sin_1[i]),
 			   .w_cos_2(w_cos_2[i]),
@@ -111,10 +71,26 @@ module bf_top (
 			   .out_i(out_i[i]),
 			   .out_q(out_q[i])				
 			);
+
+			interp interp_i (
+				.clock(clock),
+				.reset(reset),
+				.v_in(out_i[i])),
+		
+				.interp_o(interp_o_i)
+			);
+			
+			interp interp_q (
+				.clock(clock),
+				.reset(reset),
+				.v_in(out_q[i]),
+		
+				.interp_o(interp_o_q)
+			);
 			
 			mixer_iq mixer_iq_i (
-				.mixin_i(out_i[i]),
-				.mixin_q(out_q[i]), 
+				.mixin_i(interp_o_i),
+				.mixin_q(interp_o_q), 
 				.LO_i(LO_i),          // 1, 0, -1, 0
 				.LO_q(LO_q),          // 0, 1, 0 ,-1
 				.mix_o(mix_o[i])
