@@ -5,10 +5,10 @@ module bf_top_tb (
 	reg 		clock;
 	reg			ds_clock;
 	reg 		reset;
-	reg  [7: 0]	vin_i_1;
-	reg  [7: 0] vin_q_1;
-	reg  [7: 0] vin_i_2;
-	reg  [7: 0] vin_q_2;
+	reg  [9: 0]	vin_i_1;
+	reg  [9: 0] vin_q_1;
+	reg  [9: 0] vin_i_2;
+	reg  [9: 0] vin_q_2;
 	wire [4: 0]	w_cos_1 [7: 0];
 	wire [4: 0]	w_sin_1 [7: 0];
 	wire [4: 0]	w_cos_2 [7: 0];
@@ -112,7 +112,7 @@ module bf_top_tb (
 		clock = ~clock;
 	end
 	always begin
-		#25;
+		#8;
 		ds_clock = ~ds_clock;
 	end
 	
@@ -207,10 +207,10 @@ module bf_top_tb (
 	always @ (negedge ds_clock) begin
 	//always @(negedge clock) begin
 		if (reset) begin
-			vin_i_1	<= 8'b0;
-			vin_q_1	<= 8'b0;
-			vin_i_2	<= 8'b0;
-			vin_q_2	<= 8'b0;
+			vin_i_1	<= 10'b0;
+			vin_q_1	<= 10'b0;
+			vin_i_2	<= 10'b0;
+			vin_q_2	<= 10'b0;
 		end
 		else begin
 			scan_file = $fscanf(i_input_1_file, "%b\n", vin_i_1); 

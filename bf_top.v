@@ -2,10 +2,10 @@ module bf_top (
 
   input			clock,
   input			reset,
-  input	[7: 0]	vin_i_1,
-  input [7: 0] 	vin_q_1,
-  input	[7: 0]	vin_i_2,
-  input [7: 0] 	vin_q_2,
+  input	[9: 0]	vin_i_1,
+  input [9: 0] 	vin_q_1,
+  input	[9: 0]	vin_i_2,
+  input [9: 0] 	vin_q_2,
 
 	
 // Changed to 5 bits
@@ -17,16 +17,26 @@ module bf_top (
 );
 
 
-	wire [19:0] out_i [7:0];
-	wire [19:0] out_q [7:0];
-	wire [19:0] mix_o [7:0];
+	wire [14:0] out_i [7:0];
+	wire [14:0] out_q [7:0];
+	wire [14:0] mix_o [7:0];
 
-	wire [19:0] dith;
+	wire [14:0] dith;
 	
-	wire [19: 0] interp_o_i;
-	wire [19: 0] interp_o_q;
+	wire [14: 0] interp_o_i [7: 0];
+	wire [14: 0] interp_o_q [7: 0];
+	
+	wire [14: 0]	sysin_i_1;
+	wire [14: 0]	sysin_q_1;
+	wire [14: 0]	sysin_i_2;
+	wire [14: 0]	sysin_q_2;
+	
+	assign sysin_i_1	= {{5{vin_i_1[9]}}, vin_i_1};
+	assign sysin_q_1	= {{5{vin_q_1[9]}}, vin_q_1};
+	assign sysin_i_2	= {{5{vin_i_2[9]}}, vin_i_2};
+	assign sysin_q_2	= {{5{vin_q_2[9]}}, vin_q_2};
 
-
+	
 	wire	[1: 0] 	LO_i;
 	wire	[1: 0]	LO_q;
 	reg		[1: 0] 	LO_cnt;
@@ -55,14 +65,16 @@ module bf_top (
 	);                       //I think one lfsr is enough
 	
 	
+
+	
 	genvar i;
 	generate 
 		for (i = 0; i < 8; i=i+1) begin
 			phaseShift phaseShift_i (
-			   .sysin_i_1(vin_i_1),
-			   .sysin_q_1(vin_q_1),
-			   .sysin_i_2(vin_i_2),
-			   .sysin_q_2(vin_q_2),
+			   .sysin_i_1(sysin_i_1),
+			   .sysin_q_1(sysin_q_1),
+			   .sysin_i_2(sysin_i_2),
+			   .sysin_q_2(sysin_q_2),
 			   .w_cos_1(w_cos_1[i]),
 			   .w_sin_1(w_sin_1[i]),
 			   .w_cos_2(w_cos_2[i]),
@@ -75,9 +87,9 @@ module bf_top (
 			interp interp_i (
 				.clock(clock),
 				.reset(reset),
-				.v_in(out_i[i])),
-		
-				.interp_o(interp_o_i)
+				.v_in(out_i[i]),	
+				
+				.interp_o(interp_o_i[i])
 			);
 			
 			interp interp_q (
@@ -85,12 +97,12 @@ module bf_top (
 				.reset(reset),
 				.v_in(out_q[i]),
 		
-				.interp_o(interp_o_q)
+				.interp_o(interp_o_q[i])
 			);
 			
 			mixer_iq mixer_iq_i (
-				.mixin_i(interp_o_i),
-				.mixin_q(interp_o_q), 
+				.mixin_i(interp_o_i[i]),
+				.mixin_q(interp_o_q[i]), 
 				.LO_i(LO_i),          // 1, 0, -1, 0
 				.LO_q(LO_q),          // 0, 1, 0 ,-1
 				.mix_o(mix_o[i])
