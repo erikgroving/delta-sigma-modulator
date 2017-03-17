@@ -22,7 +22,7 @@ module bf_top (
 	wire [14:0] mix_o [7:0];
 
 	wire [14:0] dith;
-	
+
 	wire [14: 0] interp_o_i [7: 0];
 	wire [14: 0] interp_o_q [7: 0];
 	
@@ -87,7 +87,7 @@ module bf_top (
 			interp interp_i (
 				.clock(clock),
 				.reset(reset),
-				.v_in(out_i[i]),	
+				.v_in(out_i[i]),
 				
 				.interp_o(interp_o_i[i])
 			);
