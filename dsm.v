@@ -35,14 +35,7 @@ module DSM_top (
 		end
 	end
 	
-	// I need to know how wide y (dss_out) should be
-	// This means I need to know what n is.
-	// Also need an idea of what A, B, C, and D are
-	// see below 
-	// Question: What is n (number of states)?
-	// answer: see below, i thinks it is 4.
-	// Question: What are the values of A, B, C and D? (I can leave undefined for now)
-	// answer: you can run tb.m and get the value of A,B,C,D. only D is a number ,ABC are all matrix
+	
 	DSS DSS_i (
 		.clock(clock),
 		.reset(reset),
@@ -63,20 +56,7 @@ endmodule
 
 // Discrete-state space
 // N is number of states
-// Question: How many states are there? (need this to write)
-//answer: i get the following from the help of Discrete State-Space
-//x(n+1)=Ax(n)+Bu(n), y(n)=Cx(n)+Du(n),
-//where u is the input, x is the state, and y is the output. The matrix coefficients must //have these characteristics, as illustrated in the following diagram:
 
-//A must be an n-by-n matrix, where n is the number of states. (4*4,so n=4)
-//B must be an n-by-m matrix, where m is the number of inputs. (4*1,m=1)
-//C must be an r-by-n matrix, where r is the number of outputs. (1*4, r=1)
-//D must be an r-by-m matrix. (1*1)
-
-//The block accepts one input and generates one output. The width of the input vector
-// is the number of columns in the B and D matrices. The width of the output vector
-// is the number of rows in the C and D matrices. To define the initial state vector,
-// use the Initial conditions parameter.
 
 module DSS (
 	input						clock,
@@ -103,11 +83,17 @@ module DSS (
 	reg	 signed	[`T_BITS - 1: 0]		xn0	[3: 0];
 	wire signed	[`T_BITS * 2 - 1: 0] 	temp_xn1;
 	wire signed [`T_BITS * 2 - 1: 0]	temp_y;
-	wire signed	[`T_BITS * 2 - 1: 0] 	temp_y1;
-	wire signed	[`T_BITS * 2 - 1: 0] 	temp_y2;
-	wire signed	[`T_BITS * 2 - 1: 0] 	temp_y3;
-	wire signed	[`T_BITS * 2 - 1: 0] 	temp_y4;
-	wire signed	[`T_BITS * 2 - 1: 0] 	temp_y5;
+	wire signed	[`T_BITS * 2 - 1: 0] 	temp_y1_tmp;
+	wire signed	[`T_BITS * 2 - 1: 0] 	temp_y2_tmp;
+	wire signed	[`T_BITS * 2 - 1: 0] 	temp_y3_tmp;
+	wire signed	[`T_BITS * 2 - 1: 0] 	temp_y4_tmp;
+	wire signed	[`T_BITS * 2 - 1: 0] 	temp_y5_tmp;
+
+	reg signed	[`T_BITS * 2 - 1: 0] 	temp_y1;
+	reg signed	[`T_BITS * 2 - 1: 0] 	temp_y2;
+	reg signed	[`T_BITS * 2 - 1: 0] 	temp_y3;
+	reg signed	[`T_BITS * 2 - 1: 0] 	temp_y4;
+	reg signed	[`T_BITS * 2 - 1: 0] 	temp_y5;
 
 	
 	always @ (posedge clock) begin
@@ -126,16 +112,34 @@ module DSS (
 	end
 	
 		// TODO: shift bits properly for multiplication
-	assign temp_xn1	= A0[0]*xn0[0]+A0[1]*xn0[1]+A0[2]*xn0[2]+A0[3]*xn0[3];
+	assign temp_xn1	= A0[1]*xn0[1]+A0[3]*xn0[3];
 	assign xn1[0]	= temp_xn1[`T_BITS + `F_BITS - 1:`F_BITS] + $signed(u);
 	assign xn1[1]	= xn0[0];
 	assign xn1[2]	= xn0[1];
 	assign xn1[3]	= xn0[2];
-	assign temp_y1	= C[0]*xn0[0];
-	assign temp_y2	= C[1]*xn0[1];
-	assign temp_y3	= C[2]*xn0[2];
-	assign temp_y4	= C[3]*xn0[3];
-	assign temp_y5	= D*$signed(u);
+	assign temp_y1_tmp	= C[0]*xn0[0];
+	assign temp_y2_tmp	= C[1]*xn0[1];
+	assign temp_y3_tmp	= C[2]*xn0[2];
+	assign temp_y4_tmp	= C[3]*xn0[3];
+	assign temp_y5_tmp	= D*$signed(u);
+
+	always_ff @(posedge clock) begin
+		if (reset) begin
+			temp_y1	<= 'b0;
+			temp_y2	<= 'b0;
+			temp_y3	<= 'b0;
+			temp_y4	<= 'b0;
+			temp_y5	<= 'b0;
+		end
+		else begin
+			temp_y1	<= temp_y1_tmp;
+			temp_y2	<= temp_y2_tmp;
+			temp_y3	<= temp_y3_tmp;
+			temp_y4	<= temp_y4_tmp;
+			temp_y5	<= temp_y5_tmp;
+		end
+	end
+
 	assign temp_y	= temp_y1 + temp_y2 + temp_y3 + temp_y4 + temp_y5;
 	assign y		= temp_y[`T_BITS + 13:`F_BITS];
 	
@@ -153,9 +157,9 @@ module DSS (
 	// This divided 2^23 is -6.28113e-4, close enough(I hope, actual is -6.28132e-4)
 	
 	// First row
-	assign A0[0]	= `T_BITS'h7FFA;		// -6.28113e-4 (supposed to be -6.28132e-04)
+	assign A0[0]	= `T_BITS'h0000;		// -6.28113e-4 (supposed to be -6.28132e-04)
 	assign A0[1]	= `T_BITS'h4010;		// -1.99802649 (supposed to be -1.99802650)
-	assign A0[2]	= `T_BITS'h7FFA;		// same as A0[0]
+	assign A0[2]	= `T_BITS'h0000;		// same as A0[0]
 	assign A0[3]	= `T_BITS'h6000;		// -1
 	// Second row     
 	assign A1[0]	= `T_BITS'h2000;		// 1
@@ -196,17 +200,18 @@ module quantizer (
 	output	[1: 0]	out1
 );
 	wire signed	[`T_BITS - 1: 0]	zoh_i;
-	reg			[`T_BITS - 1: 0]	zoh_o;
-	
-	assign zoh_i	= $signed(in1) + $signed(`QUANT_OFF);
+	//reg			[`T_BITS - 1: 0]	zoh_o;
+	reg	[`T_BITS - 1: 0] in1_reg;
+
+	assign zoh_i	= $signed(in1_reg) + $signed(`QUANT_OFF);
 		
 	// Zero order hold at Ts
 	always @(posedge clock) begin
 		if (reset) begin
-			zoh_o	<= 11'b0;
+			in1_reg	<= 11'b0;
 		end
 		else begin
-			zoh_o	<= zoh_i;
+			in1_reg	<= in1;
 		end
 	end
 	

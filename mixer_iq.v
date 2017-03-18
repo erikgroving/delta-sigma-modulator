@@ -1,9 +1,11 @@
 module mixer_iq (
+	input           clock,
+	input           reset,
 	input	[14: 0]	mixin_i,
 	input	[14: 0]	mixin_q,
 	input	[1: 0] LO_i,
 	input	[1: 0] LO_q,
-	output	[14: 0] mix_o
+	output	reg [14: 0] mix_o
 );
 
 	wire signed [14: 0] ampl;
@@ -30,6 +32,17 @@ module mixer_iq (
 	
 	
 	// sum up
-	assign mix_o		= $signed(mix_res_q[29:15])+$signed(mix_res_i[29:15]); //may overflow here? please check:)
+	//assign mix_o		= $signed(mix_res_q[29:15])+$signed(mix_res_i[29:15]); 
+
+	wire	[14: 0] mix_tmp;
+	assign mix_tmp		= $signed(mix_res_q[29:15])+$signed(mix_res_i[29:15]); 
+
+	always_ff @(posedge clock) begin
+		if (reset)
+			mix_o <= 'b0;
+		else
+			mix_o <= mix_tmp;
+	end
+
 
 endmodule
