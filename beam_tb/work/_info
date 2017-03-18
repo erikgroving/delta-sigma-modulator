@@ -10,15 +10,15 @@ cModel Technology
 dC:/Users/Erik/Desktop/delta-sigma-modulator/dsm_top
 vbf_top
 Z0 DXx6 sv_std 3 std 0 22 WmjPaeP=7F5?QFXzJ>D[Q2
-Z1 !s110 1489766949
+Z1 !s110 1489868190
 !i10b 1
-!s100 hBMTU6I2AbIL`j[_:V1W:1
-IGz6h^khGW^1AS[l4VYn1U2
+!s100 8?QS4N21Z43@CDgKo2?=n0
+I<5J7AaAFOG_g1VP8O>Wi?1
 Z2 VDg1SIo80bB@j0V0VzS_@n1
 !s105 bf_top_v_unit
 S1
 Z3 dC:/Users/Erik/Desktop/delta-sigma-modulator/beam_tb
-w1489766225
+w1489868185
 8C:/Users/Erik/Desktop/delta-sigma-modulator/bf_top.v
 FC:/Users/Erik/Desktop/delta-sigma-modulator/bf_top.v
 L0 1
@@ -26,7 +26,7 @@ Z4 OP;L;10.4a;61
 r1
 !s85 0
 31
-Z5 !s108 1489766949.000000
+Z5 !s108 1489868190.000000
 !s107 C:/Users/Erik/Desktop/delta-sigma-modulator/bf_top.v|
 !s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/Erik/Desktop/delta-sigma-modulator/bf_top.v|
 !s101 -O0
@@ -34,7 +34,7 @@ Z5 !s108 1489766949.000000
 Z6 o-work work -sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact -O0
 vbf_top_tb
 R0
-Z7 !s110 1489766950
+R1
 !i10b 1
 !s100 aY5S:OQmga8]ZJfXK::lC2
 I3zJ8zlTl0KXZMcTOK2SD?1
@@ -50,7 +50,7 @@ R4
 r1
 !s85 0
 31
-Z8 !s108 1489766950.000000
+R5
 !s107 C:/Users/Erik/Desktop/delta-sigma-modulator/bf_top_tb.v|
 !s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/Erik/Desktop/delta-sigma-modulator/bf_top_tb.v|
 !s101 -O0
@@ -58,57 +58,57 @@ Z8 !s108 1489766950.000000
 R6
 vDSM_top
 R0
-R7
+R1
 !i10b 1
-!s100 Z`YSb6>cEKh3n2`6bOVMW3
-IHa2<:FJJ:dNjkZ1aSTmC30
+!s100 ALi`XPaSXA[J[;TzzBCPP2
+IVF<cD@9HkJ3<SH]8V4X3Y3
 R2
-Z9 !s105 dsm_v_unit
+Z7 !s105 dsm_v_unit
 S1
 R3
-Z10 w1489760753
-Z11 8C:/Users/Erik/Desktop/delta-sigma-modulator/dsm.v
-Z12 FC:/Users/Erik/Desktop/delta-sigma-modulator/dsm.v
+Z8 w1489867929
+Z9 8C:/Users/Erik/Desktop/delta-sigma-modulator/dsm.v
+Z10 FC:/Users/Erik/Desktop/delta-sigma-modulator/dsm.v
 L0 3
 R4
 r1
 !s85 0
 31
-R8
-Z13 !s107 C:\Users\Erik\Desktop\delta-sigma-modulator\parameters.vh|C:/Users/Erik/Desktop/delta-sigma-modulator/dsm.v|
-Z14 !s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/Erik/Desktop/delta-sigma-modulator/dsm.v|
+R5
+Z11 !s107 C:\Users\Erik\Desktop\delta-sigma-modulator\parameters.vh|C:/Users/Erik/Desktop/delta-sigma-modulator/dsm.v|
+Z12 !s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/Erik/Desktop/delta-sigma-modulator/dsm.v|
 !s101 -O0
 !i113 1
 R6
 n@d@s@m_top
 vDSS
 R0
-R7
+R1
 !i10b 1
-!s100 De?[NhJh1AiC069>MOb2j1
-II1^J70R3LK`3glk2a?Wj`2
+!s100 B2NgmRIMUbcAS;XYc_Vi:2
+IbMXzfN0eYMIEU]1XeHL5F1
 R2
-R9
+R7
 S1
 R3
+R8
+R9
 R10
-R11
-R12
-L0 81
+L0 61
 R4
 r1
 !s85 0
 31
-R8
-R13
-R14
+R5
+R11
+R12
 !s101 -O0
 !i113 1
 R6
 n@d@s@s
 vinterp
 R0
-R7
+R1
 !i10b 1
 !s100 MZ<Dn@Ak8MCoE`J@?34992
 I0l9ieG[YB_ZD7K:OiiO171
@@ -116,7 +116,7 @@ R2
 !s105 interp_v_unit
 S1
 R3
-w1489758399
+R8
 8C:/Users/Erik/Desktop/delta-sigma-modulator/interp.v
 FC:/Users/Erik/Desktop/delta-sigma-modulator/interp.v
 L0 3
@@ -124,7 +124,7 @@ R4
 r1
 !s85 0
 31
-R8
+R5
 !s107 C:\Users\Erik\Desktop\delta-sigma-modulator\parameters.vh|C:/Users/Erik/Desktop/delta-sigma-modulator/interp.v|
 !s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/Erik/Desktop/delta-sigma-modulator/interp.v|
 !s101 -O0
@@ -132,7 +132,7 @@ R8
 R6
 vlfsr
 R0
-R7
+R1
 !i10b 1
 !s100 Eadd[<B^aYBan<]WlmX:J1
 I2YRTWfbPnd^9Cg>fQ]XMA0
@@ -148,7 +148,7 @@ R4
 r1
 !s85 0
 31
-R8
+R5
 !s107 C:\Users\Erik\Desktop\delta-sigma-modulator\parameters.vh|C:/Users/Erik/Desktop/delta-sigma-modulator/lfsr.v|
 !s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/Erik/Desktop/delta-sigma-modulator/lfsr.v|
 !s101 -O0
@@ -156,15 +156,15 @@ R8
 R6
 vmixer_iq
 R0
-R7
+R1
 !i10b 1
-!s100 J?Q:B9S0PzHKdSCBR_oL02
-ISGOne@bTaamBjJl?RJSiL0
+!s100 jO^7Z>DPVzS0k9L7B@HAP2
+I12bUM]Q?^OH1[fBK:fkFa2
 R2
 !s105 mixer_iq_v_unit
 S1
 R3
-w1489763736
+R8
 8C:/Users/Erik/Desktop/delta-sigma-modulator/mixer_iq.v
 FC:/Users/Erik/Desktop/delta-sigma-modulator/mixer_iq.v
 L0 1
@@ -172,7 +172,7 @@ R4
 r1
 !s85 0
 31
-R8
+R5
 !s107 C:/Users/Erik/Desktop/delta-sigma-modulator/mixer_iq.v|
 !s90 -reportprogress|300|-work|work|-sv|-stats=none|C:/Users/Erik/Desktop/delta-sigma-modulator/mixer_iq.v|
 !s101 -O0
@@ -205,25 +205,25 @@ R6
 nphase@shift
 vquantizer
 R0
-R7
+R1
 !i10b 1
-!s100 zoDFDN31;P1DBNcN0A>6a1
-ImfNIN8Pe6Gc>USZlA_EFO0
+!s100 J7??_13SB[Xj9kRWiHlNY0
+ICiAh3a8mNMEOFXYATK`3M1
 R2
-R9
+R7
 S1
 R3
+R8
+R9
 R10
-R11
-R12
-L0 192
+L0 196
 R4
 r1
 !s85 0
 31
-R8
-R13
-R14
+R5
+R11
+R12
 !s101 -O0
 !i113 1
 R6

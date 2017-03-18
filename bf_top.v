@@ -101,6 +101,8 @@ module bf_top (
 			);
 			
 			mixer_iq mixer_iq_i (
+				.clock(clock),
+				.reset(reset),
 				.mixin_i(interp_o_i[i]),
 				.mixin_q(interp_o_q[i]), 
 				.LO_i(LO_i),          // 1, 0, -1, 0
