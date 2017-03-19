@@ -5,7 +5,7 @@ module DSM_top (
 	input							reset,
 	input		[`T_BITS - 1: 0]	vin,
 	input		[`T_BITS - 1: 0]	dith_i,
-	output	reg	[1: 0]				pwm	
+	output		[1: 0]				pwm	
 );
 
 	wire	[`T_BITS - 1: 0]	pwm_scaled;				// PWM * vin_FS/2	
@@ -13,7 +13,6 @@ module DSM_top (
 	wire	[`T_BITS - 1: 0]	dss_o;
 	wire	[`T_BITS - 1: 0]	dss_vin_sum;
 	wire	[`T_BITS - 1: 0]	dss_vin_sum_dith;
-	wire	[1: 0]				quant_o;
 	
 	
 	// Multiply by (VIN_FS/2) (bitshifted once)
@@ -26,14 +25,6 @@ module DSM_top (
 	// Dither the dss output summed with vin
 	assign 	dss_vin_sum_dith		= dss_vin_sum + dith_i;	// dithering turned off
 	
-	always @(posedge clock) begin
-		if (reset) begin
-			pwm	<= 2'b0;
-		end
-		else begin
-			pwm	<= quant_o;	// bits 19-16 are for saturation, ignore. 14-0 are fractional bits
-		end
-	end
 	
 	// I need to know how wide y (dss_out) should be
 	// This means I need to know what n is.
@@ -54,7 +45,7 @@ module DSM_top (
 		.in1(dss_vin_sum_dith),
 		.clock(clock),
 		.reset(reset),
-		.out1(quant_o)
+		.out1(pwm)
 	);
 	
 
@@ -84,106 +75,86 @@ module DSS (
 	input	[`T_BITS - 1: 0] 	u,
 	output	[`T_BITS - 1: 0]	y
 );
-	// 25 bit precision for the DSS since they are pretty small.
-	// 2's complement since there are negative numbers
-	// [24]	- -2
-	// [23] - 1
-	// [22: 0] fractional precision bits
-	wire signed	[`T_BITS - 1: 0] A0 [3: 0];	// row 0
-	wire signed	[`T_BITS - 1: 0] A1 [3: 0];	// row 1
-	wire signed	[`T_BITS - 1: 0] A2 [3: 0];	// row 2
-	wire signed	[`T_BITS - 1: 0] A3 [3: 0];	// row 3
-	
-	
-	wire signed	[3: 0]				B;
-	wire signed	[`T_BITS - 1: 0]	C [3: 0];
-	wire signed	[`T_BITS - 1: 0] 	D;
-	
-	wire signed	[`T_BITS - 1: 0] 		xn1 [3: 0];
-	reg	 signed	[`T_BITS - 1: 0]		xn0	[3: 0];
-	wire signed	[`T_BITS * 2 - 1: 0] 	temp_xn1;
-	wire signed [`T_BITS * 2 - 1: 0]	temp_y;
-	wire signed	[`T_BITS * 2 - 1: 0] 	temp_y1;
-	wire signed	[`T_BITS * 2 - 1: 0] 	temp_y2;
-	wire signed	[`T_BITS * 2 - 1: 0] 	temp_y3;
-	wire signed	[`T_BITS * 2 - 1: 0] 	temp_y4;
-	wire signed	[`T_BITS * 2 - 1: 0] 	temp_y5;
 
+	wire signed	[10: 0] A0 	[3: 0];	// 11 bits, 2 dec, 9 frac
+	wire signed	[9: 0]	C	[3: 0]; // 10 bits, 1 dec, 9 frac
+	wire signed	[9: 0] 	D;			// 10 bits, 1 dec, 9 frac
+	
+	wire signed	[`T_BITS - 1: 0] 	xn1 [3: 0];
+	reg	 signed	[`T_BITS - 1: 0]	xn0	[3: 0];
+	wire signed	[`T_BITS + 10: 0] 	temp_xn1;
+	wire signed [`T_BITS + 10: 0]	temp_y;
+	
+	
+	wire signed	[`T_BITS + 10: 0] 	temp_y1;
+	wire signed	[`T_BITS + 10: 0] 	temp_y2;
+	wire signed	[`T_BITS + 10: 0] 	temp_y3;
+	wire signed	[`T_BITS + 10: 0] 	temp_y4;
+	wire signed	[`T_BITS + 10: 0] 	temp_y5;
+	reg  signed	[`T_BITS + 10: 0] 	y1;
+	reg  signed	[`T_BITS + 10: 0] 	y2;
+	reg  signed	[`T_BITS + 10: 0] 	y3;
+	reg  signed	[`T_BITS + 10: 0] 	y4;
+	reg  signed	[`T_BITS + 10: 0] 	y5;
 	
 	always @ (posedge clock) begin
 		if (reset) begin
-			xn0[0]	<= `T_BITS'b0;
-			xn0[1]	<= `T_BITS'b0;
-			xn0[2]	<= `T_BITS'b0;
-			xn0[3]	<= `T_BITS'b0;
+			xn0[0]	<= 11'b0;
+			xn0[1]	<= 11'b0;
+			xn0[2]	<= 11'b0;
+			xn0[3]	<= 11'b0;
+			y1		<= 26'b0;
+			y2		<= 26'b0;
+			y3		<= 26'b0;
+			y4		<= 26'b0;
+			y5		<= 26'b0;
+			
 		end
 		else begin
 			xn0[0]	<= xn1[0];
 			xn0[1]	<= xn1[1];
 			xn0[2]	<= xn1[2];
 			xn0[3]	<= xn1[3];
+			y1		<= temp_y1;
+			y2		<= temp_y2;
+			y3		<= temp_y3;
+			y4		<= temp_y4;
+			y5		<= temp_y5;
 		end
 	end
 	
-		// TODO: shift bits properly for multiplication
-	assign temp_xn1	= A0[0]*xn0[0]+A0[1]*xn0[1]+A0[2]*xn0[2]+A0[3]*xn0[3];
-	assign xn1[0]	= temp_xn1[`T_BITS + `F_BITS - 1:`F_BITS] + $signed(u);
+	assign temp_xn1	= A0[1]*xn0[1];
+	assign xn1[0]	= $signed(temp_xn1[`T_BITS + 8:9]) + $signed(u) - xn0[3];
 	assign xn1[1]	= xn0[0];
 	assign xn1[2]	= xn0[1];
 	assign xn1[3]	= xn0[2];
+	
 	assign temp_y1	= C[0]*xn0[0];
 	assign temp_y2	= C[1]*xn0[1];
 	assign temp_y3	= C[2]*xn0[2];
 	assign temp_y4	= C[3]*xn0[3];
 	assign temp_y5	= D*$signed(u);
-	assign temp_y	= temp_y1 + temp_y2 + temp_y3 + temp_y4 + temp_y5;
-	assign y		= temp_y[`T_BITS + 13:`F_BITS];
-	
-	
-	// Walkthrough of how the representation of A0[0] is done
-	// Multiply by 2^23 (so there are 23 fractional bits)
-	// If negative 2's complement.
-	// A0[0] = -6.28132e-04
-	// -6.281320980921351e-04 * 2^23 = -5269.15 ~= -5269
-	// 5269 in hex: 0x000_1495
-	// Invert: 0x1FF_EB6A, 2's complment -> 0x1FF_EB6B
-	// If we look at this value:
-	// -2^24 --> -16777216, 0xFF_EB6B = 16771947
-	// -16777216 + 16771947 = -5269
-	// This divided 2^23 is -6.28113e-4, close enough(I hope, actual is -6.28132e-4)
+	assign temp_y	= y1 + y2 + y3 + y4 + y5;
+	//assign temp_y = temp_y1 + temp_y2 + temp_y3 + temp_y4 + temp_y5;
+	assign y		= temp_y[`T_BITS + 8: 9];
+
 	
 	// First row
-	assign A0[0]	= `T_BITS'h7FFA;		// -6.28113e-4 (supposed to be -6.28132e-04)
-	assign A0[1]	= `T_BITS'h4010;		// -1.99802649 (supposed to be -1.99802650)
-	assign A0[2]	= `T_BITS'h7FFA;		// same as A0[0]
-	assign A0[3]	= `T_BITS'h6000;		// -1
-	// Second row     
-	assign A1[0]	= `T_BITS'h2000;		// 1
-	assign A1[1]	= `T_BITS'h0;			// 0
-	assign A1[2]	= `T_BITS'h0;			// 0
-	assign A1[3]	= `T_BITS'h0;			// 0
-	// Third Row      
-	assign A2[0]	= `T_BITS'h0;			// 0
-	assign A2[1]	= `T_BITS'h2000;		// 1
-	assign A2[2]	= `T_BITS'h0;			// 0
-	assign A2[3]	= `T_BITS'h0;			// 0
-	// Fourth Row     
-	assign A3[0]	= `T_BITS'h0;			// 0
-	assign A3[1]	= `T_BITS'h0;			// 0
-	assign A3[2]	= `T_BITS'h2000;		// 1
-	assign A3[3]	= `T_BITS'h0;			// 0
-	
-	// B
-	assign B		= 4'b0001;
+	assign A0[0]	= 11'h0;		// -6.28113e-4 (supposed to be -6.28132e-04)
+	assign A0[1]	= 11'h401;		// -1.99802649 (supposed to be -1.99802650)
+	assign A0[2]	= 11'h0;		// same as A0[0]
+	assign A0[3]	= 11'h600;		// -1
+
+
 	
 	// C	// 14 fractional bits
-	assign C[0]		= `T_BITS'h47AE;	// -0.8799698
-	assign C[1]		= `T_BITS'h440;		//  0.0664163
-	assign C[2]		= `T_BITS'h590D;	// -0.6085788
-	assign C[3]		= `T_BITS'h197;		//  0.0248957
+	assign C[0]		= 10'h23D;		// -0.8799698
+	assign C[1]		= 10'h22;		//  0.0664163
+	assign C[2]		= 10'h2C8;		// -0.6085788
+	assign C[3]		= 10'hD;		//  0.0248957
 
 	// D 	// 14 fractional bits
-	assign D		= `T_BITS'h7E68;		// -0.0248957
+	assign D		= 10'h3F3;		// -0.0248957
 	
 
 endmodule
@@ -195,7 +166,7 @@ module quantizer (
 	input			clock,
 	output	[1: 0]	out1
 );
-	wire signed	[`T_BITS - 1: 0]	zoh_i;
+	wire signed	[`T_BITS: 0]	zoh_i;
 	
 	assign zoh_i	= $signed(in1) + $signed(`QUANT_OFF);
 		
