@@ -26,14 +26,6 @@ module DSM_top (
 	assign 	dss_vin_sum_dith		= dss_vin_sum + dith_i;	// dithering turned off
 	
 	
-	// I need to know how wide y (dss_out) should be
-	// This means I need to know what n is.
-	// Also need an idea of what A, B, C, and D are
-	// see below 
-	// Question: What is n (number of states)?
-	// answer: see below, i thinks it is 4.
-	// Question: What are the values of A, B, C and D? (I can leave undefined for now)
-	// answer: you can run tb.m and get the value of A,B,C,D. only D is a number ,ABC are all matrix
 	DSS DSS_i (
 		.clock(clock),
 		.reset(reset),
@@ -50,24 +42,6 @@ module DSM_top (
 	
 
 endmodule
-
-
-// Discrete-state space
-// N is number of states
-// Question: How many states are there? (need this to write)
-//answer: i get the following from the help of Discrete State-Space
-//x(n+1)=Ax(n)+Bu(n), y(n)=Cx(n)+Du(n),
-//where u is the input, x is the state, and y is the output. The matrix coefficients must //have these characteristics, as illustrated in the following diagram:
-
-//A must be an n-by-n matrix, where n is the number of states. (4*4,so n=4)
-//B must be an n-by-m matrix, where m is the number of inputs. (4*1,m=1)
-//C must be an r-by-n matrix, where r is the number of outputs. (1*4, r=1)
-//D must be an r-by-m matrix. (1*1)
-
-//The block accepts one input and generates one output. The width of the input vector
-// is the number of columns in the B and D matrices. The width of the output vector
-// is the number of rows in the C and D matrices. To define the initial state vector,
-// use the Initial conditions parameter.
 
 module DSS (
 	input						clock,
@@ -159,7 +133,6 @@ module quantizer (
 		
 
 	// Quantize the output
-//	assign out1	= ~zoh_o[19];
-	assign out1	= 	(zoh_i < $signed(`QUANT_LOW)) 			? 2'b11 :
+	assign out1	= 	(zoh_i < $signed(`QUANT_LOW)) 				? 2'b11 :
 					(reset || zoh_i  < $signed(`QUANT_HIGH)) 	? 2'b00	: 2'b01 ;
 endmodule
