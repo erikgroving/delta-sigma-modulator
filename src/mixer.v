@@ -14,16 +14,21 @@ module mixer (
 	output	[14: 0]	mix_o
 );
 
-	wire signed [14: 0] ampl;
+	//wire signed [14: 0] ampl;
 	wire signed [14: 0] inter_res;
+	wire signed [29: 0] s_inter_res;
 	wire signed	[29: 0] mix_res;
 	
-	assign ampl = 15'h2861;	// 0.6309573 * 0.5 = 0.3154786 (15 fractional bits)
+	//assign ampl = 15'h2861;	// 0.6309573 * 0.5 = 0.3154786 (15 fractional bits)
+	
+	
 	
 	assign inter_res	= 	LO[1] ? -interp_i :
 							LO[0] ? interp_i : 15'b0;
+	assign s_inter_res	= 	{{15{inter_res[14]}}, inter_res};
 							
-	assign mix_res		= inter_res * ampl;
+	assign mix_res		= (s_inter_res << 13) + (s_inter_res << 11) + (s_inter_res << 6) 
+						+ (s_inter_res << 5) + s_inter_res;
 	assign mix_o		= mix_res[29: 15];
 
 endmodule

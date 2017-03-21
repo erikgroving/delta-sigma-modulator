@@ -76,15 +76,12 @@ module DSS (
 	output	[`T_BITS - 1: 0]	y
 );
 
-	wire signed	[10: 0] A0 	[3: 0];	// 11 bits, 2 dec, 9 frac
-	wire signed	[9: 0]	C	[3: 0]; // 10 bits, 1 dec, 9 frac
-	wire signed	[9: 0] 	D;			// 10 bits, 1 dec, 9 frac
-	
-	wire signed	[`T_BITS - 1: 0] 	xn1 [3: 0];
-	reg	 signed	[`T_BITS - 1: 0]	xn0	[3: 0];
+	wire signed	[`T_BITS - 1: 0] 	xn1 	[3: 0];
+	reg	 signed	[`T_BITS - 1: 0]	xn0		[3: 0];
+	wire signed	[`T_BITS + 10: 0]	s_xn0	[3: 0];
+	wire signed [`T_BITS + 10: 0]	s_u;
 	wire signed	[`T_BITS + 10: 0] 	temp_xn1;
-	wire signed [`T_BITS + 10: 0]	temp_y;
-	
+	wire signed [`T_BITS + 10: 0]	temp_y;	
 	
 	wire signed	[`T_BITS + 10: 0] 	temp_y1;
 	wire signed	[`T_BITS + 10: 0] 	temp_y2;
@@ -123,39 +120,29 @@ module DSS (
 		end
 	end
 	
-	assign temp_xn1	= A0[1]*xn0[1];
+	assign s_u		= {{11{u[`T_BITS - 1]}}, u};
+	assign s_xn0[0]	= {{11{xn0[0][`T_BITS - 1]}}, xn0[0]};
+	assign s_xn0[1]	= {{11{xn0[1][`T_BITS - 1]}}, xn0[1]};
+	assign s_xn0[2]	= {{11{xn0[2][`T_BITS - 1]}}, xn0[2]};
+	assign s_xn0[3]	= {{11{xn0[3][`T_BITS - 1]}}, xn0[3]};
+	
+	assign temp_xn1	= s_xn0[1] - (s_xn0[1] << 10);
 	assign xn1[0]	= $signed(temp_xn1[`T_BITS + 8:9]) + $signed(u) - xn0[3];
 	assign xn1[1]	= xn0[0];
 	assign xn1[2]	= xn0[1];
 	assign xn1[3]	= xn0[2];
+
 	
-	assign temp_y1	= C[0]*xn0[0];
-	assign temp_y2	= C[1]*xn0[1];
-	assign temp_y3	= C[2]*xn0[2];
-	assign temp_y4	= C[3]*xn0[3];
-	assign temp_y5	= D*$signed(u);
-	assign temp_y	= y1 + y2 + y3 + y4 + y5;
-	//assign temp_y = temp_y1 + temp_y2 + temp_y3 + temp_y4 + temp_y5;
+	assign temp_y1	= (s_xn0[0] << 8) + (s_xn0[0] << 7) +
+					  (s_xn0[0] << 6) + (s_xn0[0] << 1) + s_xn0[0];
+	assign temp_y2	= (s_xn0[1] << 5) + (s_xn0[1] << 1);
+	assign temp_y3	= (s_xn0[2] << 7) - (s_xn0[2] << 9) +
+					  (s_xn0[2] << 6) + (s_xn0[2] << 3);
+	assign temp_y4	= (s_xn0[3] << 3) + (s_xn0[3] << 2) + s_xn0[3];
+	assign temp_y5	= (s_u << 3) + (s_u << 2) + s_u;
+
+	assign temp_y	= y2 - y1 + y3 + y4 - y5;
 	assign y		= temp_y[`T_BITS + 8: 9];
-
-	
-	// First row
-	assign A0[0]	= 11'h0;		// -6.28113e-4 (supposed to be -6.28132e-04)
-	assign A0[1]	= 11'h401;		// -1.99802649 (supposed to be -1.99802650)
-	assign A0[2]	= 11'h0;		// same as A0[0]
-	assign A0[3]	= 11'h600;		// -1
-
-
-	
-	// C	// 14 fractional bits
-	assign C[0]		= 10'h23D;		// -0.8799698
-	assign C[1]		= 10'h22;		//  0.0664163
-	assign C[2]		= 10'h2C8;		// -0.6085788
-	assign C[3]		= 10'hD;		//  0.0248957
-
-	// D 	// 14 fractional bits
-	assign D		= 10'h3F3;		// -0.0248957
-	
 
 endmodule
 
