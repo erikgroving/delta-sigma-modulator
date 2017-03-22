@@ -50,7 +50,7 @@ module DSS (
 	output	[`T_BITS - 1: 0]	y
 );
 
-	wire signed	[`T_BITS - 1: 0] 	xn1 	[3: 0];
+	wire signed	[`T_BITS - 1: 0] 	xn1;
 	reg	 signed	[`T_BITS - 1: 0]	xn0		[3: 0];
 	wire signed	[`T_BITS + 10: 0]	s_xn0	[3: 0];
 	wire signed [`T_BITS + 10: 0]	s_u;
@@ -82,10 +82,10 @@ module DSS (
 			
 		end
 		else begin
-			xn0[0]	<= xn1[0];
-			xn0[1]	<= xn1[1];
-			xn0[2]	<= xn1[2];
-			xn0[3]	<= xn1[3];
+			xn0[0]	<= xn1;
+			xn0[1]	<= xn0[0];
+			xn0[2]	<= xn0[1];
+			xn0[3]	<= xn0[2];
 			y1		<= temp_y1;
 			y2		<= temp_y2;
 			y3		<= temp_y3;
@@ -99,12 +99,9 @@ module DSS (
 	assign s_xn0[1]	= {{11{xn0[1][`T_BITS - 1]}}, xn0[1]};
 	assign s_xn0[2]	= {{11{xn0[2][`T_BITS - 1]}}, xn0[2]};
 	assign s_xn0[3]	= {{11{xn0[3][`T_BITS - 1]}}, xn0[3]};
-	
+
 	assign temp_xn1	= s_xn0[1] - (s_xn0[1] << 10);
-	assign xn1[0]	= $signed(temp_xn1[`T_BITS + 8:9]) + $signed(u) - xn0[3];
-	assign xn1[1]	= xn0[0];
-	assign xn1[2]	= xn0[1];
-	assign xn1[3]	= xn0[2];
+	assign xn1	= $signed(temp_xn1[`T_BITS + 8:9]) + $signed(u) - xn0[3];
 
 	
 	assign temp_y1	= (s_xn0[0] << 8) + (s_xn0[0] << 7) +
