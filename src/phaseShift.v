@@ -2,10 +2,9 @@
 module phaseShift(
 	input			clock,
 	input 			reset,
-	input 	[14: 0] sysin_i_1,
-	input 	[14: 0] sysin_q_1,
-	input 	[14: 0] sysin_i_2,
-	input 	[14: 0] sysin_q_2,
+	input 	[14: 0] sysin_i,
+	input 	[14: 0] sysin_q,
+	
 	input 	[4: 0]  w_cos_1,
 	input 	[4: 0]  w_sin_1,
 	input 	[4: 0]  w_cos_2,
@@ -38,19 +37,19 @@ module phaseShift(
 		//implement adder in phaseShift
 
 	//for beam 1
-	assign ii_1 = $signed(sysin_i_1) * $signed(w_cos_1);
-	assign iq_1 = $signed(sysin_i_1) * $signed(w_sin_1);
-	assign qi_1 = $signed(sysin_q_1) * $signed(w_cos_1);
-	assign qq_1 = $signed(sysin_q_1) * $signed(w_sin_1);
+	assign ii_1 = $signed(sysin_i) * $signed(w_cos_1);
+	assign iq_1 = $signed(sysin_i) * $signed(w_sin_1);
+	assign qi_1 = $signed(sysin_q) * $signed(w_cos_1);
+	assign qq_1 = $signed(sysin_q) * $signed(w_sin_1);
 	assign i_cwm_1 = ii_1 + qq_1;
 	assign q_cwm_1 = qi_1 - iq_1;
 
 
 	//for beam 2
-	assign ii_2 = $signed(sysin_i_2) * $signed(w_cos_2);
-	assign iq_2 = $signed(sysin_i_2) * $signed(w_sin_2);
-	assign qi_2 = $signed(sysin_q_2) * $signed(w_cos_2);
-	assign qq_2 = $signed(sysin_q_2) * $signed(w_sin_2);
+	assign ii_2 = $signed(sysin_i) * $signed(w_cos_2);
+	assign iq_2 = $signed(sysin_i) * $signed(w_sin_2);
+	assign qi_2 = $signed(sysin_q) * $signed(w_cos_2);
+	assign qq_2 = $signed(sysin_q) * $signed(w_sin_2);
 	assign i_cwm_2 = ii_2 + qq_2;
 	assign q_cwm_2 = qi_2 - iq_2;
 

@@ -5,10 +5,8 @@ module bf_top_tb (
 	reg 		clock;
 	reg			ds_clock;
 	reg 		reset;
-	reg  [9: 0]	vin_i_1;
-	reg  [9: 0] vin_q_1;
-	reg  [9: 0] vin_i_2;
-	reg  [9: 0] vin_q_2;
+	reg  [9: 0]	vin_i;
+	reg  [9: 0] vin_q;
 	wire [4: 0]	w_cos_1 [7: 0];
 	wire [4: 0]	w_sin_1 [7: 0];
 	wire [4: 0]	w_cos_2 [7: 0];
@@ -24,10 +22,8 @@ module bf_top_tb (
 	integer				pwm_5_file;
 	integer				pwm_6_file;
 	integer				pwm_7_file;
-	integer				i_input_1_file;
-	integer				i_input_2_file;
-	integer				q_input_1_file;
-	integer				q_input_2_file;
+	integer				i_input_file;
+	integer				q_input_file;
 	integer 			scan_file;
 
 	
@@ -37,10 +33,8 @@ module bf_top_tb (
 		ds_clock	= 0;
 		reset		= 1;
 		#300;
-		i_input_1_file = $fopen("../../input/i_input_1_bin.txt", "r");
-		i_input_2_file = $fopen("../../input/i_input_2_bin.txt", "r");
-		q_input_1_file = $fopen("../../input/q_input_1_bin.txt", "r");
-		q_input_2_file = $fopen("../../input/q_input_2_bin.txt", "r");
+		i_input_file = $fopen("../../input/i_input_bin.txt", "r");
+		q_input_file = $fopen("../../input/q_input_bin.txt", "r");
 		pwm_0_file = $fopen("../../output/pwm_0.txt", "w");			
 		pwm_1_file = $fopen("../../output/pwm_1.txt", "w");			
 		pwm_2_file = $fopen("../../output/pwm_2.txt", "w");			
@@ -95,10 +89,8 @@ module bf_top_tb (
 	bf_top bf_top_i (
 		.clock(clock),
 		.reset(reset),
-		.vin_i_1(vin_i_1),
-		.vin_q_1(vin_q_1),
-		.vin_i_2(vin_i_2),
-		.vin_q_2(vin_q_2),
+		.vin_i(vin_i),
+		.vin_q(vin_q),
 		.w_cos_1(w_cos_1),
 		.w_sin_1(w_sin_1),
 		.w_cos_2(w_cos_2),
@@ -207,21 +199,15 @@ module bf_top_tb (
 	always @ (negedge ds_clock) begin
 	//always @(negedge clock) begin
 		if (reset) begin
-			vin_i_1	<= 10'b0;
-			vin_q_1	<= 10'b0;
-			vin_i_2	<= 10'b0;
-			vin_q_2	<= 10'b0;
+			vin_i	<= 10'b0;
+			vin_q	<= 10'b0;
 		end
 		else begin
-			scan_file = $fscanf(i_input_1_file, "%b\n", vin_i_1); 
-			scan_file = $fscanf(q_input_1_file, "%b\n", vin_q_1); 
-			scan_file = $fscanf(i_input_2_file, "%b\n", vin_i_2); 
-			scan_file = $fscanf(q_input_2_file, "%b\n", vin_q_2);
-			if ($feof(i_input_1_file)) begin
-				$fclose(i_input_1_file);
-				$fclose(i_input_2_file);
-				$fclose(q_input_1_file);
-				$fclose(q_input_2_file);
+			scan_file = $fscanf(i_input_file, "%b\n", vin_i); 
+			scan_file = $fscanf(q_input_file, "%b\n", vin_q); 
+			if ($feof(i_input_file)) begin
+				$fclose(i_input_file);
+				$fclose(q_input_file);
 				$fclose(pwm_0_file);
 				$fclose(pwm_1_file);
 				$fclose(pwm_2_file);

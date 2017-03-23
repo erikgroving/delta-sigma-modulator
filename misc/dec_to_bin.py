@@ -2,8 +2,8 @@ import os
 import math
 total_bits = 10
 frac_bits = 9
-f = open('../input/q_input_1.txt', 'r')
-out = open('../input/q_input_1_bin.txt', 'w')
+f = open('../input/i_input.txt', 'r')
+out = open('../input/i_input_bin.txt', 'w')
 for line in f:
 	val = float(line)
 	bin_val = ""

@@ -12,6 +12,18 @@ module dsm_top (
 	wire	[`T_BITS - 1: 0]	interp_o;
 	wire	[`T_BITS - 1: 0] 	mix_o;	
 	wire	[`T_BITS - 1: 0]	dith;
+	reg		[`T_BITS - 1: 0]	vin_sync [1: 0];
+	
+	always @(posedge clock) begin
+		if (reset) begin
+			vin_sync[0]	<= 15'b0;
+			vin_sync[1]	<= 15'b0;
+		end
+		else begin
+			vin_sync[0]	<= vin;
+			vin_sync[1]	<= vin_sync[0];
+		end
+	end
 	
 	
 	assign	LO	= 	LO_cnt[0]		? 2'b00 :
@@ -29,7 +41,7 @@ module dsm_top (
 	interp interp_i (
 		.clock(clock),
 		.reset(reset),
-		.v_in(vin),
+		.v_in(vin_sync[0]),
 		.interp_o(interp_o)
 	);
 	

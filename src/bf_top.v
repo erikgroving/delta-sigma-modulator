@@ -2,10 +2,9 @@ module bf_top (
 
   input			clock,
   input			reset,
-  input	[9: 0]	vin_i_1,
-  input [9: 0] 	vin_q_1,
-  input	[9: 0]	vin_i_2,
-  input [9: 0] 	vin_q_2,
+  input	[9: 0]	vin_i,
+  input [9: 0] 	vin_q,
+
 
 	
 // Changed to 5 bits
@@ -26,15 +25,32 @@ module bf_top (
 	wire [14: 0] interp_o_i [7: 0];
 	wire [14: 0] interp_o_q [7: 0];
 	
-	wire [14: 0]	sysin_i_1;
-	wire [14: 0]	sysin_q_1;
-	wire [14: 0]	sysin_i_2;
-	wire [14: 0]	sysin_q_2;
+	reg  [9: 0]		vin_i_sync [1: 0];
+	reg  [9: 0]		vin_q_sync [1: 0];
+	wire [14: 0]	sysin_i;
+	wire [14: 0]	sysin_q;
+
 	
-	assign sysin_i_1	= {{5{vin_i_1[9]}}, vin_i_1};
-	assign sysin_q_1	= {{5{vin_q_1[9]}}, vin_q_1};
-	assign sysin_i_2	= {{5{vin_i_2[9]}}, vin_i_2};
-	assign sysin_q_2	= {{5{vin_q_2[9]}}, vin_q_2};
+	always @(posedge clock) begin
+		if (reset) begin
+			vin_i_sync[0]	<= 20'b0;
+			vin_i_sync[1]	<= 20'b0;
+			vin_q_sync[0]	<= 20'b0;
+			vin_q_sync[1]	<= 20'b0;
+		end
+		else begin
+			vin_i_sync[0]	<= vin_i;
+			vin_i_sync[1]	<= vin_i_sync[0];
+			vin_q_sync[0]	<= vin_q;
+			vin_q_sync[1]	<= vin_q_sync[0];
+		end
+	end
+	
+	
+	
+	assign sysin_i	= {{5{vin_i[9]}}, vin_i};
+	assign sysin_q	= {{5{vin_q[9]}}, vin_q};
+	
 
 	
 	wire	[1: 0] 	LO_i;
@@ -73,10 +89,8 @@ module bf_top (
 			phaseShift phaseShift_i (
 			   .clock(clock),
 			   .reset(reset),
-			   .sysin_i_1(sysin_i_1),
-			   .sysin_q_1(sysin_q_1),
-			   .sysin_i_2(sysin_i_2),
-			   .sysin_q_2(sysin_q_2),
+			   .sysin_i(sysin_i),
+			   .sysin_q(sysin_q),
 			   .w_cos_1(w_cos_1[i]),
 			   .w_sin_1(w_sin_1[i]),
 			   .w_cos_2(w_cos_2[i]),
