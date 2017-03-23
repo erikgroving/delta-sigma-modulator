@@ -2,10 +2,10 @@ import os
 import math
 total_bits = 10
 frac_bits = 9
-f = open('i_input_1.txt', 'r')
-out = open('i_input_1_bin.txt', 'w')
+f = open('../input/q_input_1.txt', 'r')
+out = open('../input/q_input_1_bin.txt', 'w')
 for line in f:
-	val = float(line) * 16.0
+	val = float(line)
 	bin_val = ""
 	for i in range(total_bits):
 		exp = total_bits - (i + frac_bits + 1)
