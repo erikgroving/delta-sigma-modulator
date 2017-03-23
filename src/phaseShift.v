@@ -10,8 +10,8 @@ module phaseShift(
 	input 	[4: 0]  w_sin_1,
 	input 	[4: 0]  w_cos_2,
 	input 	[4: 0]  w_sin_2, //bit depth for the w coefficients are pending, maybe 5 ot 6 bits
-	output 	[14: 0] out_i,
-	output 	[14: 0] out_q
+	output reg	[14: 0] out_i,
+	output reg	[14: 0] out_q
 );
 
 	wire signed	[14: 0] out_i_w;
