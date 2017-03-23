@@ -41,7 +41,7 @@ module dsm_top (
 	interp interp_i (
 		.clock(clock),
 		.reset(reset),
-		.v_in(vin_sync[0]),
+		.v_in(vin_sync[1]),
 		.interp_o(interp_o)
 	);
 	

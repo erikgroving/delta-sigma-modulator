@@ -48,8 +48,8 @@ module bf_top (
 	
 	
 	
-	assign sysin_i	= {{5{vin_i[9]}}, vin_i};
-	assign sysin_q	= {{5{vin_q[9]}}, vin_q};
+	assign sysin_i	= {{5{vin_i[9]}}, vin_i_sync[1]};
+	assign sysin_q	= {{5{vin_q[9]}}, vin_q_sync[1]};
 	
 
 	
