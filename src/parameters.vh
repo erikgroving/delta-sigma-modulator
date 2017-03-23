@@ -10,9 +10,8 @@
 `define VIN_FS_RECIPROCAL	15'h2000	// 1/1 is still 1
 `define VIN_FS_HALF			15'h1000	// half of VIN_FS (bit 14 is high)
 `define VIN_FS_HALF_NEG		15'h7000	// -0.5
-`define QUANT_LOW			15'h800		// 0.25
-`define QUANT_HIGH			15'h1800	// 0.75
-`define QUANT_OFF			15'h1000	// 0.5
+`define QUANT_LOW			4'hF		// -0.25
+`define QUANT_HIGH			4'h1		// 0.25
 
 `define F_BITS				13	//fractional bits
 `define T_BITS				15	// total bits

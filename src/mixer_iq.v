@@ -22,25 +22,27 @@ module mixer_iq (
 	
 	
 	//i
-	assign inter_res_i = 	LO_i[1] ? -mixin_i :
-							LO_i[0] ? mixin_i : 15'b0;	
+	assign inter_res_i = 	LO_i[1] ? $signed(-mixin_i) :
+							LO_i[0] ? $signed(mixin_i) 	: 15'b0;	
 							
-	assign se_inter_res_i	 = 	{{15{inter_res_i[14]}}, inter_res_i};
+	assign se_inter_res_i	 = 	$signed({{15{inter_res_i[14]}}, inter_res_i});
 	assign sl_inter_res_i[0] = 	se_inter_res_i << 13;
 	assign sl_inter_res_i[1] =	se_inter_res_i << 11;
 	assign sl_inter_res_i[2] =	se_inter_res_i << 6;
 	assign sl_inter_res_i[3] = 	se_inter_res_i << 5;
 	assign sl_inter_res_i[4] =	se_inter_res_i;
 	
-	assign mix_res_i = 	sl_inter_res_i[0][29: 7] + sl_inter_res_i[1][29: 7] + 
-						sl_inter_res_i[2][29: 7] + sl_inter_res_i[3][29: 7] +
-						sl_inter_res_i[4][29: 7];	
+	assign mix_res_i = 	$signed(sl_inter_res_i[0][29: 7]) + 
+						$signed(sl_inter_res_i[1][29: 7]) + 
+						$signed(sl_inter_res_i[2][29: 7]) + 
+						$signed(sl_inter_res_i[3][29: 7]) +
+						$signed(sl_inter_res_i[4][29: 7]);	
 	
 	//q
-	assign inter_res_q	= 	LO_q[1] ? -mixin_q :
-							LO_q[0] ? mixin_q : 15'b0;			
+	assign inter_res_q	= 	LO_q[1] ? $signed(-mixin_q) :
+							LO_q[0] ? $signed(mixin_q) : 15'b0;			
 	
-	assign se_inter_res_q	 = 	{{15{inter_res_q[14]}}, inter_res_q};
+	assign se_inter_res_q	 = 	$signed({{15{inter_res_q[14]}}, inter_res_q});
 
 	assign sl_inter_res_q[0] = 	se_inter_res_q << 13;
 	assign sl_inter_res_q[1] =	se_inter_res_q << 11;
@@ -48,9 +50,11 @@ module mixer_iq (
 	assign sl_inter_res_q[3] = 	se_inter_res_q << 5;
 	assign sl_inter_res_q[4] =	se_inter_res_q;
 	
-	assign mix_res_q = 	sl_inter_res_q[0][29: 7] + sl_inter_res_q[1][29: 7] + 
-						sl_inter_res_q[2][29: 7] + sl_inter_res_q[3][29: 7] +
-						sl_inter_res_q[4][29: 7];	
+	assign mix_res_q = 	$signed(sl_inter_res_q[0][29: 7]) + 
+						$signed(sl_inter_res_q[1][29: 7]) + 
+						$signed(sl_inter_res_q[2][29: 7]) + 
+						$signed(sl_inter_res_q[3][29: 7]) +
+						$signed(sl_inter_res_q[4][29: 7]);	
 
 	assign mix_tmp		= $signed(mix_res_q[22:8])+$signed(mix_res_i[22:8]); 
 

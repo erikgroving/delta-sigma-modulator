@@ -12,7 +12,7 @@ module DSM_top (
 	wire	[`T_BITS - 1: 0]	vin_pwm_scaled_delta;	// vin - pwm_scaled
 	wire	[`T_BITS - 1: 0]	dss_o;
 	wire	[`T_BITS - 1: 0]	dss_vin_sum;
-	wire	[`T_BITS - 1: 0]	dss_vin_sum_dith;
+	wire	[9: 0]	dss_vin_sum_dith;
 	
 	
 	// Multiply by (VIN_FS/2) (bitshifted once)
@@ -23,7 +23,7 @@ module DSM_top (
 	// Sum DSS output with vin
 	assign	dss_vin_sum				= dss_o + vin;
 	// Dither the dss output summed with vin
-	assign 	dss_vin_sum_dith		= dss_vin_sum + dith_i;	// dithering turned off
+	assign 	dss_vin_sum_dith		= dss_vin_sum[14:5] + dith_i[14:5];
 	
 	
 	DSS DSS_i (
@@ -34,8 +34,7 @@ module DSM_top (
 	);
 	
 	quantizer quantizer_i (
-		.in1(dss_vin_sum_dith),
-		.clock(clock),
+		.in1(dss_vin_sum_dith[9: 6]),
 		.reset(reset),
 		.out1(pwm)
 	);
@@ -52,17 +51,17 @@ module DSS (
 
 	wire signed	[`T_BITS - 1: 0] 	xn1;
 	reg	 signed	[`T_BITS - 1: 0]	xn0		[3: 0];
-	wire signed	[`T_BITS + 10: 0]	s_xn0	[3: 0];
-	wire signed [`T_BITS + 10: 0]	s_u;
+	wire		[`T_BITS + 10: 0]	s_xn0	[3: 0];
+	wire 	 	[`T_BITS + 10: 0]	s_u;
 	wire signed	[`T_BITS + 3 : 0] 	temp_xn1;
 	wire signed [`T_BITS + 5: 0]	temp_y;	
 	
-	wire signed [`T_BITS + 10: 0] temp_xn1_s_summand;	
-	wire signed [`T_BITS + 8: 0] temp_y1_in [3: 0];
-	wire signed [`T_BITS + 8: 0] temp_y2_in [1: 0];
-	wire signed [`T_BITS + 8: 0] temp_y3_in [3: 0];
-	wire signed [`T_BITS + 8: 0] temp_y4_in [1: 0];
-	wire signed [`T_BITS + 8: 0] temp_y5_in [1: 0];
+	wire signed [`T_BITS + 10: 0]	temp_xn1_s_summand;	
+	wire signed [`T_BITS + 8: 0] 	temp_y1_in [3: 0];
+	wire signed [`T_BITS + 8: 0] 	temp_y2_in [1: 0];
+	wire signed [`T_BITS + 8: 0] 	temp_y3_in [3: 0];
+	wire signed [`T_BITS + 8: 0] 	temp_y4_in [1: 0];
+	wire signed [`T_BITS + 8: 0] 	temp_y5_in [1: 0];
 	
 	wire signed	[`T_BITS + 5: 0] 	temp_y1;
 	wire signed	[`T_BITS + 5: 0] 	temp_y2;
@@ -155,17 +154,12 @@ endmodule
 
 // Quantizer
 module quantizer (
-	input	[`T_BITS - 1: 0] in1,
+	input	[3: 0] in1,
 	input			reset,
-	input			clock,
 	output	[1: 0]	out1
 );
-	wire signed	[`T_BITS: 0]	zoh_i;
-	
-	assign zoh_i	= $signed(in1) + $signed(`QUANT_OFF);
-		
 
 	// Quantize the output
-	assign out1	= 	(zoh_i < $signed(`QUANT_LOW)) 				? 2'b11 :
-					(reset || zoh_i  < $signed(`QUANT_HIGH)) 	? 2'b00	: 2'b01 ;
+	assign out1	= 	($signed(in1) < $signed(`QUANT_LOW)) 			? 2'b11 :
+					(reset || $signed(in1)  < $signed(`QUANT_HIGH)) ? 2'b00	: 2'b01 ;
 endmodule

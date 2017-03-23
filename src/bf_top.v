@@ -71,6 +71,8 @@ module bf_top (
 	generate 
 		for (i = 0; i < 8; i=i+1) begin
 			phaseShift phaseShift_i (
+			   .clock(clock),
+			   .reset(reset),
 			   .sysin_i_1(sysin_i_1),
 			   .sysin_q_1(sysin_q_1),
 			   .sysin_i_2(sysin_i_2),

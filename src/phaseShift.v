@@ -1,5 +1,7 @@
 
 module phaseShift(
+	input			clock,
+	input 			reset,
 	input 	[14: 0] sysin_i_1,
 	input 	[14: 0] sysin_q_1,
 	input 	[14: 0] sysin_i_2,
@@ -11,6 +13,9 @@ module phaseShift(
 	output 	[14: 0] out_i,
 	output 	[14: 0] out_q
 );
+
+	wire signed	[14: 0] out_i_w;
+	wire signed [14: 0] out_q_w;
 
 	wire signed [19: 0] ii_1;
 	wire signed [19: 0] iq_1;
@@ -56,11 +61,22 @@ module phaseShift(
 	
 	// Check saturation and then assign output
 	// positive check then negative check, if neither were true, then set to bottom 20 bits
-	assign out_i = 	{out_i_sat[21], |out_i_sat[20:14]} == 2'b01	?	15'h3FFF : 
-					{out_i_sat[21], &out_i_sat[20:14]} == 2'b10	?	15'h4000 :  out_i_sat[14: 0];
+	assign out_i_w = 	{out_i_sat[21], |out_i_sat[20:14]} == 2'b01	?	15'h3FFF : 
+						{out_i_sat[21], &out_i_sat[20:14]} == 2'b10	?	15'h4000 :  out_i_sat[14: 0];
 
-	assign out_q =	{out_q_sat[21], |out_q_sat[20:14]} == 2'b01	?	15'h3FFF : 
-					{out_q_sat[21], &out_q_sat[20:14]} == 2'b10	?	15'h4000 :  out_q_sat[14: 0] ;
+	assign out_q_w =	{out_q_sat[21], |out_q_sat[20:14]} == 2'b01	?	15'h3FFF : 
+						{out_q_sat[21], &out_q_sat[20:14]} == 2'b10	?	15'h4000 :  out_q_sat[14: 0] ;
+	
+	always @(posedge clock) begin
+		if (reset) begin 
+			out_i	<= 15'b0;
+			out_q	<= 15'b0;
+		end
+		else begin
+			out_i	<= out_i_w;
+			out_q	<= out_q_w;
+		end
+	end
 					
-
+					
 endmodule

@@ -21,9 +21,9 @@ module mixer (
 	
 	//assign ampl = 15'h2861;	// 0.6309573 * 0.5 = 0.3154786 (15 fractional bits)
 	
-	assign inter_res		= 	LO[1] ? -interp_i :
-								LO[0] ? interp_i : 15'b0;
-	assign se_inter_res		= 	{{15{inter_res[14]}}, inter_res};
+	assign inter_res		= 	LO[1] ? $signed(-interp_i) 	:
+								LO[0] ? $signed(interp_i) 	: 15'b0;
+	assign se_inter_res		= 	$signed({{15{inter_res[14]}}, inter_res});
 	assign sl_inter_res[0]	= 	se_inter_res << 13;
 	assign sl_inter_res[1]	=	se_inter_res << 11;
 	assign sl_inter_res[2]	=	se_inter_res << 6;
@@ -31,9 +31,11 @@ module mixer (
 	assign sl_inter_res[4]	=	se_inter_res;
 
 							
-	assign mix_res			= 	sl_inter_res[0][29: 7] + sl_inter_res[1][29: 7] + 
-								sl_inter_res[2][29: 7] + sl_inter_res[3][29: 7] +
-								sl_inter_res[4][29: 7];
+	assign mix_res			= 	$signed(sl_inter_res[0][29: 7]) + 
+								$signed(sl_inter_res[1][29: 7]) + 
+								$signed(sl_inter_res[2][29: 7]) + 
+								$signed(sl_inter_res[3][29: 7]) +
+								$signed(sl_inter_res[4][29: 7]);
 	assign mix_o			= 	mix_res[22: 8];
 
 endmodule

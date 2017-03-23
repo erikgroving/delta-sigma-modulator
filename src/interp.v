@@ -37,7 +37,7 @@ module interp (
 		end
 		else if (prescale_cnt == 3'd7) begin
 			v_prev	<= v;
-			v		<= {v_in, `I_BITS_SUB_VIN_BITS'b0};// 
+			v		<= $signed({v_in, `I_BITS_SUB_VIN_BITS'b0});// 
 		end
 		
 		// prescale_clk goes high when it goes from 24->25
@@ -59,7 +59,7 @@ module interp (
 	assign prescale_clk	= (prescale_cnt == 3'd6);
 	
 	assign v_diff 	= v - v_prev;
-	assign v_step	= {{3{v_diff[`I_U_LIM]}}, v_diff[`I_U_LIM:3]};
+	assign v_step	= $signed({{3{v_diff[`I_U_LIM]}}, v_diff[`I_U_LIM:3]});
 
 	
 endmodule
