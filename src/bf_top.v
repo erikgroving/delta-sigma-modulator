@@ -30,6 +30,19 @@ module bf_top (
 	wire [14: 0]	sysin_i;
 	wire [14: 0]	sysin_q;
 
+	wire		prescale_clk;	// (1/8)Fclk
+	reg [2: 0]	prescale_cnt;
+	
+	always @(posedge clock) begin
+		if (reset) begin
+			prescale_cnt <= 3'b0;
+		end
+		else begin
+			prescale_cnt <= prescale_cnt + 1'b1;
+		end
+	end
+	
+	assign prescale_clk = (prescale_cnt > 3'd3);
 	
 	always @(posedge clock) begin
 		if (reset) begin
@@ -87,7 +100,7 @@ module bf_top (
 	generate 
 		for (i = 0; i < 8; i=i+1) begin
 			phaseShift phaseShift_i (
-			   .clock(clock),
+			   .clock(prescale_clk),
 			   .reset(reset),
 			   .sysin_i(sysin_i),
 			   .sysin_q(sysin_q),
