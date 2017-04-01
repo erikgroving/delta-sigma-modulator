@@ -56,12 +56,12 @@ module DSS (
 	wire signed	[`T_BITS + 3 : 0] 	temp_xn1;
 	wire signed [`T_BITS + 5: 0]	temp_y;	
 	
-	wire signed [`T_BITS + 10: 0]	temp_xn1_s_summand;	
-	wire signed [`T_BITS + 8: 0] 	temp_y1_in [3: 0];
-	wire signed [`T_BITS + 8: 0] 	temp_y2_in [1: 0];
-	wire signed [`T_BITS + 8: 0] 	temp_y3_in [3: 0];
-	wire signed [`T_BITS + 8: 0] 	temp_y4_in [1: 0];
-	wire signed [`T_BITS + 8: 0] 	temp_y5_in [1: 0];
+	wire  		[`T_BITS + 10: 0]	temp_xn1_s_summand;	
+	wire  		[`T_BITS + 8: 0] 	temp_y1_in [3: 0];
+	wire  		[`T_BITS + 8: 0] 	temp_y2_in [1: 0];
+	wire  		[`T_BITS + 8: 0] 	temp_y3_in [3: 0];
+	wire  		[`T_BITS + 8: 0] 	temp_y4_in [1: 0];
+	wire  		[`T_BITS + 8: 0] 	temp_y5_in [1: 0];
 	
 	wire signed	[`T_BITS + 5: 0] 	temp_y1;
 	wire signed	[`T_BITS + 5: 0] 	temp_y2;

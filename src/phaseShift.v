@@ -13,8 +13,8 @@ module phaseShift(
 	output reg	[14: 0] out_q
 );
 
-	wire signed	[14: 0] out_i_w;
-	wire signed [14: 0] out_q_w;
+	wire		[14: 0] out_i_w;
+	wire 		[14: 0] out_q_w;
 
 	wire signed [19: 0] ii_1;
 	wire signed [19: 0] iq_1;

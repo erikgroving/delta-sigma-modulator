@@ -9,7 +9,7 @@ module interpolate (
 
 	reg signed	[`I_BITS - 1: 0] 	interp;
 	wire signed [`I_BITS - 1: 0]	interp_sum;
-	reg signed 	[14: 0]				v_in_sync [1: 0];
+	reg 		[1: 0][14: 0]		v_in_sync;
 	reg signed 	[`I_BITS - 1: 0] 	v;			// current v
 	reg signed 	[`I_BITS - 1: 0] 	v_prev;		// previous v
 	wire signed [`I_BITS - 1: 0]	v_step;		// 1/50 * v_diff

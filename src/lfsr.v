@@ -10,7 +10,7 @@ module lfsr (
 	reg	[21: 0]	lfsr_22;
 	reg	[22: 0]	lfsr_23;
 	
-	wire		[`T_BITS - 1: 0]	dith_pre;
+	wire signed	[`T_BITS - 1: 0]	dith_pre;
 	
 	assign	dith_pre	= $signed(lfsr_20[`F_BITS - 1:0]) + $signed(lfsr_21[`F_BITS - 1:0]) + 
 							$signed(lfsr_22[`F_BITS - 1:0]) + $signed(lfsr_23[`F_BITS - 1:0]);
