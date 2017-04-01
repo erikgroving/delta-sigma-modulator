@@ -16,33 +16,23 @@ module bf_top (
 );
 
 
-	wire [14:0] out_i [7:0];
-	wire [14:0] out_q [7:0];
-	wire [14:0] mix_o [7:0];
+	wire [7: 0][14:0] 	out_i;
+	wire [7: 0][14:0] 	out_q;
+	wire [7: 0][14:0] 	mix_o;
 
-	wire [14:0] dith;
+	wire [14:0] 		dith;
 
-	wire [14: 0] interp_o_i [7: 0];
-	wire [14: 0] interp_o_q [7: 0];
+	wire [7: 0][14: 0] 	interp_o_i;
+	wire [7: 0][14: 0] 	interp_o_q;
 	
-	reg  [9: 0]		vin_i_sync [1: 0];
-	reg  [9: 0]		vin_q_sync [1: 0];
-	wire [14: 0]	sysin_i;
-	wire [14: 0]	sysin_q;
+	reg  [1: 0][9: 0]	vin_i_sync;
+	reg  [1: 0][9: 0]	vin_q_sync;
+	wire [14: 0]		sysin_i;
+	wire [14: 0]		sysin_q;
 
-	wire		prescale_clk;	// (1/8)Fclk
-	reg [2: 0]	prescale_cnt;
+
 	
-	always @(posedge clock) begin
-		if (reset) begin
-			prescale_cnt <= 3'b0;
-		end
-		else begin
-			prescale_cnt <= prescale_cnt + 1'b1;
-		end
-	end
 	
-	assign prescale_clk = (prescale_cnt > 3'd3);
 	
 	always @(posedge clock) begin
 		if (reset) begin
@@ -100,7 +90,7 @@ module bf_top (
 	generate 
 		for (i = 0; i < 8; i=i+1) begin
 			phaseShift phaseShift_i (
-			   .clock(prescale_clk),
+			   .clock(clock),
 			   .reset(reset),
 			   .sysin_i(sysin_i),
 			   .sysin_q(sysin_q),
