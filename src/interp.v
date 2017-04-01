@@ -8,6 +8,8 @@ module interp (
 );
 
 	reg signed	[`I_BITS - 1: 0] 	interp;
+	wire signed [`I_BITS - 1: 0]	interp_sum;
+	reg signed 	[14: 0]				v_in_sync [1: 0];
 	reg signed 	[`I_BITS - 1: 0] 	v;			// current v
 	reg signed 	[`I_BITS - 1: 0] 	v_prev;		// previous v
 	wire signed [`I_BITS - 1: 0]	v_step;		// 1/50 * v_diff
@@ -15,6 +17,17 @@ module interp (
 
 	wire				prescale_clk;	// 80 MHz clock
 	reg	[2: 0]			prescale_cnt;	// Counter to prescale
+	
+	always @(posedge clock) begin
+		if (reset) begin
+			v_in_sync[0]	<= 15'b0;
+			v_in_sync[1]	<= 15'b0;
+		end
+		else begin
+			v_in_sync[0]	<= v_in;
+			v_in_sync[1]	<= v_in_sync[0];
+		end
+	end
 	
 	always @(posedge clock) begin
 		// Prescale counter and interp,
@@ -37,7 +50,7 @@ module interp (
 		end
 		else if (prescale_cnt == 3'd7) begin
 			v_prev	<= v;
-			v		<= $signed({v_in, `I_BITS_SUB_VIN_BITS'b0});// 
+			v		<= $signed({v_in_sync[1], `I_BITS_SUB_VIN_BITS'b0});// 
 		end
 		
 		// prescale_clk goes high when it goes from 24->25
@@ -50,16 +63,17 @@ module interp (
 			interp	<= v;
 		end
 		else begin
-			interp	<= $signed(interp) + $signed(v_step);
+			interp	<= interp_sum;
 		end
 	end
 	
-	assign interp_o = interp[`I_U_LIM: `I_L_LIM];
+	assign interp_sum 	= $signed(interp) + $signed(v_step);
+	assign interp_o 	= interp[`I_U_LIM: `I_L_LIM];
 	
 	assign prescale_clk	= (prescale_cnt == 3'd6);
 	
-	assign v_diff 	= v - v_prev;
-	assign v_step	= $signed({{3{v_diff[`I_U_LIM]}}, v_diff[`I_U_LIM:3]});
+	assign v_diff 		= v - v_prev;
+	assign v_step		= $signed({{3{v_diff[`I_U_LIM]}}, v_diff[`I_U_LIM:3]});
 
 	
 endmodule
