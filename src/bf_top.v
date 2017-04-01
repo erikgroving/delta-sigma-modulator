@@ -113,7 +113,7 @@ module bf_top (
 			   .out_q(out_q[i])				
 			);
 
-			interp interp_i (
+			interpolate interpolate_i (
 				.clock(clock),
 				.reset(reset),
 				.v_in(out_i[i]),

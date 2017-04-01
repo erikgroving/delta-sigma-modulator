@@ -1,6 +1,6 @@
 `include "parameters.vh"
 
-module interp (
+module interpolate (
 	input							clock,
 	input							reset,
 	input 		[14: 0]				v_in,		// signal in
