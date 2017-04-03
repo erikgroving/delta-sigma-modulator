@@ -2,7 +2,7 @@
 module lfsr (
 	input 						clock,
 	input 						reset,
-	output reg [`T_BITS - 1: 0]	dith_o
+	output reg [`T_BITS - 1: 5]	dith_o
 );
 	
 	reg	[19: 0]	lfsr_20;
@@ -17,7 +17,7 @@ module lfsr (
 	
 	//
 	always @(posedge clock) begin			
-		dith_o			<= {{2{dith_pre[`T_BITS - 1]}}, dith_pre[`T_BITS - 1:2]};
+		dith_o			<= {{2{dith_pre[`T_BITS - 1]}}, dith_pre[`T_BITS - 1:7]};
 		if (reset) begin
 			lfsr_20			<= 20'hA_BCDE;
 			lfsr_21			<= 21'h08_fa82;

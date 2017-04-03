@@ -2,8 +2,8 @@
 module phaseShift(
 	input			clock,
 	input 			reset,
-	input 	[14: 0] sysin_i,
-	input 	[14: 0] sysin_q,
+	input 	[9: 0] sysin_i,
+	input 	[9: 0] sysin_q,
 	
 	input 	[4: 0]  w_cos_1,
 	input 	[4: 0]  w_sin_1,

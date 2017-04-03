@@ -11,7 +11,7 @@ module dsm_top (
 	reg		[1: 0] 				LO_cnt;
 	wire	[`T_BITS - 1: 0]	interp_o;
 	wire	[`T_BITS - 1: 0] 	mix_o;	
-	wire	[`T_BITS - 1: 0]	dith;
+	wire	[`T_BITS - 1: 5]	dith;
 	reg		[`T_BITS - 1: 0]	vin_sync [1: 0];
 	
 	always @(posedge clock) begin

@@ -4,7 +4,7 @@ module DSM_top (
 	input							clock,
 	input							reset,
 	input		[`T_BITS - 1: 0]	vin,
-	input		[`T_BITS - 1: 0]	dith_i,
+	input		[`T_BITS - 1: 5]	dith_i,
 	output		[1: 0]				pwm	
 );
 

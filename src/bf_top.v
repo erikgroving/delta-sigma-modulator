@@ -20,15 +20,15 @@ module bf_top (
 	wire [7: 0][14:0] 	out_q;
 	wire [7: 0][14:0] 	mix_o;
 
-	wire [14:0] 		dith;
+	wire [14: 5] 		dith;
 
 	wire [7: 0][14: 0] 	interp_o_i;
 	wire [7: 0][14: 0] 	interp_o_q;
 	
 	reg  [1: 0][9: 0]	vin_i_sync;
 	reg  [1: 0][9: 0]	vin_q_sync;
-	wire [14: 0]		sysin_i;
-	wire [14: 0]		sysin_q;
+	wire [9: 0]		sysin_i;
+	wire [9: 0]		sysin_q;
 
 
 	
@@ -49,12 +49,9 @@ module bf_top (
 		end
 	end
 	
+	assign sysin_i	= vin_i_sync[1];
+	assign sysin_q	= vin_q_sync[1];	
 	
-	
-	assign sysin_i	= {{5{vin_i_sync[1][9]}}, vin_i_sync[1]};
-	assign sysin_q	= {{5{vin_q_sync[1][9]}}, vin_q_sync[1]};
-	
-
 	
 	wire	[1: 0] 	LO_i;
 	wire	[1: 0]	LO_q;
