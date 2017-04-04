@@ -5,23 +5,36 @@ module DSM_top (
 	input							reset,
 	input		[`T_BITS - 1: 0]	vin,
 	input		[`T_BITS - 1: 5]	dith_i,
-	output		[1: 0]				pwm	
+	output reg		[1: 0]			pwm	
 );
 
+	reg		[14: 0]				vin_reg;
 	wire	[`T_BITS - 1: 0]	pwm_scaled;				// PWM * vin_FS/2	
 	wire	[`T_BITS - 1: 0]	vin_pwm_scaled_delta;	// vin - pwm_scaled
 	wire	[9: 0]				dss_o;
 	wire	[9: 0]				dss_vin_sum;
 	wire	[9: 0]				dss_vin_sum_dith;
+	wire	[1: 0]				quant_o;
+	
+	always @(posedge clock) begin
+		if (reset) begin
+			vin_reg	<= 15'b0;
+			pwm		<= 2'b0;
+		end
+		else begin
+			vin_reg	<= vin;
+			pwm		<= quant_o;
+		end
+	end
 	
 	
 	// Multiply by (VIN_FS/2) (bitshifted once)
 	assign	pwm_scaled				= 	pwm == 2'b00	? `T_BITS'h0 	: 
 										pwm == 2'b01	? `VIN_FS_HALF 	: `VIN_FS_HALF_NEG;
 	// Assuming KFW is 1
-	assign	vin_pwm_scaled_delta	= vin - pwm_scaled;
+	assign	vin_pwm_scaled_delta	= vin_reg - pwm_scaled;
 	// Sum DSS output with vin
-	assign	dss_vin_sum				= dss_o + vin[14: 5];
+	assign	dss_vin_sum				= dss_o + vin_reg[14: 5];
 	// Dither the dss output summed with vin
 	assign 	dss_vin_sum_dith		= dss_vin_sum + dith_i[14:5];
 	
@@ -36,7 +49,7 @@ module DSM_top (
 	quantizer quantizer_i (
 		.in1(dss_vin_sum_dith[9: 6]),
 		.reset(reset),
-		.out1(pwm)
+		.out1(quant_o)
 	);
 	
 
@@ -68,11 +81,11 @@ module DSS (
 	wire signed	[`T_BITS + 2: 0] 	temp_y3;
 	wire signed	[`T_BITS + 2: 0] 	temp_y4;
 	wire signed	[`T_BITS + 2: 0] 	temp_y5;
-	reg  signed	[`T_BITS - 2: 0] 	y1;
-	reg  signed	[`T_BITS - 2: 0] 	y2;
-	reg  signed	[`T_BITS - 2: 0] 	y3;
-	reg  signed	[`T_BITS - 2: 0] 	y4;
-	reg  signed	[`T_BITS - 2: 0] 	y5;
+	wire signed	[`T_BITS - 2: 0] 	y1;
+	wire signed	[`T_BITS - 2: 0] 	y2;
+	wire signed	[`T_BITS - 2: 0] 	y3;
+	wire signed	[`T_BITS - 2: 0] 	y4;
+	wire signed	[`T_BITS - 2: 0] 	y5;
 	
 	always @ (posedge clock) begin
 		if (reset) begin
@@ -80,26 +93,20 @@ module DSS (
 			xn0[1]	<= 11'b0;
 			xn0[2]	<= 11'b0;
 			xn0[3]	<= 11'b0;
-			y1		<= 26'b0;
-			y2		<= 26'b0;
-			y3		<= 26'b0;
-			y4		<= 26'b0;
-			y5		<= 26'b0;
-			
 		end
 		else begin
 			xn0[0]	<= xn1;
 			xn0[1]	<= xn0[0];
 			xn0[2]	<= xn0[1];
 			xn0[3]	<= xn0[2];
-			y1		<= temp_y1[`T_BITS + 2: 4];
-			y2		<= temp_y2[`T_BITS + 2: 4];
-			y3		<= temp_y3[`T_BITS + 2: 4];
-			y4		<= temp_y4[`T_BITS + 2: 4];
-			y5		<= temp_y5[`T_BITS + 2: 4];
+
 		end
 	end
-	
+	assign y1		= temp_y1[`T_BITS + 2: 4];
+	assign y2		= temp_y2[`T_BITS + 2: 4];
+	assign y3		= temp_y3[`T_BITS + 2: 4];
+	assign y4		= temp_y4[`T_BITS + 2: 4];
+	assign y5		= temp_y5[`T_BITS + 2: 4];	
 	assign s_u		= {{11{u[`T_BITS - 1]}}, u};
 	assign s_xn0[0]	= {{11{xn0[0][`T_BITS - 1]}}, xn0[0]};
 	assign s_xn0[1]	= {{11{xn0[1][`T_BITS - 1]}}, xn0[1]};
