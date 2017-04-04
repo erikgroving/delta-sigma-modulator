@@ -10,9 +10,9 @@ module DSM_top (
 
 	wire	[`T_BITS - 1: 0]	pwm_scaled;				// PWM * vin_FS/2	
 	wire	[`T_BITS - 1: 0]	vin_pwm_scaled_delta;	// vin - pwm_scaled
-	wire	[`T_BITS - 1: 0]	dss_o;
-	wire	[`T_BITS - 1: 0]	dss_vin_sum;
-	wire	[9: 0]	dss_vin_sum_dith;
+	wire	[9: 0]				dss_o;
+	wire	[9: 0]				dss_vin_sum;
+	wire	[9: 0]				dss_vin_sum_dith;
 	
 	
 	// Multiply by (VIN_FS/2) (bitshifted once)
@@ -21,9 +21,9 @@ module DSM_top (
 	// Assuming KFW is 1
 	assign	vin_pwm_scaled_delta	= vin - pwm_scaled;
 	// Sum DSS output with vin
-	assign	dss_vin_sum				= dss_o + vin;
+	assign	dss_vin_sum				= dss_o + vin[14: 5];
 	// Dither the dss output summed with vin
-	assign 	dss_vin_sum_dith		= dss_vin_sum[14:5] + dith_i[14:5];
+	assign 	dss_vin_sum_dith		= dss_vin_sum + dith_i[14:5];
 	
 	
 	DSS DSS_i (
@@ -46,7 +46,7 @@ module DSS (
 	input						clock,
 	input						reset,
 	input	[`T_BITS - 1: 0] 	u,
-	output	[`T_BITS - 1: 0]	y
+	output	[9: 0]				y
 );
 
 	wire signed	[`T_BITS - 1: 0] 	xn1;
@@ -54,7 +54,7 @@ module DSS (
 	wire		[`T_BITS + 10: 0]	s_xn0	[3: 0];
 	wire 	 	[`T_BITS + 10: 0]	s_u;
 	wire signed	[`T_BITS + 3 : 0] 	temp_xn1;
-	wire signed [`T_BITS + 5: 0]	temp_y;	
+	wire signed [`T_BITS - 2: 0]	temp_y;	
 	
 	wire  		[`T_BITS + 10: 0]	temp_xn1_s_summand;	
 	wire  		[`T_BITS + 8: 0] 	temp_y1_in [3: 0];
@@ -63,16 +63,16 @@ module DSS (
 	wire  		[`T_BITS + 8: 0] 	temp_y4_in [1: 0];
 	wire  		[`T_BITS + 8: 0] 	temp_y5_in [1: 0];
 	
-	wire signed	[`T_BITS + 5: 0] 	temp_y1;
-	wire signed	[`T_BITS + 5: 0] 	temp_y2;
-	wire signed	[`T_BITS + 5: 0] 	temp_y3;
-	wire signed	[`T_BITS + 5: 0] 	temp_y4;
-	wire signed	[`T_BITS + 5: 0] 	temp_y5;
-	reg  signed	[`T_BITS + 5: 0] 	y1;
-	reg  signed	[`T_BITS + 5: 0] 	y2;
-	reg  signed	[`T_BITS + 5: 0] 	y3;
-	reg  signed	[`T_BITS + 5: 0] 	y4;
-	reg  signed	[`T_BITS + 5: 0] 	y5;
+	wire signed	[`T_BITS + 2: 0] 	temp_y1;
+	wire signed	[`T_BITS + 2: 0] 	temp_y2;
+	wire signed	[`T_BITS + 2: 0] 	temp_y3;
+	wire signed	[`T_BITS + 2: 0] 	temp_y4;
+	wire signed	[`T_BITS + 2: 0] 	temp_y5;
+	reg  signed	[`T_BITS - 2: 0] 	y1;
+	reg  signed	[`T_BITS - 2: 0] 	y2;
+	reg  signed	[`T_BITS - 2: 0] 	y3;
+	reg  signed	[`T_BITS - 2: 0] 	y4;
+	reg  signed	[`T_BITS - 2: 0] 	y5;
 	
 	always @ (posedge clock) begin
 		if (reset) begin
@@ -92,11 +92,11 @@ module DSS (
 			xn0[1]	<= xn0[0];
 			xn0[2]	<= xn0[1];
 			xn0[3]	<= xn0[2];
-			y1		<= temp_y1;
-			y2		<= temp_y2;
-			y3		<= temp_y3;
-			y4		<= temp_y4;
-			y5		<= temp_y5;
+			y1		<= temp_y1[`T_BITS + 2: 4];
+			y2		<= temp_y2[`T_BITS + 2: 4];
+			y3		<= temp_y3[`T_BITS + 2: 4];
+			y4		<= temp_y4[`T_BITS + 2: 4];
+			y5		<= temp_y5[`T_BITS + 2: 4];
 		end
 	end
 	
@@ -130,25 +130,25 @@ module DSS (
 	assign temp_y5_in[1] = (s_u << 2);
 
 	
-	assign temp_y1 	= $signed(temp_y1_in[0][`T_BITS + 8: 5]) +
-					  $signed(temp_y1_in[1][`T_BITS + 8: 5]) +
-					  $signed(temp_y1_in[2][`T_BITS + 8: 5]) + 
-					  $signed(temp_y1_in[3][`T_BITS + 8: 5]) + 
-					  $signed(s_xn0[0][`T_BITS + 8: 5]);
-	assign temp_y2 	= $signed(temp_y2_in[0][`T_BITS + 8: 5]) +
-					  $signed(temp_y2_in[1][`T_BITS + 8: 5]);
-	assign temp_y3 	= $signed(temp_y3_in[0][`T_BITS + 8: 5]) -
-					  $signed(temp_y3_in[1][`T_BITS + 8: 5]) +
-					  $signed(temp_y3_in[2][`T_BITS + 8: 5]) +
-					  $signed(temp_y3_in[3][`T_BITS + 8: 5]);					 
-	assign temp_y4 	= $signed(temp_y4_in[0][`T_BITS + 8: 5]) +
-					  $signed(temp_y4_in[1][`T_BITS + 8: 5]) +
-					  $signed(s_xn0[3][`T_BITS + 8: 5]);
-	assign temp_y5 	= $signed(temp_y5_in[0][`T_BITS + 8: 5]) +
-					  $signed(temp_y5_in[1][`T_BITS + 8: 5]) +
-					  $signed(s_u[`T_BITS + 8: 5]);
+	assign temp_y1 	= $signed(temp_y1_in[0][`T_BITS + 8: 8]) +
+					  $signed(temp_y1_in[1][`T_BITS + 8: 8]) +
+					  $signed(temp_y1_in[2][`T_BITS + 8: 8]) + 
+					  $signed(temp_y1_in[3][`T_BITS + 8: 8]) + 
+					  $signed(s_xn0[0][`T_BITS + 8: 8]);
+	assign temp_y2 	= $signed(temp_y2_in[0][`T_BITS + 8: 8]) +
+					  $signed(temp_y2_in[1][`T_BITS + 8: 8]);
+	assign temp_y3 	= $signed(temp_y3_in[0][`T_BITS + 8: 8]) -
+					  $signed(temp_y3_in[1][`T_BITS + 8: 8]) +
+					  $signed(temp_y3_in[2][`T_BITS + 8: 8]) +
+					  $signed(temp_y3_in[3][`T_BITS + 8: 8]);					 
+	assign temp_y4 	= $signed(temp_y4_in[0][`T_BITS + 8: 8]) +
+					  $signed(temp_y4_in[1][`T_BITS + 8: 8]) +
+					  $signed(s_xn0[3][`T_BITS + 8: 8]);
+	assign temp_y5 	= $signed(temp_y5_in[0][`T_BITS + 8: 8]) +
+					  $signed(temp_y5_in[1][`T_BITS + 8: 8]) +
+					  $signed(s_u[`T_BITS + 8: 8]);
 	assign temp_y  	= y2 - y1 + y3 + y4 - y5;
-	assign y		= temp_y[`T_BITS + 3: 4];
+	assign y		= temp_y[11: 2];
 
 endmodule
 

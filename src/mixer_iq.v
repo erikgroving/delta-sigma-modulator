@@ -59,11 +59,13 @@ module mixer_iq (
 	assign mix_tmp		= mix_res_q[22:8]+mix_res_i[22:8]; 
 
 	
-	always_ff @(posedge clock) begin
-		if (reset)
+	always @(posedge clock) begin
+		if (reset) begin
 			mix_o <= 15'b0;
-		else
+		end
+		else begin
 			mix_o <= mix_tmp;
+		end
 	end
 
 
