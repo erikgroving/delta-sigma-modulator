@@ -87,15 +87,13 @@ module BF_TOP_TB (
 	assign w_sin_2[7]	= -5'd15;
 	
 	BF_TOP BF_TOP_I (
-		.clock(clock),
-		.reset(reset),
-		.vin_i(vin_i),
-		.vin_q(vin_q),
-		.w_cos_1(w_cos_1),
-		.w_sin_1(w_sin_1),
-		.w_cos_2(w_cos_2),
-		.w_sin_2(w_sin_2),
-		.pwm(pwm)
+		.CLOCK(clock),
+		.RESET(reset),
+		.SCLK(sclk),
+		.MOSI(mosi),
+		.VIN_I(vin_i),
+		.VIN_Q(vin_q),
+		.PWM(pwm)
 	);
 	
 	

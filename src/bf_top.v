@@ -1,20 +1,22 @@
 module BF_TOP (
-
-  input			clock,
-  input			reset,
-  input	[9: 0]	vin_i,
-  input [9: 0] 	vin_q,
-
-
-	
-// Changed to 5 bits
-  input [4: 0]  w_cos_1 [7: 0],
-  input [4: 0]  w_sin_1 [7: 0],                           
-  input [4: 0]  w_cos_2 [7: 0],                           
-  input [4: 0]  w_sin_2 [7: 0],  
-  output [1: 0]	pwm [7: 0]
+  input			CLOCK,
+  input			RESET,
+  input			SCLK,
+  input			MOSI,
+  input	[9: 0]	VIN_I,
+  input [9: 0] 	VIN_Q,
+  output [1: 0] PWM [7: 0]
 );
 
+
+
+	wire [4: 0]  w_cos_1 [7: 0];
+	wire [4: 0]  w_sin_1 [7: 0];                          
+	wire [4: 0]  w_cos_2 [7: 0];                          
+	wire [4: 0]  w_sin_2 [7: 0]; 	
+	// synopsys dc_script_begin
+	// set_dont_touch ps_clock
+	// synopsys dc_script_end
 	reg					ps_clock;
 	reg	[2: 0]			ps_clock_cnt;
 
@@ -32,8 +34,8 @@ module BF_TOP (
 	wire [9: 0]			sysin_i;
 	wire [9: 0]			sysin_q;
 
-	always @(posedge clock) begin
-		if (reset) begin
+	always @(posedge CLOCK) begin
+		if (RESET) begin
 			ps_clock_cnt	<= 3'b0;
 		end
 		else begin
@@ -45,16 +47,16 @@ module BF_TOP (
 	
 	
 	always @(posedge ps_clock) begin
-		if (reset) begin
+		if (RESET) begin
 			vin_i_sync[0]	<= 20'b0;
 			vin_i_sync[1]	<= 20'b0;
 			vin_q_sync[0]	<= 20'b0;
 			vin_q_sync[1]	<= 20'b0;
 		end
 		else begin
-			vin_i_sync[0]	<= vin_i;
+			vin_i_sync[0]	<= VIN_I;
 			vin_i_sync[1]	<= vin_i_sync[0];
-			vin_q_sync[0]	<= vin_q;
+			vin_q_sync[0]	<= VIN_Q;
 			vin_q_sync[1]	<= vin_q_sync[0];
 		end
 	end
@@ -73,8 +75,8 @@ module BF_TOP (
 	assign	LO_q =	~LO_cnt[0]		? 2'b00 :			// 0 --> 1 --> 0 --> -1
 					~LO_cnt[1]		? 2'b01 : 2'b10;	
 	
-	always @(posedge clock) begin
-		if (reset) begin
+	always @(posedge CLOCK) begin
+		if (RESET) begin
 			LO_cnt	<= 2'b0;
 		end
 		else begin
@@ -85,8 +87,8 @@ module BF_TOP (
 
 	
 	LFSR LFSR_I (
-		.clock(clock),
-		.reset(reset),
+		.clock(CLOCK),
+		.reset(RESET),
 		.dith_o(dith)
 	);                       //I think one lfsr is enough
 	
@@ -98,7 +100,7 @@ module BF_TOP (
 		for (i = 0; i < 8; i=i+1) begin
 			PHASESHIFT PHASESHIFT_I (
 			   .clock(ps_clock),
-			   .reset(reset),
+			   .reset(RESET),
 			   .sysin_i(sysin_i),
 			   .sysin_q(sysin_q),
 			   .w_cos_1(w_cos_1[i]),
@@ -112,26 +114,26 @@ module BF_TOP (
 
 			
 			INTERPOLATE INTERPOLATE_I (
-				.clock(clock),
+				.clock(CLOCK),
 				.ps_clock(ps_clock),
-				.reset(reset),
+				.reset(RESET),
 				.v_in(out_i[i]),
 				
 				.interp_o(interp_o_i[i])
 			);
 			
 			INTERPOLATE INTERPOLATE_Q (
-				.clock(clock),
+				.clock(CLOCK),
 				.ps_clock(ps_clock),
-				.reset(reset),
+				.reset(RESET),
 				.v_in(out_q[i]),
 		
 				.interp_o(interp_o_q[i])
 			);
 			
 			MIXER_IQ MIXER_IQ_I (
-				.clock(clock),
-				.reset(reset),
+				.clock(CLOCK),
+				.reset(RESET),
 				.mixin_i(interp_o_i[i]),
 				.mixin_q(interp_o_q[i]), 
 				.LO_i(LO_i),          // 1, 0, -1, 0
@@ -140,11 +142,11 @@ module BF_TOP (
 			); 
  			
 			DSM_TOP DSM_I (
-				.clock(clock),
-				.reset(reset),
+				.clock(CLOCK),
+				.reset(RESET),
 				.vin(mix_o[i]),
 				.dith_i(dith),
-				.pwm(pwm[i])
+				.pwm(PWM[i])
 			);    			
 		end	
 	endgenerate

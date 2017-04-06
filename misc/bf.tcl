@@ -103,7 +103,7 @@ create_clock -name $clk_name -period $clk_period [get_ports $clk_port]
 
 #create_generated_clock –divide_by 8 –source [get_ports {clock}]  [get_pins {bf_top:ps_clock/Q}]
 
-create_generated_clock -name ps_clock -source [get_ports $clk_port] -divide_by 8
+create_generated_clock -name ps_clock -source [get_ports $clk_port] -divide_by 8 [get_pins ps_clock_reg/Q]
 
 set_clock_latency $clk_latency [get_clocks $clk_name]
 set_clock_transition $clk_transition [get_clocks $clk_name]
