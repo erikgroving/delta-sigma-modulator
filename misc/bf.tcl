@@ -116,7 +116,7 @@ set_optimize_registers true
 #set_input_delay $typical_input_delay [get_ports IN*] -clock $clk_name 
 
 ##########!!!
-set_input_delay $typical_input_delay [get_ports vin*] -clock $clk_name
+set_input_delay $typical_input_delay [get_ports VIN*] -clock $clk_name
 
 
 #set_output_delay $typical_output_delay [all_outputs] -clock $clk_name 
