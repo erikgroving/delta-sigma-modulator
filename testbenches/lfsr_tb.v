@@ -1,4 +1,4 @@
-module lfsr_tb (
+module LFSR_TB (
 
 );
 
@@ -9,7 +9,7 @@ module lfsr_tb (
 	integer lfsr_out;
 	
 	
-	lfsr lfsr_i(
+	LFSR LFSR_I(
 		.clock(clock),
 		.reset(reset),
 		.lfsr_o(lfsr)

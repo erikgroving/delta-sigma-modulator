@@ -1,4 +1,4 @@
-module  dsm_tb ();
+module  DSM_TB ();
 
 	reg 		clock;
 	reg 		reset;
@@ -9,7 +9,7 @@ module  dsm_tb ();
 	integer scan_file;
 	integer write_file;
 
-	DSM_top dsm_i (
+	DSM_TOP DSM_I (
 		.clock(clock),
 		.reset(reset),
 		.dith_i(11'h0),

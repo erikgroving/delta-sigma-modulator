@@ -8,7 +8,7 @@
 // If this synthesizes at a bad clock period, I can make the
 // ampl multiply a bitshift-sum operation.
 `include "parameters.vh"
-module mixer (
+module MIXER (
 	input	[14: 0]	interp_i,
 	input	[1: 0] 				LO,
 	output	[14: 0]	mix_o

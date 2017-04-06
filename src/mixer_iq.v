@@ -1,4 +1,4 @@
-module mixer_iq (
+module MIXER_IQ (
 	input           clock,
 	input           reset,
 	input	[14: 0]	mixin_i,

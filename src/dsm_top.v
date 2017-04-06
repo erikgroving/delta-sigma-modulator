@@ -1,6 +1,6 @@
 `include "parameters.vh"
 
-module dsm_top (
+module DSM_TOP (
 	input			clock,
 	input			reset,
 	input	[14: 0]	vin,
@@ -38,27 +38,27 @@ module dsm_top (
 		end
 	end
 
-	interp interp_i (
+	INTERP INTERP_I (
 		.clock(clock),
 		.reset(reset),
 		.v_in(vin_sync[1]),
 		.interp_o(interp_o)
 	);
 	
-	mixer mixer_i (
+	MIXER MIXER_I (
 		.interp_i(interp_o), 
 		.LO(LO),
 		.mix_o(mix_o)
 	);
 	
-	lfsr lfsr_i (
+	LFSR LFSR_I (
 		.clock(clock),
 		.reset(reset),
 		.dith_o(dith)
 	);
 	
 	
-	DSM_top dsm_i (
+	DSM_TOP DSM_I (
 		.clock(clock),
 		.reset(reset),
 		.vin(mix_o),

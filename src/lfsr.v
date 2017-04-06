@@ -1,5 +1,5 @@
 `include "parameters.vh"
-module lfsr (
+module LFSR (
 	input 						clock,
 	input 						reset,
 	output reg [`T_BITS - 1: 5]	dith_o

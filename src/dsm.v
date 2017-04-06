@@ -1,6 +1,6 @@
 `include "parameters.vh"
 // Top level module
-module DSM_top (
+module DSM_TOP (
 	input							clock,
 	input							reset,
 	input		[`T_BITS - 1: 0]	vin,
@@ -39,14 +39,14 @@ module DSM_top (
 	assign 	dss_vin_sum_dith		= dss_vin_sum + dith_i[14:5];
 	
 	
-	DSS DSS_i (
+	DSS DSS_I (
 		.clock(clock),
 		.reset(reset),
 		.u(vin_pwm_scaled_delta),
 		.y(dss_o)
 	);
 	
-	quantizer quantizer_i (
+	QUANTIZER QUANTIZER_I (
 		.in1(dss_vin_sum_dith[9: 6]),
 		.reset(reset),
 		.out1(quant_o)
@@ -102,11 +102,11 @@ module DSS (
 
 		end
 	end
-	assign y1		= temp_y1[`T_BITS + 2: 4];
-	assign y2		= temp_y2[`T_BITS + 2: 4];
-	assign y3		= temp_y3[`T_BITS + 2: 4];
-	assign y4		= temp_y4[`T_BITS + 2: 4];
-	assign y5		= temp_y5[`T_BITS + 2: 4];	
+	assign y1		= $signed(temp_y1[`T_BITS + 2: 4]);
+	assign y2		= $signed(temp_y2[`T_BITS + 2: 4]);
+	assign y3		= $signed(temp_y3[`T_BITS + 2: 4]);
+	assign y4		= $signed(temp_y4[`T_BITS + 2: 4]);
+	assign y5		= $signed(temp_y5[`T_BITS + 2: 4]);	
 	assign s_u		= {{11{u[`T_BITS - 1]}}, u};
 	assign s_xn0[0]	= {{11{xn0[0][`T_BITS - 1]}}, xn0[0]};
 	assign s_xn0[1]	= {{11{xn0[1][`T_BITS - 1]}}, xn0[1]};
@@ -160,7 +160,7 @@ module DSS (
 endmodule
 
 // Quantizer
-module quantizer (
+module QUANTIZER (
 	input	[3: 0] in1,
 	input			reset,
 	output	[1: 0]	out1

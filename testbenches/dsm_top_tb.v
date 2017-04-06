@@ -1,6 +1,6 @@
 `include "../src/parameters.vh"
 
-module dsm_top_tb (
+module DSM_TOP_TB (
 
 );
 
@@ -74,7 +74,7 @@ module dsm_top_tb (
 		ds_clock = ~ds_clock;
 	end
 	
-	dsm_top dsm_top_i (
+	DSM_TOP DSM_TOP_I (
 		.clock(clock),
 		.reset(reset),
 		.vin(vin),

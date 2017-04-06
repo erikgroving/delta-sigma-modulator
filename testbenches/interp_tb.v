@@ -1,4 +1,4 @@
-module interp_tb(
+module INTERP_TB (
 
 );
 		
@@ -96,14 +96,14 @@ module interp_tb(
 	// Read 1 sample every edge of ds_clock
 	
 	
-	interp interp_i (
+	INTERP INTERP_I (
 		.clock(clock),
 		.reset(reset),
 		.v_in(vin),
 		.interp_o(interp_o)
 	);
 	
-	mixer mixer_i (
+	MIXER MIXER_I (
 		.interp_i(interp_o),
 		.LO(LO),
 		.mix_o(mix_o)

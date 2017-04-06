@@ -1,4 +1,4 @@
-module mixer_tb(
+module MIXER_TB (
 
 );
 		
@@ -8,7 +8,7 @@ module mixer_tb(
 	wire [19: 0]	mix_o;
 	integer			write_file;
 	
-	mixer mixer_i (
+	MIXER MIXER_I (
 		.interp_i(interp_i),
 		.LO(LO),
 		.mix_o(mix_o)

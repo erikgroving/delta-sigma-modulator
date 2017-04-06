@@ -1,4 +1,4 @@
-module bf_top_tb (
+module BF_TOP_TB (
 
 );
 	
@@ -86,7 +86,7 @@ module bf_top_tb (
 	assign w_sin_2[6]	= 5'd0;
 	assign w_sin_2[7]	= -5'd15;
 	
-	bf_top bf_top_i (
+	BF_TOP BF_TOP_I (
 		.clock(clock),
 		.reset(reset),
 		.vin_i(vin_i),

@@ -1,5 +1,4 @@
-
-module phaseShift(
+module PHASESHIFT (
 	input			clock,
 	input 			reset,
 	input 	[9: 0] sysin_i,
@@ -65,17 +64,6 @@ module phaseShift(
 
 	assign out_q_w =	{out_q_sat[21], |out_q_sat[20:14]} == 2'b01	?	15'h3FFF : 
 						{out_q_sat[21], &out_q_sat[20:14]} == 2'b10	?	15'h4000 :  out_q_sat[14: 0] ;
-	
-	reg [2: 0]	prescale_cnt;
-	
-	always @(posedge clock) begin
-		if (reset) begin
-			prescale_cnt <= 3'b0;
-		end
-		else begin
-			prescale_cnt <= prescale_cnt + 1'b1;
-		end
-	end	
 
 	
 	always @(posedge clock) begin
@@ -83,7 +71,7 @@ module phaseShift(
 			out_i	<= 15'b0;
 			out_q	<= 15'b0;
 		end
-		else if (prescale_cnt == 3'd7) begin
+		else begin
 			out_i	<= out_i_w;
 			out_q	<= out_q_w;
 		end
