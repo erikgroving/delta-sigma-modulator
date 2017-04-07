@@ -61,6 +61,7 @@ set verilog_files " \
 	$my_path/phaseShift.v \
 	$my_path/lfsr.v \
 	$my_path/mixer_iq.v \
+	$my_path/spi.v \
 	$my_path/parameters.vh
 	
 "

@@ -2,16 +2,20 @@ module BF_TOP_TB (
 
 );
 	
-	reg 		clock;
-	reg			ds_clock;
-	reg 		reset;
-	reg  [9: 0]	vin_i;
-	reg  [9: 0] vin_q;
-	wire [4: 0]	w_cos_1 [7: 0];
-	wire [4: 0]	w_sin_1 [7: 0];
-	wire [4: 0]	w_cos_2 [7: 0];
-	wire [4: 0]	w_sin_2 [7: 0];
-	wire [1: 0]	pwm 	[7: 0];
+	reg 				clock;
+	reg					ds_clock;
+	reg 				reset;
+	reg  [9: 0]			vin_i;
+	reg  [9: 0] 		vin_q;
+	reg	 [31: 0] 		spi_data;
+	reg					MOSI;
+	reg					SS;
+	reg					sclk;
+	wire [7: 0][4: 0]	w_cos_1;
+	wire [7: 0][4: 0]	w_sin_1;
+	wire [7: 0][4: 0]	w_cos_2;
+	wire [7: 0][4: 0]	w_sin_2;
+	wire [7: 0][1: 0]	pwm;
 	
 	// Testbench input and output file descriptors
 	integer				pwm_0_file;
@@ -85,6 +89,9 @@ module BF_TOP_TB (
 	assign w_sin_2[5]	= 5'd15;
 	assign w_sin_2[6]	= 5'd0;
 	assign w_sin_2[7]	= -5'd15;
+	
+	
+	
 	
 	BF_TOP BF_TOP_I (
 		.CLOCK(clock),
