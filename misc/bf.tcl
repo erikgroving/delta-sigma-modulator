@@ -9,7 +9,7 @@ set OUTPUT_ROOT "${SYN_ROOT}/output/"
 
 #set module_list [list $design_name beamformer_core ch_unit cwm_adder cwm_output_selector cwm decimator_250M decimator_2G down_mixer down_sample_16b sampler_2G_3b sampler_2G_set]
 
-set module_list [list $design_name PHASESHIFT MIXER_IQ DSM_TOP INTERPOLATE LFSR]
+set module_list [list $design_name SPI PHASESHIFT MIXER_IQ DSM_TOP INTERPOLATE LFSR]
 
 # this has a list of names to avoid things:
 set tsmc_name_file "${COMMON_ROOT}/namingrules.tcl"
@@ -83,6 +83,10 @@ set clk_period 		0.72
 set clk_uncertainty 	0.1
 set clk_transition 	0.05
 set clk_latency 	0.00
+set sclk_period 	6.25
+set sclk_uncertainty 0.5
+set sclk_transition 0.2
+set sclk_latency	0.00
 
 #set clk_port "clk"
 #If no waveform is specified, 50% duty cycle is assumed
@@ -95,11 +99,14 @@ set clk_latency 	0.00
 # GENERATE CLOCK
 set clk_port "CLOCK"
 set clk_name "CLOCK"
+set sclk_port "SCLK"
+set sclk_name "SCLK"
 
 set typical_input_delay [expr 0.1 * $clk_period]
 #set typical_output_delay [expr 0.25 * $clk_period]
 
 create_clock -name $clk_name -period $clk_period [get_ports $clk_port]
+create_clock -name $sclk_name -period $sclk_period [get_ports $sclk_port]
 
 #create_generated_clock –divide_by 8 –source [get_ports {clock}]  [get_pins {bf_top:ps_clock/Q}]
 
@@ -108,6 +115,9 @@ create_generated_clock -name ps_clock -source [get_ports $clk_port] -divide_by 8
 set_clock_latency $clk_latency [get_clocks $clk_name]
 set_clock_transition $clk_transition [get_clocks $clk_name]
 set_clock_uncertainty $clk_uncertainty [get_clocks $clk_name]
+set_clock_latency $sclk_latency [get_clocks $sclk_name]
+set_clock_transition $sclk_transition [get_clocks $sclk_name]
+set_clock_uncertainty $sclk_uncertainty [get_clocks $sclk_name]
 
 set_optimize_registers true
 #set_balance_registers true
@@ -117,10 +127,14 @@ set_optimize_registers true
 
 ##########!!!
 set_input_delay $typical_input_delay [get_ports VIN*] -clock $clk_name
+set_input_delay $typical_input_delay [get_ports MOSI*] -clock $clk_name
+
 
 
 #set_output_delay $typical_output_delay [all_outputs] -clock $clk_name 
 remove_input_delay -clock $clk_name [get_ports $clk_port]
+remove_input_delay -clock $sclk_name [get_ports $sclk_port]
+
 
 #source -echo -verbose $load_cons_file
 source -echo -verbose  $tsmc_name_file
