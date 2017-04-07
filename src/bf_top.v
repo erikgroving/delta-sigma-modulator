@@ -2,6 +2,7 @@ module BF_TOP (
   input			CLOCK,
   input			RESET,
   input			SCLK,
+  input			SS,
   input			MOSI,
   input	[9: 0]	VIN_I,
   input [9: 0] 	VIN_Q,
