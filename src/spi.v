@@ -143,9 +143,9 @@ module SPI (
 	internalRegister w_sin1_s_i (
 		.clock(SCLK),
 		.reset(reset),
-		.en(w_sin1_f_en),
+		.en(w_sin1_s_en),
 		.D(spi_data_in[23:4]),
-		.Q(w_sin1_f)
+		.Q(w_sin1_s)
 	);
 	
 	// w_cos2_f

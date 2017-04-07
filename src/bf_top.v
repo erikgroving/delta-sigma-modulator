@@ -17,14 +17,14 @@ module BF_TOP (
 	wire [7: 0][4: 0]  w_sin_2; 
 	
 	// synchronizers
-	reg [7: 0][4: 0]  w_cos_1_sync_1;
+	/*reg [7: 0][4: 0]  w_cos_1_sync_1;
 	reg [7: 0][4: 0]  w_sin_1_sync_1;                          
 	reg [7: 0][4: 0]  w_cos_2_sync_1;                          
 	reg [7: 0][4: 0]  w_sin_2_sync_1; 	
 	reg [7: 0][4: 0]  w_cos_1_sync_2;
 	reg [7: 0][4: 0]  w_sin_1_sync_2;                          
 	reg [7: 0][4: 0]  w_cos_2_sync_2;                          
-	reg [7: 0][4: 0]  w_sin_2_sync_2; 	
+	reg [7: 0][4: 0]  w_sin_2_sync_2; */	
 
 	reg					ps_clock;
 	reg	[2: 0]			ps_clock_cnt;
@@ -61,28 +61,28 @@ module BF_TOP (
 			vin_i_sync[1]	<= 20'b0;
 			vin_q_sync[0]	<= 20'b0;
 			vin_q_sync[1]	<= 20'b0;
-			w_cos_1_sync_1	<= 40'b0;
+			/*w_cos_1_sync_1	<= 40'b0;
 			w_cos_1_sync_2	<= 40'b0;
 			w_sin_1_sync_1	<= 40'b0;
 			w_sin_1_sync_2	<= 40'b0;
 			w_cos_2_sync_1	<= 40'b0;
 			w_cos_2_sync_2	<= 40'b0;
 			w_sin_2_sync_1	<= 40'b0;
-			w_sin_2_sync_2	<= 40'b0;
+			w_sin_2_sync_2	<= 40'b0;*/
 		end
 		else begin
 			vin_i_sync[0]	<= VIN_I;
 			vin_i_sync[1]	<= vin_i_sync[0];
 			vin_q_sync[0]	<= VIN_Q;
 			vin_q_sync[1]	<= vin_q_sync[0];			
-			w_cos_1_sync_1	<= w_cos_1;
+			/*w_cos_1_sync_1	<= w_cos_1;
 			w_cos_1_sync_2	<= w_cos_1_sync_1;
 			w_sin_1_sync_1	<= w_sin_1;
 			w_sin_1_sync_2	<= w_sin_1_sync_1;
 			w_cos_2_sync_1	<= w_cos_2;
 			w_cos_2_sync_2	<= w_cos_2_sync_1;
 			w_sin_2_sync_1	<= w_sin_2;
-			w_sin_2_sync_2	<= w_sin_2_sync_1;
+			w_sin_2_sync_2	<= w_sin_2_sync_1;*/
 		end
 	end
 	
@@ -139,10 +139,10 @@ module BF_TOP (
 			   .reset(RESET),
 			   .sysin_i(sysin_i),
 			   .sysin_q(sysin_q),
-			   .w_cos_1(w_cos_1_sync_2[i]),
-			   .w_sin_1(w_sin_1_sync_2[i]),
-			   .w_cos_2(w_cos_2_sync_2[i]),
-			   .w_sin_2(w_sin_2_sync_2[i]),
+			   .w_cos_1(w_cos_1[i]),
+			   .w_sin_1(w_sin_1[i]),
+			   .w_cos_2(w_cos_2[i]),
+			   .w_sin_2(w_sin_2[i]),
 			   
 			   .out_i(out_i[i]),
 			   .out_q(out_q[i])				
