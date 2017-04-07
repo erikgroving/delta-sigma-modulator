@@ -17,7 +17,6 @@
 
 // Combine this into a 32 bit string and write it via SPI to properly set.
 
-
 module SPI (
 	input	SCLK,
 	input	MOSI,

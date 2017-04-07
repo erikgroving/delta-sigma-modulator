@@ -9,7 +9,7 @@ set OUTPUT_ROOT "${SYN_ROOT}/output/"
 
 #set module_list [list $design_name beamformer_core ch_unit cwm_adder cwm_output_selector cwm decimator_250M decimator_2G down_mixer down_sample_16b sampler_2G_3b sampler_2G_set]
 
-set module_list [list $design_name SPI PHASESHIFT MIXER_IQ DSM_TOP INTERPOLATE LFSR]
+set module_list [list $design_name SPI PHASESHIFT MIXER_IQ DSM_TOP INTERPOLATE LFSR internalRegister DSS QUANTIZER]
 
 # this has a list of names to avoid things:
 set tsmc_name_file "${COMMON_ROOT}/namingrules.tcl"
