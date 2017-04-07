@@ -75,7 +75,7 @@ module SPI (
 	
 	// similar to SPI.v
 	assign spi_addr		= spi_data_in[30:24];	// bit [31] (oldest bit) is the R/W, so then bits 30:24 (7 bits) is the address
-	assign master_en 	= /*(~ss) & */(counter == 6'd32) & spi_data_in[31];	// slave select low (active low), 
+	assign master_en 	= (~ss) & (counter == 6'd32) & spi_data_in[31];	// slave select low (active low), 
 																		// transaction finished, and write bit high
 	assign w_cos1_f_en	= master_en & (spi_addr == addr_w_cos1_f);
 	assign w_cos1_s_en	= master_en & (spi_addr == addr_w_cos1_s);
@@ -89,7 +89,7 @@ module SPI (
 	
 	// code similar to SPI.v	
 	// synopsys sync_set_reset "reset"
-	/*always_ff @(negedge SCLK or posedge reset) begin
+	always_ff @(negedge SCLK or posedge reset) begin
       	if (reset) begin
 			counter		<= 6'd0;
 		end
@@ -99,7 +99,7 @@ module SPI (
 			end				
 			counter	<= counter + 1'b1;
 		end
-	end*/
+	end
 	
 	
 	// SPI Data register (similar to SRegister.v)

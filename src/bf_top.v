@@ -3,6 +3,9 @@ module BF_TOP (
   input			RESET,
   input			SCLK,
   input			SS,
+	// synopsys dc_script_begin
+	// set_dont_touch MOSI
+	// synopsys dc_script_end
   input			MOSI,
   input	[9: 0]	VIN_I,
   input [9: 0] 	VIN_Q,

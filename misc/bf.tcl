@@ -165,7 +165,12 @@ set sdf_file [format "%s%s"  [format "%s%s"  "./verilog_out/" $design_name] ".sd
 set_fix_hold [all_clocks]
 
 # check design before compile
-check_design
+check_design -summary
+check_unmapped
+
+list all_connected [get_ports MOSI]
+
+
 
 # Uniquify repeated modules
 uniquify
