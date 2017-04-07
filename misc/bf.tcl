@@ -128,7 +128,8 @@ set_optimize_registers true
 
 ##########!!!
 set_input_delay $typical_input_delay [get_ports VIN*] -clock $clk_name
-set_input_delay $typical_input_delay [get_ports MOSI*] -clock $clk_name
+set_input_delay $typical_input_delay [get_ports MOSI] -clock $clk_name
+set_input_delay $typical_input_delay [get_ports SS] -clock $clk_name
 
 
 

@@ -97,8 +97,8 @@ module BF_TOP_TB (
 		.CLOCK(clock),
 		.RESET(reset),
 		.SCLK(sclk),
-		.MOSI(mosi),
-		.SS(ss),
+		.MOSI(MOSI),
+		.SS(SS),
 		.VIN_I(vin_i),
 		.VIN_Q(vin_q),
 		.PWM(pwm)
