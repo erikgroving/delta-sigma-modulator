@@ -15,8 +15,8 @@ module LFSR (
 	assign	dith_pre	= $signed(lfsr_20[`F_BITS - 1:0]) + $signed(lfsr_21[`F_BITS - 1:0]) + 
 							$signed(lfsr_22[`F_BITS - 1:0]) + $signed(lfsr_23[`F_BITS - 1:0]);
 	
-	//
-	always @(posedge clock) begin			
+	// synopsys sync_set_reset "reset"
+	always_ff @(posedge clock) begin			
 		dith_o			<= {{2{dith_pre[`T_BITS - 1]}}, dith_pre[`T_BITS - 1:7]};
 		if (reset) begin
 			lfsr_20			<= 20'hA_BCDE;

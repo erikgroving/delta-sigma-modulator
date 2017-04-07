@@ -88,8 +88,9 @@ module SPI (
 	assign w_sin2_s_en	= master_en & (spi_addr == addr_w_sin2_s);
 	
 	
-	// code similar to SPI.v
-	always @ (negedge SCLK or posedge reset) begin
+	// code similar to SPI.v	
+	// synopsys sync_set_reset "reset"
+	always_ff @(negedge SCLK or posedge reset) begin
       	if (reset) begin
 			counter		<= 6'd0;
 		end
@@ -103,7 +104,8 @@ module SPI (
 	
 	
 	// SPI Data register (similar to SRegister.v)
-	always @ (posedge SCLK or posedge reset) begin
+	// synopsys sync_set_reset "reset"
+	always_ff @(posedge SCLK or posedge reset) begin
 		if (reset)
 			spi_data_in	<= 32'b0;
 		else if (~ss) begin
@@ -194,8 +196,8 @@ module internalRegister (
 	input [19: 0] 		D,
 	output reg [3: 0][4: 0]	Q
 );
-
-	always @(posedge clock) begin
+	// synopsys sync_set_reset "reset"
+	always_ff @(posedge clock) begin
 		if (reset) begin
 			Q		<= 20'b0;
 		end

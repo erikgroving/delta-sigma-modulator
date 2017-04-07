@@ -42,8 +42,9 @@ module BF_TOP (
 	reg  [1: 0][9: 0]	vin_q_sync;
 	wire [9: 0]			sysin_i;
 	wire [9: 0]			sysin_q;
-
-	always @(posedge CLOCK) begin
+	
+    // synopsys sync_set_reset "RESET"
+	always_ff @(posedge CLOCK) begin
 		if (RESET) begin
 			ps_clock_cnt	<= 3'b0;
 		end
@@ -54,8 +55,8 @@ module BF_TOP (
 		ps_clock	<= (ps_clock_cnt > 3'd3);
 	end
 	
-	
-	always @(posedge ps_clock) begin
+    // synopsys sync_set_reset "RESET"	
+	always_ff @(posedge ps_clock) begin
 		if (RESET) begin
 			vin_i_sync[0]	<= 20'b0;
 			vin_i_sync[1]	<= 20'b0;
@@ -99,8 +100,9 @@ module BF_TOP (
 					~LO_cnt[1] 		? 2'b01 : 2'b10;
 	assign	LO_q =	~LO_cnt[0]		? 2'b00 :			// 0 --> 1 --> 0 --> -1
 					~LO_cnt[1]		? 2'b01 : 2'b10;	
-	
-	always @(posedge CLOCK) begin
+    
+	// synopsys sync_set_reset "RESET"	
+	always_ff @(posedge CLOCK) begin
 		if (RESET) begin
 			LO_cnt	<= 2'b0;
 		end
@@ -128,7 +130,6 @@ module BF_TOP (
 		.w_sin_2(w_sin_2)
 	);
 
-	
 	
 	
 	genvar i;

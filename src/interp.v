@@ -19,7 +19,8 @@ module INTERPOLATE (
 	reg signed	[`I_BITS - 1: 0]	v_clock_prev;
 
 	
-	always @(posedge ps_clock) begin
+	// synopsys sync_set_reset "reset"	
+	always_ff @(posedge ps_clock) begin
 		if (reset) begin
 			v_prev	<= `I_BITS'b0;
 			v		<= `I_BITS'b0;		
@@ -30,8 +31,8 @@ module INTERPOLATE (
 		end
 	end
 	
-	
-	always @(posedge clock) begin
+	// synopsys sync_set_reset "reset"	
+	always_ff @(posedge clock) begin
 		// listen for changes of v
 		if (reset) begin
 			v_clock			<= `I_BITS'b0;

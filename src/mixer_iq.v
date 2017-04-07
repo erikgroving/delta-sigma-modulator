@@ -58,8 +58,8 @@ module MIXER_IQ (
 
 	assign mix_tmp		= mix_res_q[22:8]+mix_res_i[22:8]; 
 
-	
-	always @(posedge clock) begin
+	// synopsys sync_set_reset "reset"	
+	always_ff @(posedge clock) begin
 		if (reset) begin
 			mix_o <= 15'b0;
 		end

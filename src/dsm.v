@@ -16,7 +16,8 @@ module DSM_TOP (
 	wire	[9: 0]				dss_vin_sum_dith;
 	wire	[1: 0]				quant_o;
 	
-	always @(posedge clock) begin
+	// synopsys sync_set_reset "reset"	
+	always_ff @(posedge clock) begin
 		if (reset) begin
 			vin_reg	<= 15'b0;
 			pwm		<= 2'b0;
@@ -87,7 +88,8 @@ module DSS (
 	wire signed	[`T_BITS - 2: 0] 	y4;
 	wire signed	[`T_BITS - 2: 0] 	y5;
 	
-	always @ (posedge clock) begin
+	// synopsys sync_set_reset "reset"	
+	always_ff @(posedge clock) begin
 		if (reset) begin
 			xn0[0]	<= 11'b0;
 			xn0[1]	<= 11'b0;
