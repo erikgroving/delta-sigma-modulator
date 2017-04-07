@@ -10,13 +10,11 @@ module BF_TOP (
 
 
 
-	wire [4: 0]  w_cos_1 [7: 0];
-	wire [4: 0]  w_sin_1 [7: 0];                          
-	wire [4: 0]  w_cos_2 [7: 0];                          
-	wire [4: 0]  w_sin_2 [7: 0]; 	
-	// synopsys dc_script_begin
-	// set_dont_touch ps_clock
-	// synopsys dc_script_end
+	wire [7: 0][4: 0]  w_cos_1;
+	wire [7: 0][4: 0]  w_sin_1;                          
+	wire [7: 0][4: 0]  w_cos_2;                          
+	wire [7: 0][4: 0]  w_sin_2; 	
+
 	reg					ps_clock;
 	reg	[2: 0]			ps_clock_cnt;
 
