@@ -93,7 +93,7 @@ module SPI (
       	if (reset) begin
 			counter		<= 6'd0;
 		end
-     	else if (~ss) begin
+     	else if (~MOSI) begin
 			if (counter == 6'd32) begin
 				counter	<= 6'd0;
 			end				
@@ -107,7 +107,7 @@ module SPI (
 	always_ff @(posedge SCLK or posedge reset) begin
 		if (reset)
 			spi_data_in	<= 32'b0;
-		else if (~ss) begin
+		else if (~MOSI) begin
 			spi_data_in	<= {spi_data_in[30:1], ss};
 		end
 	end
