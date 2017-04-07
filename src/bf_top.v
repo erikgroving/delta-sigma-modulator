@@ -91,7 +91,16 @@ module BF_TOP (
 		.dith_o(dith)
 	);                       //I think one lfsr is enough
 	
-	
+	SPI SPI_I (
+		.SCLK(SCLK),
+		.MOSI(MOSI),
+		.ss(SS),
+		.reset(RESET),
+		.w_cos_1(w_cos_1),
+		.w_sin_1(w_sin_1),
+		.w_cos_2(w_cos_2),
+		.w_sin_2(w_sin_2)
+	);
 
 	
 	genvar i;
