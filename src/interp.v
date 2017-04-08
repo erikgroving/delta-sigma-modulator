@@ -5,7 +5,7 @@ module INTERPOLATE (
 	input							ps_clock,
 	input							reset,
 	input 		[14: 0]				v_in,		// signal in
-	output wire	[`T_BITS - 1: 0]	interp_o	// interpolated output singal
+	output	[`T_BITS - 1: 0]		interp_o	// interpolated output singal
 );
 
 	reg signed	[`I_BITS - 1: 0] 	interp;
