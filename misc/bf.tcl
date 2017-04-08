@@ -196,7 +196,7 @@ redirect -append $rep_file { report_power }
 redirect -append $rep_file { get_attribute [all_clocks] capacitance }
 redirect -append $rep_file { report_net_fanout -threshold 50}
 redirect -append $rep_file { report_constraint -all_violators -verbose -nosplit }
-redirect -append $rep_file { report_timing -max_paths 20 -input_pins -nets -transition_time -capacitance -nosplit }
+redirect -append $rep_file { report_timing -max_paths 100 -input_pins -nets -transition_time -capacitance -nosplit }
 
 ##Add the Report timing part
 #redirect -append $rep_file { report_timing -loops -max_paths 500 }

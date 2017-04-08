@@ -1,13 +1,10 @@
 module MIXER_IQ (
-	input           clock,
-	input           reset,
 	input	[14: 0]	mixin_i,
 	input	[14: 0]	mixin_q,
 	input	[1: 0] LO_i,
 	input	[1: 0] LO_q,
 	output [14: 0] mix_o
 );
-	reg			[14: 0] mix_o_reg;
 	wire  		[14: 0] inter_res_i;
 	wire signed [29: 0] se_inter_res_i; 			// sign extend
 	wire signed	[29: 0] sl_inter_res_i [4: 0];	// shift left	
@@ -16,7 +13,6 @@ module MIXER_IQ (
 	wire  		[14: 0] inter_res_q;
 	wire signed	[22: 0] mix_res_i;
 	wire signed	[22: 0] mix_res_q;
-	wire		[14: 0] mix_tmp;
 	
 	//assign ampl = 15'h2861;	// 0.6309573 * 0.5 = 0.3154786
 	
@@ -56,17 +52,7 @@ module MIXER_IQ (
 						$signed(sl_inter_res_q[3][29: 7]) +
 						$signed(sl_inter_res_q[4][29: 7]);	
 
-	assign mix_tmp		= mix_res_q[22:8]+mix_res_i[22:8]; 
-	assign mix_o		= mix_o_reg;
-	// synopsys sync_set_reset "reset"	
-	always_ff @(posedge clock) begin
-		if (reset) begin
-			mix_o_reg <= 15'b0;
-		end
-		else begin
-			mix_o_reg <= mix_tmp;
-		end
-	end
+	assign mix_o		= mix_res_q[22:8]+mix_res_i[22:8]; 
 
 
 endmodule

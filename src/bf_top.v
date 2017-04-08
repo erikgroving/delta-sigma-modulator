@@ -173,8 +173,6 @@ module BF_TOP (
 			);
 			
 			MIXER_IQ MIXER_IQ_I (
-				.clock(CLOCK),
-				.reset(RESET),
 				.mixin_i(interp_o_i[i]),
 				.mixin_q(interp_o_q[i]), 
 				.LO_i(LO_i),          // 1, 0, -1, 0
