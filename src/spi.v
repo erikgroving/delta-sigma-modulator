@@ -16,6 +16,7 @@
 // spi_data[3: 0]	= don't care
 
 // Combine this into a 32 bit string and write it via SPI to properly set.
+// It would be 0x137D4490
 
 module SPI (
 	input	SCLK,
@@ -39,7 +40,7 @@ module SPI (
 
 	wire		master_en;
 	reg	[31: 0]	spi_data_in;
-	wire [7: 1]	spi_addr;
+	wire [6: 0]	spi_addr;
 	
 	
 	
@@ -96,8 +97,10 @@ module SPI (
      	else if (~ss) begin
 			if (counter == 6'd32) begin
 				counter	<= 6'd0;
-			end				
-			counter	<= counter + 1'b1;
+			end
+			else begin
+				counter	<= counter + 1'b1;
+			end
 		end
 	end
 	
@@ -108,7 +111,7 @@ module SPI (
 		if (reset)
 			spi_data_in	<= 32'b0;
 		else if (~ss) begin
-			spi_data_in	<= {spi_data_in[30:1], MOSI};
+			spi_data_in	<= {spi_data_in[30:0], MOSI};
 		end
 	end
 	
@@ -196,7 +199,7 @@ module internalRegister (
 	output reg [3: 0][4: 0]	Q
 );
 	// synopsys sync_set_reset "reset"
-	always_ff @(posedge clock) begin
+	always_ff @(posedge clock or posedge reset) begin
 		if (reset) begin
 			Q		<= 20'b0;
 		end

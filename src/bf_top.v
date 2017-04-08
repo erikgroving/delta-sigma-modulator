@@ -46,6 +46,7 @@ module BF_TOP (
 	wire [9: 0]			sysin_i;
 	wire [9: 0]			sysin_q;
 	
+	
     // synopsys sync_set_reset "RESET"
 	always_ff @(posedge CLOCK) begin
 		if (RESET) begin
@@ -59,7 +60,7 @@ module BF_TOP (
 	end
 	
     // synopsys sync_set_reset "RESET"	
-	always_ff @(posedge ps_clock) begin
+	always_ff @(posedge ps_clock or posedge RESET) begin
 		if (RESET) begin
 			vin_i_sync[0]	<= 20'b0;
 			vin_i_sync[1]	<= 20'b0;

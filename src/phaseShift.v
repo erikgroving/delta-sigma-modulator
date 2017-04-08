@@ -66,7 +66,7 @@ module PHASESHIFT (
 						{out_q_sat[21], &out_q_sat[20:14]} == 2'b10	?	15'h4000 :  out_q_sat[14: 0] ;
 
 	// synopsys sync_set_reset "reset"	
-	always_ff @(posedge clock) begin
+	always_ff @(posedge clock or posedge reset) begin
 		if (reset) begin 
 			out_i	<= 15'b0;
 			out_q	<= 15'b0;

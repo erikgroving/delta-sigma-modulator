@@ -1,14 +1,19 @@
 module BF_TOP_TB (
 
 );
-	
+	parameter registerwidth=32; 
+	reg  LOAD;
+	reg [registerwidth-1:0] DATA;
+	wire MOSI;
+	wire SOut;
+
+
 	reg 				clock;
 	reg					ds_clock;
 	reg 				reset;
 	reg  [9: 0]			vin_i;
 	reg  [9: 0] 		vin_q;
 	reg	 [31: 0] 		spi_data;
-	reg					MOSI;
 	reg					SS;
 	reg					sclk;
 	wire [7: 0][4: 0]	w_cos_1;
@@ -32,11 +37,18 @@ module BF_TOP_TB (
 
 	
 	// System reset, clock initialization, and opening files
-	initial begin		
+	initial begin	
+		SS 			= 1'b1;
+		reset 		= 1'b0;
+		sclk		= 1'b0;
+		
+		
+		#20;
 		clock 		= 0;
 		ds_clock	= 0;
 		reset		= 1;
 		#300;
+		
 		i_input_file = $fopen("../../input/i_input_bin.txt", "r");
 		q_input_file = $fopen("../../input/q_input_bin.txt", "r");
 		pwm_0_file = $fopen("../../output/pwm_0.txt", "w");			
@@ -51,44 +63,125 @@ module BF_TOP_TB (
 		#10;
 		@(posedge clock);
 		reset = #1 0;
+		#50;
+		//*******w_cos_1_f**********
+		DATA <= 32'h817D4490;
+		#50 LOAD<=1'b1;
+		#50 LOAD <=1'b0;
+		#100 SS <=1'b0;
+		sclk <= 1'b0;
+		repeat (66)
+		begin
+		#50 sclk <= ~sclk;
+		end
+		#10 SS<=1'b1;
+		#500;
+		
+		//*******w_cos_1_s**********
+		DATA <= 32'h828B77A0;
+		#50 LOAD<=1'b1;
+		#50 LOAD <=1'b0;
+		#100 SS <=1'b0;
+		sclk <= 1'b0;
+		repeat (66)
+		begin
+		#50 sclk <= ~sclk;
+		end
+		#10 SS<=1'b1;
+		#500;
+		
+		//*******w_sin_1_f**********
+		DATA <= 32'h83059F40;
+		#50 LOAD<=1'b1;
+		#50 LOAD <=1'b0;
+		#100 SS <=1'b0;
+		sclk <= 1'b0;
+		repeat (66)
+		begin
+		#50 sclk <= ~sclk;
+		end
+		#10 SS<=1'b1;
+		#500;
+		
+		//*******w_sin_1_s**********
+		DATA <= 32'h841A22E0;
+		#50 LOAD<=1'b1;
+		#50 LOAD <=1'b0;
+		#100 SS <=1'b0;
+		sclk <= 1'b0;
+		repeat (66)
+		begin
+		#50 sclk <= ~sclk;
+		end
+		#10 SS<=1'b1;
+		#500;
+		
+		//*******w_cos_2_f**********
+		DATA <= 32'h85782200;
+		#50 LOAD<=1'b1;
+		#50 LOAD <=1'b0;
+		#100 SS <=1'b0;
+		sclk <= 1'b0;
+		repeat (66)
+		begin
+		#50 sclk <= ~sclk;
+		end
+		#10 SS<=1'b1;
+		#500;
+		
+		//*******w_cos_2_s**********
+		DATA <= 32'h86782200;
+		#50 LOAD<=1'b1;
+		#50 LOAD <=1'b0;
+		#100 SS <=1'b0;
+		sclk <= 1'b0;
+		repeat (66)
+		begin
+		#50 sclk <= ~sclk;
+		end
+		#10 SS<=1'b1;
+		#500;
+		
+		
+		//*******w_sin_2_f**********
+		DATA <= 32'h8703C110;
+		#50 LOAD<=1'b1;
+		#50 LOAD <=1'b0;
+		#100 SS <=1'b0;
+		sclk <= 1'b0;
+		repeat (66)
+		begin
+		#50 sclk <= ~sclk;
+		end
+		#10 SS<=1'b1;
+		#500;
+		
+		//*******w_sin_2_s**********
+		DATA <= 32'h8803C110;
+		#50 LOAD<=1'b1;
+		#50 LOAD <=1'b0;
+		#100 SS <=1'b0;
+		sclk <= 1'b0;
+		repeat (66)
+		begin
+		#50 sclk <= ~sclk;
+		end
+		#10 SS<=1'b1;
+		#500;
+		
+		
+		
 	end
 
 	
-	assign w_cos_1[0]	= 5'd15;
-	assign w_cos_1[1]	= -5'd11;
-	assign w_cos_1[2]	= 5'd2;
-	assign w_cos_1[3]	= 5'd9;
-	assign w_cos_1[4]	= -5'd15;
-	assign w_cos_1[5]	= 5'd13;
-	assign w_cos_1[6]	= -5'd5;
-	assign w_cos_1[7]	= -5'd6;
 
-	assign w_cos_2[0]	= 5'd15;
-	assign w_cos_2[1]	= 5'd0;
-	assign w_cos_2[2]	= -5'd15;
-	assign w_cos_2[3]	= 5'd0;
-	assign w_cos_2[4]	= 5'd15;
-	assign w_cos_2[5]	= 5'd0;
-	assign w_cos_2[6]	= -5'd15;
-	assign w_cos_2[7]	= 5'd0;
-	
-	assign w_sin_1[0]	= 5'd0;
-	assign w_sin_1[1]	= -5'd10;
-	assign w_sin_1[2]	= 5'd15;
-	assign w_sin_1[3]	= -5'd12;
-	assign w_sin_1[4]	= 5'd3;
-	assign w_sin_1[5]	= 5'd8;
-	assign w_sin_1[6]	= -5'd15;
-	assign w_sin_1[7]	= 5'd14;
-
-	assign w_sin_2[0]	= 5'd0;
-	assign w_sin_2[1]	= 5'd15;
-	assign w_sin_2[2]	= 5'd0;
-	assign w_sin_2[3]	= -5'd15;
-	assign w_sin_2[4]	= 5'd0;
-	assign w_sin_2[5]	= 5'd15;
-	assign w_sin_2[6]	= 5'd0;
-	assign w_sin_2[7]	= -5'd15;
+	SRegistertest #(registerwidth) inputdata(
+		.Clock(sclk), 
+		.Resetb(~reset), 
+		.Pload(LOAD), 
+		.PIn(DATA), 
+		.SOut(MOSI)
+	);
 	
 	
 	

@@ -20,7 +20,7 @@ module INTERPOLATE (
 
 	
 	// synopsys sync_set_reset "reset"	
-	always_ff @(posedge ps_clock) begin
+	always_ff @(posedge ps_clock or posedge reset) begin
 		if (reset) begin
 			v_prev	<= `I_BITS'b0;
 			v		<= `I_BITS'b0;		
