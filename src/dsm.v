@@ -8,7 +8,7 @@ module DSM_TOP (
 	output reg		[1: 0]			pwm	
 );
 
-	reg		[14: 0]				vin_reg;
+	//reg		[14: 0]				vin_reg;
 	wire	[`T_BITS - 1: 0]	pwm_scaled;				// PWM * vin_FS/2	
 	wire	[`T_BITS - 1: 0]	vin_pwm_scaled_delta;	// vin - pwm_scaled
 	wire	[9: 0]				dss_o;
@@ -19,11 +19,11 @@ module DSM_TOP (
 	// synopsys sync_set_reset "reset"	
 	always_ff @(posedge clock) begin
 		if (reset) begin
-			vin_reg	<= 15'b0;
+			//vin_reg	<= 15'b0;
 			pwm		<= 2'b0;
 		end
 		else begin
-			vin_reg	<= vin;
+			//vin_reg	<= vin;
 			pwm		<= quant_o;
 		end
 	end
@@ -33,9 +33,9 @@ module DSM_TOP (
 	assign	pwm_scaled				= 	pwm == 2'b00	? `T_BITS'h0 	: 
 										pwm == 2'b01	? `VIN_FS_HALF 	: `VIN_FS_HALF_NEG;
 	// Assuming KFW is 1
-	assign	vin_pwm_scaled_delta	= vin_reg - pwm_scaled;
+	assign	vin_pwm_scaled_delta	= vin - pwm_scaled;
 	// Sum DSS output with vin
-	assign	dss_vin_sum				= dss_o + vin_reg[14: 5];
+	assign	dss_vin_sum				= dss_o + vin[14: 5];
 	// Dither the dss output summed with vin
 	assign 	dss_vin_sum_dith		= dss_vin_sum + dith_i[14:5];
 	
