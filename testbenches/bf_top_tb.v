@@ -224,7 +224,7 @@ module BF_TOP_TB (
 			if (pwm[1] == 2'b01) begin
 				$fdisplay(pwm_1_file, "1");
 			end
-			else if (pwm[1] == 2'b10 begin
+			else if (pwm[1] == 2'b10) begin
 				$fdisplay(pwm_1_file, "-1");
 			end
 			else begin
