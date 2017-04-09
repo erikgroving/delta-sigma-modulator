@@ -214,7 +214,7 @@ module BF_TOP_TB (
 			if (pwm[0] == 2'b01) begin
 				$fdisplay(pwm_0_file, "1");
 			end
-			else if (pwm[0] == 2'b11) begin
+			else if (pwm[0] == 2'b10) begin
 				$fdisplay(pwm_0_file, "-1");
 			end
 			else begin
@@ -224,7 +224,7 @@ module BF_TOP_TB (
 			if (pwm[1] == 2'b01) begin
 				$fdisplay(pwm_1_file, "1");
 			end
-			else if (pwm[1] == 2'b11) begin
+			else if (pwm[1] == 2'b10 begin
 				$fdisplay(pwm_1_file, "-1");
 			end
 			else begin
@@ -234,7 +234,7 @@ module BF_TOP_TB (
 			if (pwm[2] == 2'b01) begin
 				$fdisplay(pwm_2_file, "1");
 			end
-			else if (pwm[2] == 2'b11) begin
+			else if (pwm[2] == 2'b10) begin
 				$fdisplay(pwm_2_file, "-1");
 			end
 			else begin
@@ -244,7 +244,7 @@ module BF_TOP_TB (
 			if (pwm[3] == 2'b01) begin
 				$fdisplay(pwm_3_file, "1");
 			end
-			else if (pwm[3] == 2'b11) begin
+			else if (pwm[3] == 2'b10) begin
 				$fdisplay(pwm_3_file, "-1");
 			end
 			else begin
@@ -254,7 +254,7 @@ module BF_TOP_TB (
 			if (pwm[4] == 2'b01) begin
 				$fdisplay(pwm_4_file, "1");
 			end
-			else if (pwm[4] == 2'b11) begin
+			else if (pwm[4] == 2'b10) begin
 				$fdisplay(pwm_4_file, "-1");
 			end
 			else begin
@@ -264,7 +264,7 @@ module BF_TOP_TB (
 			if (pwm[5] == 2'b01) begin
 				$fdisplay(pwm_5_file, "1");
 			end
-			else if (pwm[5] == 2'b11) begin
+			else if (pwm[5] == 2'b10)	begin
 				$fdisplay(pwm_5_file, "-1");
 			end
 			else begin
@@ -274,7 +274,7 @@ module BF_TOP_TB (
 			if (pwm[6] == 2'b01) begin
 				$fdisplay(pwm_6_file, "1");
 			end
-			else if (pwm[6] == 2'b11) begin
+			else if (pwm[6] == 2'b10) begin
 				$fdisplay(pwm_6_file, "-1");
 			end
 			else begin
@@ -284,7 +284,7 @@ module BF_TOP_TB (
 			if (pwm[7] == 2'b01) begin
 				$fdisplay(pwm_7_file, "1");
 			end
-			else if (pwm[7] == 2'b11) begin
+			else if (pwm[7] == 2'b10) begin
 				$fdisplay(pwm_7_file, "-1");
 			end
 			else begin
