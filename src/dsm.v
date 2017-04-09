@@ -169,6 +169,6 @@ module QUANTIZER (
 );
 
 	// Quantize the output
-	assign out1	= 	($signed(in1) < $signed(`QUANT_LOW)) 			? 2'b11 :
+	assign out1	= 	($signed(in1) < $signed(`QUANT_LOW)) 			? 2'b10 :
 					(reset || $signed(in1)  < $signed(`QUANT_HIGH)) ? 2'b00	: 2'b01 ;
 endmodule
