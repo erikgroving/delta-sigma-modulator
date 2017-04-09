@@ -3,13 +3,14 @@ module BF_TOP (
   input			RESET,
   input			SCLK,
   input			SS,
-	// synopsys dc_script_begin
-	// set_dont_touch MOSI
-	// synopsys dc_script_end
   input			MOSI,
   input	[9: 0]	VIN_I,
   input [9: 0] 	VIN_Q,
-  output [7: 0][1: 0] PWM 
+  output	[7: 0][14: 0] out_i,
+  output	[7: 0][14: 0] interp_o_i,
+  output	[7: 0][14: 0] mix_o,
+  output [7: 0][1: 0] PWM ,
+  output	reg			ps_clock
 );
 
 
@@ -19,26 +20,17 @@ module BF_TOP (
 	wire [7: 0][4: 0]  w_cos_2;                          
 	wire [7: 0][4: 0]  w_sin_2; 
 	
-	// synchronizers
-	/*reg [7: 0][4: 0]  w_cos_1_sync_1;
-	reg [7: 0][4: 0]  w_sin_1_sync_1;                          
-	reg [7: 0][4: 0]  w_cos_2_sync_1;                          
-	reg [7: 0][4: 0]  w_sin_2_sync_1; 	
-	reg [7: 0][4: 0]  w_cos_1_sync_2;
-	reg [7: 0][4: 0]  w_sin_1_sync_2;                          
-	reg [7: 0][4: 0]  w_cos_2_sync_2;                          
-	reg [7: 0][4: 0]  w_sin_2_sync_2; */	
 
-	reg					ps_clock;
+	//reg					ps_clock;
 	reg	[2: 0]			ps_clock_cnt;
 
-	wire [7: 0][14:0] 	out_i;
+	//wire [7: 0][14:0] 	out_i;
 	wire [7: 0][14:0] 	out_q;
-	wire [7: 0][14:0] 	mix_o;
+	//wire [7: 0][14:0] 	mix_o;
 
 	wire [14: 5] 		dith;
 
-	wire [7: 0][14: 0] 	interp_o_i;
+	//wire [7: 0][14: 0] 	interp_o_i;
 	wire [7: 0][14: 0] 	interp_o_q;
 	
 	reg  [1: 0][9: 0]	vin_i_sync;

@@ -6,8 +6,9 @@ module BF_TOP_TB (
 	reg [registerwidth-1:0] DATA;
 	wire MOSI;
 	wire SOut;
+	wire ps_clock;
 
-
+	reg					start_print;
 	reg 				clock;
 	reg					ds_clock;
 	reg 				reset;
@@ -31,6 +32,9 @@ module BF_TOP_TB (
 	integer				pwm_5_file;
 	integer				pwm_6_file;
 	integer				pwm_7_file;
+	integer				ps_file;
+	integer				interp_o_file;
+	integer				mix_o_file;
 	integer				i_input_file;
 	integer				q_input_file;
 	integer 			scan_file;
@@ -41,6 +45,7 @@ module BF_TOP_TB (
 		SS 			= 1'b1;
 		reset 		= 1'b0;
 		sclk		= 1'b0;
+		start_print = 1'b0;
 		
 		
 		#20;
@@ -58,7 +63,10 @@ module BF_TOP_TB (
 		pwm_4_file = $fopen("../../output/pwm_4.txt", "w");			
 		pwm_5_file = $fopen("../../output/pwm_5.txt", "w");			
 		pwm_6_file = $fopen("../../output/pwm_6.txt", "w");			
-		pwm_7_file = $fopen("../../output/pwm_7.txt", "w");			
+		pwm_7_file = $fopen("../../output/pwm_7.txt", "w");	
+		ps_file = $fopen("../../output/phaseshift.txt", "w");
+		interp_o_file = $fopen("../../output/interp.txt", "w");
+		mix_o_file = $fopen("../../output/mixer_o.txt", "w");
 
 		#10;
 		@(posedge clock);
@@ -169,7 +177,7 @@ module BF_TOP_TB (
 		#10 SS<=1'b1;
 		#500;
 		
-		
+		start_print = 1'b1;
 		
 	end
 
@@ -184,16 +192,23 @@ module BF_TOP_TB (
 	);
 	
 	
-	
+		wire [7: 0][14:0] 	out_i;
+		wire [7: 0][14:0] 	interp_o_i;
+		wire [7: 0][14:0] 	mix_o;
+
 	
 	BF_TOP BF_TOP_I (
 		.CLOCK(clock),
 		.RESET(reset),
 		.SCLK(sclk),
 		.MOSI(MOSI),
+		.out_i(out_i),
+		.interp_o_i(interp_o_i),
+		.mix_o(mix_o),
 		.SS(SS),
 		.VIN_I(vin_i),
 		.VIN_Q(vin_q),
+		.ps_clock(ps_clock),
 		.PWM(pwm)
 	);
 	
@@ -207,10 +222,16 @@ module BF_TOP_TB (
 		ds_clock = ~ds_clock;
 	end
 	
+	always @(negedge ps_clock) begin
+		if(start_print) 
+			$fdisplay(ps_file, "%d", out_i[0]);
+	end
 	
 	always @(negedge clock) begin
-		if (!reset) begin
-		
+		if (start_print) begin
+			$fdisplay(interp_o_file, "%d", interp_o_i[0]);	
+
+			$fdisplay(mix_o_file, "%d", mix_o[0]);
 			if (pwm[0] == 2'b01) begin
 				$fdisplay(pwm_0_file, "1");
 			end
@@ -315,6 +336,9 @@ module BF_TOP_TB (
 				$fclose(pwm_5_file);
 				$fclose(pwm_6_file);
 				$fclose(pwm_7_file);
+				$fclose(ps_file);
+				$fclose(mix_o_file);
+				$fclose(interp_o_file);
 				$fclose(scan_file);
 				$finish;
 			end
