@@ -4,7 +4,7 @@ period = 0.75
 setup_hold_time = 0.01
 with open('dsm_pos.csv', 'w', newline='') as csvfile:
 	f = open('dsm_out.txt', 'r')		
-	dsm_csv = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+	dsm_csv = csv.writer(csvfile, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
 	x = 0;
 	for line in f:
 		t1 = x + setup_hold_time
@@ -18,7 +18,7 @@ with open('dsm_pos.csv', 'w', newline='') as csvfile:
 		
 with open('dsm_neg.csv', 'w', newline='') as csvfile:
 	f = open('dsm_out.txt', 'r')		
-	dsm_csv = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+	dsm_csv = csv.writer(csvfile, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
 	x = 0;
 	for line in f:
 		t1 = x + setup_hold_time
