@@ -1,7 +1,7 @@
 import csv
 import os
 period = 0.75
-setup_hold_time = 0.01
+setup_hold_time = 0.00125
 with open('dsm_pos.csv', 'w', newline='') as csvfile:
 	f = open('dsm_out.txt', 'r')		
 	dsm_csv = csv.writer(csvfile, delimiter='\t', quotechar='|', quoting=csv.QUOTE_MINIMAL)
